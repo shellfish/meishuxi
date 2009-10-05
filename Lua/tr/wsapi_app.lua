@@ -1,3 +1,7 @@
+---------------------------------------------------------------------------
+-- wsapi app generator
+---------------------------------------------------------------------------
+
 require "tr"
 require "wsapi.request"
 require "wsapi.response"
@@ -9,6 +13,10 @@ module(..., package.seeall)
 local make_prefered_app
 local make_error_app
 
+---------------------------------------------------------------------------
+--- The only method exported by this module
+-- @parma bootstrap_config a user-defined configuration table
+-- @return the (waapi)app function which will be lanuched by the server
 function new( bootstrap_config )
 	local preferedApp = make_prefered_app( bootstrap_config )
 	local errorApp    = make_error_app( bootstrap_config )

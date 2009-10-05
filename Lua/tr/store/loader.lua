@@ -1,19 +1,24 @@
+---------------------------------------------------------------------------
 -- Loader for lua script
 -- load the executive node, RETURN a func
+---------------------------------------------------------------------------
+
 module(..., package.seeall)
 
 local _MODULER = "store.loader"
 
 local LOADER ={}
 
+--- return a new  instance of LOADER
 function new( config )
 	local obj =  setmetatable( {}, {__index = LOADER } )
 	obj:init( config )
 	return obj
 end
 
--- @parma   a path string or table, refers to LUAPATH syntax
--- @RETURN  nothing, if error occurs, throw it
+--- use the config table to initialize the instance 
+-- @parma a path string or table, refers to LUAPATH syntax
+-- @return nothing, if error occurs, throw it
 function LOADER:init( config )
 
 	local path = config.NODE_LOAD_PATH
@@ -39,9 +44,9 @@ function LOADER:init( config )
 
 end
 
--- @parma name      the script name
--- @RETURN          table repersent node
--- @THROW           if canot find, throw error
+--- load node using name( is An error occurs, throw it)
+-- @parma name the script name
+-- @return table repersent node
 function LOADER:load( name )
 	assert( name )
 

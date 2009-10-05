@@ -1,8 +1,5 @@
 ----------------------------------------------------------------------------
--- Serialize tables.
--- It works only for tables without cycles and without functions or
--- userdata inside it.
--- @release $Id: serialize.lua,v 1.7 2007/04/16 14:01:32 tomas Exp $
+-- General utility module 
 ----------------------------------------------------------------------------
 local ipairs, pairs, type, tostring, table = ipairs, pairs, type, tostring, table
 local format = string.format
@@ -88,9 +85,11 @@ function tabledump (tab, outf, ind, pre)
 	outf ("}")
 end
 
-
--- @tab  the table to be serialized
--- @RETURN the string represent this table
+---  Serialize tables.
+-- It works only for tables without cycles and without functions or
+-- userdata inside it.
+-- @parma tab the table to be serialized
+-- @return the string represent this table
 function serialize( tab )
 	local content = {}
 	tabledump(tab, function(d) table.insert( content, d) end )
@@ -98,8 +97,10 @@ function serialize( tab )
 	return table.concat( content )
 end
 
--- convert srting to table
-function collect( str)
+--- deserialize a string to Lua Table
+-- @parma str the string contains a complete table
+-- @return the deserializd table
+function deserialize( string )
 	return ( loadstring( 'return' .. str ) )()
 end
 
