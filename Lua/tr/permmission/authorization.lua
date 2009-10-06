@@ -18,9 +18,77 @@ end
 function AUTHORIZATION:init( tr_object )
 	self.authentication = tr_object.authentication
 	self.database  = tr_object.database
+	self.request  = tr_object.request
+
+	self.check_chain = {}
 end
 
-function AUTHORIZATION:run( auth_statement, arg )
-	return true
+
+-- @return the ENV context sandbox "table"
+function AUTHORIZATION:make_basic_environment()
+	local ENV = {  }
+
+	function ENV.allow( user )
+		user = tostring( user )
+		table.insert(
+			self.check_chain, 
+			function(id) 
+				id = tostring(id); 
+				if id  == user then return true  end end
+		)
+	end
+
+	function ENV.type( user )
+		user = tostring(user)
+
+		local cursor = assert( self.database:execute(string.format(
+		"SELECT userCategory FROM role WHERE userId = %s;", user )))
+		local result = cursor:fetch({})[1]
+		
+
+		local roles = {}
+		if result % 2 == 0 then  roles.student = true end
+		if result % 3 == 0 then  roles.teacher = true end
+		if result % 7 == 0 then  roles.clerk   = true end
+		if result % 11 == 0 then roles.tutor   = true end
+
+		return roles
+	end
+
+	function ENV.get_tutor( user )
+		self.database:execute([[SELECT ]] )
+
+		return "1234567"
+	end
+
+	function ENV.error( msg )
+		error(msg)
+	end
+
+	
+	return ENV
+end
+
+function AUTHORIZATION:make_engine( auth_statement  )
+	local user = self.authentication:user()
+
+	local basic_env = self:make_basic_environment()
+	
+	local environment = setmetatable(
+		{ GET = self.request.GET, POST = self.request.POST}, 
+		{__index = basic_env }
+	)
+
+	local stat = assert( loadstring( auth_statement ) )
+	setfenv( stat, environment )()
+	
+	return function( user )
+		for _, check in ipairs( self.check_chain ) do
+			if check(user) then
+				return true
+			end
+		end
+		return false 
+	end
 end
 

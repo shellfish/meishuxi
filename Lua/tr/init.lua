@@ -58,21 +58,24 @@ function TR:handle_request( request, response )
 	-- request for page
 	local destination = request.GET.p
 
-	-- make argument
-	local arguments = { GET = request.GET, POST = request.POST }
 
 	-- get virtual node
 	local node = self.loader:load( destination or "" )	
+	
+	local check_engine = self.authorization:make_engine(node.AccessControl)
+	--if check_engine( self.authentication:user() ) then
+	if check_engine( 200704213014 ) then
 
-	local output
-	if self.authorization:run( node.AccessControl, arguments ) then
+	-- make argument
+		local arguments = { GET = request.GET, POST = request.POST }
 		output = self.launcher:getJson( node.Run, arguments )
+
+		response.status = 200
+		response.header = {['Content-type'] = node.Type }
+		response:write( output )
 	else
-		-- Permmission error
+		response.status = 200
+		response.header = {['Content-type'] = 'text/html' }
+		response:write"权限问题"
 	end
-
-	response.status = 200
-	response.header = {['Content-type'] = node.Type or 'text/html'}
-	response:write( output )
-
 end

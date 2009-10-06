@@ -91,7 +91,8 @@ function AUTH:user()
 end
 
 
---- logout action, we assume it'ill never fail
+--- logout action
+-- if user did't login, it'll throw a error
 function AUTH:logout()
 	local index = USER or self.request.cookies[ self.token ]
 

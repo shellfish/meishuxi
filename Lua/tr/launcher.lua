@@ -11,16 +11,18 @@ end
 
 local function make_sanbox( tr_object )
 	local env = {}
+	local lib = {}
 	local map1 = {
-		"database", "memcached" 
+		"database", "memcached", 'authentication', 
 	}
 
 	local map2 = {
-		'tostring', 'ipairs', 'pairs', 'string', 'table', 'math'
+		'tostring', 'ipairs', 'pairs', 'string', 'table', 'math',
+		"pcall", 
 	}
 
 	for _, v in ipairs( map1 ) do
-		env[v] = tr_object[v]
+		lib[v] = tr_object[v]
 	end
 
 	for _, v in ipairs( map2 ) do
@@ -31,6 +33,7 @@ local function make_sanbox( tr_object )
 		GET = tr_object.request.GET, 
 		POST = tr_object.request.POST
 	}
+	env.lib = lib
 
 	return env	
 end
