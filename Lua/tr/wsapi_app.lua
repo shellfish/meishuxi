@@ -51,6 +51,22 @@ end
 
 function make_error_app( config, err_msg  )
 	
+	local function transalte( src )
+
+
+		local a, b = src:find":%d+:"
+		local c, d = src:find( "stack traceback:", b + 1)
+		local part1 = string.sub(src, 1, a - 1)
+		local part2 = string.sub(src, b + 1, c - 1)
+		local part3 = string.sub(src, d + 1, #src)
+		part3:gsub("<", "&lt;")
+		part3:gsub(">" , "&gt;")
+
+		return ("<p style=\"color:blue;\"><b>[Position]</b>" .. src:sub(a, b) .. part1 .. "</p>" ..
+			"<p style=\"color:red; font-size:1.3em;\">" .. part2 .. "</p>" ..
+			"<hr /><h4 style=\"color:silver; font-size:2em;\">stack traceback:<h4><pre>" .. part3 .. "</pre>")
+	end
+
 	local HTML_MESSAGE = [[
 		<html>
 		<head><title>Oops - An Error Occurs!</title></head>
@@ -65,23 +81,12 @@ function make_error_app( config, err_msg  )
 		</body>
 		</html>
 ]]
-
-	local function translate( msg )
-		local  summary, msg, stack =  msg:match("^(.+)#(.-)#(.+)$")
-		summary = string.format("<p style=\"color:blue;\">" .. summary .. "</p>")
-
-		msg = string.format(	"<p style=\"color:red; font-size:2em;\">" .. msg .. "</p>")
-
-		stack = stack:gsub("<", "&lt;")
-		stack = stack:gsub(">", "&gt;")
-		stack = string.format("<pre>" .. stack .. "</pre>")
-		return summary .. msg .. stack
-	end
+	
 
 	return function( wsapi_env  )
 		local summary = "<h1 style=\"color:pink;\">Oops, An unexpected error occurs!</h1>"
 		local message = string.format( HTML_MESSAGE, summary, 
-			config.SHOW_STACK_TRACE and  translate(err_msg ) or "Please Contact Site admin" )
+			config.SHOW_STACK_TRACE and  transalte( err_msg )  or "Please Contact Site admin" )
 
 		io.open('/tmp/lua-logile', 'w'):write(tostring(err_msg))
 		local response = wsapi.response.new(500, 
