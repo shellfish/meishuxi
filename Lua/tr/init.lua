@@ -2,10 +2,6 @@
 -- @release Main module  [AT] Mon Oct  5 23:19:47 CST 2009
 ----------------------------------------------------------------------------
 
-require "tr.store"
-require "tr.permmission"
-
-
 module(..., package.seeall)
 
 TR = {}
@@ -22,10 +18,17 @@ function new( bootstrap_config )
 end
 
 ---------------------------------------------------------------------------
--- Do main process
--- @parma request wsapi request object
--- @parma response wsapi response object
-function TR:main( request, response )
+--- load and initialize our libraroes
+-- @parma request the wsapi.request object plus field request.wsapi_env 
+-- @parma response the wsapi.response object
+function TR:load_libs( request, response )
+
+	require "Json"
+
+	require "tr.store"
+	require "tr.permmission"
+	require "tr.launcher"
+
 	-- push sth into self object for convinence
 	self.request = request
 	self.response = response
@@ -39,18 +42,37 @@ function TR:main( request, response )
 	-- initialize permmission system
 	self.authentication = tr.permmission.authentication.new( self )
 	self.authorization  = tr.permmission.authorization.new( self )
-	response:write( "It Works!" )
+
+	self.launcher       = tr.launcher.new( self )
+end
 
 
-	if not self.authentication.user() then
-		response:write"LOG IN ..."
-		self.authentication:login("Admin", "test")
+
+---------------------------------------------------------------------------
+-- Do main process
+-- @parma request wsapi request object
+-- @parma response wsapi response object
+function TR:handle_request( request, response )
+	self:load_libs( request, response )
+
+	-- request for page
+	local destination = request.GET.p
+
+	-- make argument
+	local arguments = { GET = request.GET, POST = request.POST }
+
+	-- get virtual node
+	local node = self.loader:load( destination or "" )	
+
+	local output
+	if self.authorization:run( node.AccessControl, arguments ) then
+		output = self.launcher:getJson( node.Run, arguments )
 	else
-		response:write(self.authentication:user() .. "Has loged in!")
+		-- Permmission error
 	end
 
-
-
-	
+	response.status = 200
+	response.header = {['Content-type'] = node.Type or 'text/html'}
+	response:write( output )
 
 end

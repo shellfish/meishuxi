@@ -43,7 +43,7 @@ function make_prefered_app( bootstrap_config )
 		local res = wsapi.response.new()
 
 		local my_tr = tr.new( bootstrap_config )
-		my_tr:main( req, res )
+		my_tr:handle_request( req, res )
 
 		return { res:finish() }
 	end

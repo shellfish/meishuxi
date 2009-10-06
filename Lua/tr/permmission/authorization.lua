@@ -16,7 +16,11 @@ end
 
 
 function AUTHORIZATION:init( tr_object )
-	self.auth = tr_object.authentication
+	self.authentication = tr_object.authentication
 	self.database  = tr_object.database
+end
+
+function AUTHORIZATION:run( auth_statement, arg )
+	return true
 end
 
