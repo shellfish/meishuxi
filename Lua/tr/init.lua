@@ -63,8 +63,7 @@ function TR:handle_request( request, response )
 	local node = self.loader:load( destination or "" )	
 	
 	local check_engine = self.authorization:make_engine(node.AccessControl)
-	--if check_engine( self.authentication:user() ) then
-	if check_engine( 200704213014 ) then
+	if check_engine( self.authentication:user() ) then
 
 	-- make argument
 		local arguments = { GET = request.GET, POST = request.POST }

@@ -26,20 +26,29 @@ end
 
 -- @return the ENV context sandbox "table"
 function AUTHORIZATION:make_basic_environment()
-	local ENV = {  }
+	local ENV = { all_user = {} }
+	
 
 	function ENV.allow( user )
+		group = assert( user )
 		user = tostring( user )
 		table.insert(
 			self.check_chain, 
 			function(id) 
-				id = tostring(id); 
-				if id  == user then return true  end end
+				if  group == ENV.all_user then
+					return true
+				else
+					id = tostring(id); 
+					if id  == user then 
+						return true  
+					end 
+				end
+			end
 		)
 	end
 
 	function ENV.type( user )
-		user = tostring(user)
+		user = tostring( assert( user ))
 
 		local cursor = assert( self.database:execute(string.format(
 		"SELECT userCategory FROM role WHERE userId = %s;", user )))
@@ -55,12 +64,14 @@ function AUTHORIZATION:make_basic_environment()
 		return roles
 	end
 
+
 	function ENV.get_tutor( user )
 		self.database:execute([[SELECT ]] )
 
 		return "1234567"
 	end
 
+	-- just for debug
 	function ENV.error( msg )
 		error(msg)
 	end
