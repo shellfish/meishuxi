@@ -100,7 +100,7 @@ end
 --- deserialize a string to Lua Table
 -- @parma str the string contains a complete table
 -- @return the deserializd table
-function deserialize( string )
+function deserialize( str )
 	return ( loadstring( 'return' .. str ) )()
 end
 

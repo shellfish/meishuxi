@@ -11,6 +11,8 @@ module(..., package.seeall)
 local AUTH = {}
 local USER = nil
 
+local db_coon = nil
+local global_config = nil
 
 --- new a authentication object
 -- @return AUTH instance
@@ -24,9 +26,12 @@ end
 --== DEFINE class AUTH ==========
 function AUTH:init( tr_object )
 	local config = tr_object.config
+	global_config = config
 
 	self.memcached = tr_object.memcached
 	self.database = tr_object.database
+	db_coon = self.database
+
 	self.request = tr_object.request
 	self.response = tr_object.response
 	self.ip = tr_object.wsapi_env.REMOTE_ADDR
@@ -36,7 +41,10 @@ function AUTH:init( tr_object )
 	self.timeout = config.AUTH_TIMEOUT or 600  -- default 10 mimute 
 end
 
+
+
 local method = {}
+
 method.simple = function (id, passwd )
 	if id == 'Admin' and passwd == 'test' then
 		return true
@@ -45,6 +53,18 @@ method.simple = function (id, passwd )
 	end
 end
 
+function method.database( id, passwd )
+	local cursor = assert(db_coon:execute(
+		string.format("SELECT passwd FROM role WHERE userId = %s;", id)))
+	local result = cursor:fetch{}
+	
+	local passwd_db =  result[1]
+
+	passwd = md5.sumhexa(  passwd ..  assert( global_config.AUTH_PASSWD_SALT ) )
+
+	return passwd_db == passwd
+
+end
 
 function AUTH:setToken(id)
 	local index

@@ -23,7 +23,9 @@ local default_options = {
 	DATABASE_DRIVER = 'postgres',
 	DATABASE_INITSTAT = "SET search_path TO jw;",
 
+	AUTH_METHOD = "database",
 	AUTH_TOKEN_NAME = 'userHash',
+	AUTH_PASSWD_SALT = "5d41402abc4b2a76b9719d911017c592", -- 影子密码加密key
 
 	NODE_LOAD_PATH = '/home/zhousiyv/桌面/trunk/Nodes',
 }

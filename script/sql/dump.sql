@@ -36,6 +36,7 @@ CREATE TABLE "role" (
 	userCategory  T_category,      -- 用户类型: 学生/教师/教秘
 	userSex       T_sex,           -- 性别: t-> male | f -> female
 	userBorn      date,             -- 出生日期
+	passwd        text,
 
 	PRIMARY KEY( userId )
 );
@@ -149,7 +150,6 @@ $PROC$ LANGUAGE SQL;
 SELECT addStudent(200704213014, '费昊', 2, 'M', '1988-11-18', 77);
 SELECT addStudent(200704213005, '尹成龙', 2, 'M', '1989-01-01', 77);
 SELECT addStudent(200704213006, '王慧慧', 2, 'W', '1989-01-01', 77);
-
 
 
 
