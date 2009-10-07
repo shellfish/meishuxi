@@ -1,0 +1,28 @@
+#topbar {
+  background:#97BDBF;
+  height:1.2em;
+}
+#topbar ul {
+  margin:0 auto;
+}
+
+#topbar .msg span {
+	color:red;
+}
+
+#topbar li {
+  float:right;
+ 
+  padding:0 0.5em 0 0;
+  list-style:none;
+  font-size:1em;
+}
+
+#topbar a:hover {
+	background:#273FF3;
+}
+
+#topbar a {
+	background:white;
+}
+
