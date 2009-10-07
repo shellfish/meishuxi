@@ -24,6 +24,39 @@ function AUTHORIZATION:init( tr_object )
 end
 
 
+function AUTHORIZATION:getInfo( user, field )
+	assert( type(user) == 'string' or 'nil' and type(field) == 'string' ) 
+
+	-- user has't authenticated
+	if user == nil then
+		return "anonymous"
+	end
+
+	-- get userType filed( a table that fields represent types)
+	if field == 'userType' then
+	
+		local cursor = assert( self.database:execute(string.format(
+		"SELECT userCategory FROM role WHERE userId = %s;", user )))
+		local result = cursor:fetch({})[1]
+
+
+		local roles = {}
+		if result % 2 == 0 then  roles.student = true end
+		if result % 3 == 0 then  roles.teacher = true end
+		if result % 7 == 0 then  roles.clerk   = true end
+		if result % 11 == 0 then roles.tutor   = true end
+
+		return roles
+	-- get tutor's id( for student only)
+	elseif field == 'tutor' then
+		
+	-- return nil for 
+	else
+		error(string.format("Unknown info field:%s", field))
+	end
+end
+
+
 -- @return the ENV context sandbox "table"
 function AUTHORIZATION:make_basic_environment()
 	local ENV = { all_user = {} }

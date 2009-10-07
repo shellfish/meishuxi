@@ -13,7 +13,7 @@ local function make_sanbox( tr_object )
 	local env = {}
 	local lib = {}
 	local map1 = {
-		"database", "memcached", 'authentication', 
+		"database", "memcached", 'authentication', "authorization", "config",
 	}
 
 	local map2 = {
