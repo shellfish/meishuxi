@@ -11,6 +11,22 @@ function parseJson( str )
 	return obj
 }
 
+function setMenu( arg ) 
+{
+	if ( arg == null ) {
+		$('#sidebar >div').hide()
+		$('#sidebar >h1').hide()
+		$('#sidebar > .anonymous').show()
+	}else {
+		$('#sidebar >div').hide()
+		$('#sidebar >h1').hide()
+
+		for (i in arg) {
+			$('#sidebar > .' + i).show()
+		}
+	}
+}
+
 function updateTopbar(arg)
 {
 	if (!arg) {
@@ -38,6 +54,8 @@ function updateTopbar(arg)
 			$('#topbar .msg').replaceWith('<li class="msg">' + userType + 
 					"<span>"	+ data.user + "</span>" + ",你好!&nbsp;</li>")
 
+			// 修改可用菜单
+			setMenu(data.userType)
 		}
 
 		$.ajax({
@@ -59,6 +77,8 @@ function updateTopbar(arg)
 	}else if (arg == "hasLogout") {
 		$('#login_link').show()
 		$('#logout_link').hide()
+		// 修改菜单项
+		setMenu(null)
 		$('#topbar .msg').replaceWith('<li class="msg">' +
 			"你还未登录</li>")
 	}else 
@@ -85,6 +105,7 @@ $( function()
 	$('#login_dialog').dialog({
 		autoOpen: false,
 		width: 300,
+		modal:true,   // a modal dialog
 		buttons: {
 			"确定": function() { 
 				var self = $(this)
@@ -114,6 +135,40 @@ $( function()
 		}
 	});
 
+
+	$('#sidebar').accordion({
+		active:false,
+		collapsible:true,
+	})
+
+	function loadContent( href ) 
+	{	
+		$('#content').attr('src', href)
+	}
+
+	$('#sidebar li a').each(function() {
+
+		$(this).click(function() {
+			loadContent($(this).attr('href'))
+			return false;
+		})
+	})
 	
+	// 自适应宽度的iframe
+	$('#content').load(function() {
+	 	var h =  ( this.contentWindow.document.body.offsetHeight + 10)
+		if ( h < $(document).height() - 80 )
+			this.style.height = $(document).height() - 80
+		else
+	 		this.style.height =
+			  ( this.contentWindow.document.body.offsetHeight + 10) + 'px';
+   })
+
+	$('#sidebar > div').css({backgroundImage:"url(/img/sidebar.gif)"})
+
+
 })    // 初始化完成
+
+
+
 

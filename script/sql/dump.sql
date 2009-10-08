@@ -36,24 +36,10 @@ CREATE TABLE "role" (
 	userCategory  T_category,      -- 用户类型: 学生/教师/教秘
 	userSex       T_sex,           -- 性别: t-> male | f -> female
 	userBorn      date,             -- 出生日期
-	passwd        text,
+	passwd        text,            -- 原始密码使用md5加salt散列
 
 	PRIMARY KEY( userId )
 );
-
--- student
-/* INSERT INTO "role" VALUES(200704213014, '费昊', 2, 'M', '1988-11-18');
-INSERT INTO "role" VALUES(200704213006, '王慧慧', 2, 'W', '1988-01-01');
-INSERT INTO "role" VALUES(200704113020, '熊亮文', 2, 'M', '1990-02-21');
--- teacher
-INSERT INTO "role" VALUES(2798, '张驰', 3, 'M', '1988-12-06');
--- teacher(clerk)
-INSERT INTO "role" VALUES(77,   'xianyan', 21, 'M', '1989-05-17');
--- teacher ( tutor )
-INSERT INTO "role" VALUES(5463,  '叶子', 33, 'W', '1989-02-01');
-*/
-
-
 
 --======= 学生信息 ===========
 DROP TABLE IF EXISTS "student";

@@ -50,4 +50,26 @@
 	color:red;
 }
 
+#container {
+	position:absolute;
+	top:85px;
+	width:100%;
+	height:100%;
+}
 
+#sidebar {
+	width:12%;
+	float:left;
+}
+
+#sidebar li {
+	list-style:none;	
+}
+
+#content {
+	width:86%;
+	float:left;
+	border:solid 0.5px #878787;
+
+	height:100%;
+}
