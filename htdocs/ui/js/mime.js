@@ -14,11 +14,12 @@ function parseJson( str )
 function setMenu( arg ) 
 {
 	if ( arg == null ) {
-		$('#sidebar >div').hide()
+		
 		$('#sidebar >h1').hide()
 		$('#sidebar > .anonymous').show()
+		$('#sidebar-index-link').click()
+	
 	}else {
-		$('#sidebar >div').hide()
 		$('#sidebar >h1').hide()
 
 		for (i in arg) {
@@ -87,7 +88,12 @@ function updateTopbar(arg)
 
 $( function() 
 {
-	updateTopbar()
+
+	$('#sidebar').accordion({
+		active:false,
+		collapsible:true,
+	})
+
 
 	// Login Link
 	$('#login_link').click(function(){
@@ -135,18 +141,12 @@ $( function()
 		}
 	});
 
-
-	$('#sidebar').accordion({
-		active:false,
-		collapsible:true,
-	})
-
 	function loadContent( href ) 
 	{	
 		$('#content').attr('src', href)
 	}
 
-	$('#sidebar li a').each(function() {
+	$('#sidebar div  a').each(function() {
 
 		$(this).click(function() {
 			loadContent($(this).attr('href'))
@@ -165,6 +165,8 @@ $( function()
    })
 
 	$('#sidebar > div').css({backgroundImage:"url(/img/sidebar.gif)"})
+	
+	updateTopbar()
 
 
 })    // 初始化完成
