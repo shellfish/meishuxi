@@ -58,12 +58,15 @@ function method.database( id, passwd )
 		string.format("SELECT passwd FROM role WHERE userId = %s;", id)))
 	local result = cursor:fetch{}
 	
-	local passwd_db =  result[1]
-
+	local passwd_db 
+	if not result then
+		return false, string.format( 'No this user:%s !', id)
+	end
+	
+	passwd_db = result[1]
 	passwd = md5.sumhexa(  passwd ..  assert( global_config.AUTH_PASSWD_SALT ) )
 
-	return passwd_db == passwd
-
+	return passwd_db == passwd, "user & passwd is't vaild match"
 end
 
 function AUTH:setToken(id)
@@ -84,13 +87,14 @@ end
 --- check id with passwd, is correct match, then login
 -- @return boolean value points if is loged now
 function AUTH:login( id, passwd )
-	local _check = method[self.method]	
-	if _check(id, passwd) then
+	local _check = method[self.method]
+	local ok, msg = _check( id, passwd )
+	if ok then
 		self:setToken(id)
 		USER = id
 		return true
 	else
-		return false
+		return false, msg
 	end
 end
 

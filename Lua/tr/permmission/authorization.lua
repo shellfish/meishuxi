@@ -3,6 +3,7 @@
 -- with some cache support
 ---------------------------------------------------------------------------
 
+require "Json"
 
 module(..., package.seeall)
 
@@ -29,7 +30,7 @@ function AUTHORIZATION:getInfo( user, field )
 
 	-- user has't authenticated
 	if user == nil then
-		return "anonymous"
+		return nil
 	end
 
 	-- get userType filed( a table that fields represent types)
@@ -45,8 +46,9 @@ function AUTHORIZATION:getInfo( user, field )
 		if result % 3 == 0 then  roles.teacher = true end
 		if result % 7 == 0 then  roles.clerk   = true end
 		if result % 11 == 0 then roles.tutor   = true end
-
+		
 		return roles
+
 	-- get tutor's id( for student only)
 	elseif field == 'tutor' then
 		

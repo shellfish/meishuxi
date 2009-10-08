@@ -10,8 +10,9 @@ Run = [==[
 		local action = arg.GET.action
 		if action == 'login' then
 			local user, passwd = arg.GET.user, arg.GET.passwd
-			if not lib.authentication:login( user, passwd ) then
-				error"user & passwd is't vaild match"
+			local ok, msg = lib.authentication:login( user, passwd )
+			if not ok then
+				error(msg)
 			end
 		elseif action == 'logout' then
 			lib.authentication:logout()
