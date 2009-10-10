@@ -16,11 +16,12 @@ function setMenu( arg )
 	if ( arg == null ) {
 		
 		$('#sidebar >h1').hide()
-		$('#sidebar > .anonymous').show()
+		$('#sidebar > .general').show()
 		$('#sidebar-index-link').click()
 	
 	}else {
-		$('#sidebar >h1').hide()
+		$('#sidebar > h1').hide()
+		$('#sidebar .general').show()
 
 		for (i in arg) {
 			$('#sidebar > .' + i).show()

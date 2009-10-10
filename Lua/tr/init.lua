@@ -75,7 +75,7 @@ function TR:handle_request( request, response )
 		response:write( output )
 	else
 		response.status = 200
-		response.header = {['Content-type'] = 'text/html' }
-		response:write"权限问题"
+		response.header = {['Content-type'] = 'text/javascript' }
+		response:write( Json.Encode{result = false, msg = "权限问题" })
 	end
 end
