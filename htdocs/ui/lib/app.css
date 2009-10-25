@@ -1,0 +1,12 @@
+
+/* make sure expand full viewpoint */
+html, body {
+	 height:100%;
+	 width:100%;
+}
+
+#wrapper {
+	background:#BCD6DC;
+	padding:5px;
+}
+
