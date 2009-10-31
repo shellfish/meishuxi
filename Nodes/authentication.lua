@@ -9,7 +9,7 @@ Run = [==[
 	local status, message = pcall( function()
 		local action = arg.GET.action
 		if action == 'login' then
-			local user, passwd = arg.GET.user, arg.GET.passwd
+			local user, passwd = arg.POST.user, arg.POST.passwd
 			local ok, msg = lib.authentication:login( user, passwd )
 			if not ok then
 				error(msg)
