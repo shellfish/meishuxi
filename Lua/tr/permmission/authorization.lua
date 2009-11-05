@@ -61,7 +61,7 @@ end
 
 -- @return the ENV context sandbox "table"
 function AUTHORIZATION:make_basic_environment()
-	local ENV = { all_user = {} }
+	local ENV = { all_user = {}, authenticated_user = {} }
 	
 
 	function ENV.allow( user )
@@ -69,12 +69,14 @@ function AUTHORIZATION:make_basic_environment()
 		user = tostring( user )
 		table.insert(
 			self.check_chain, 
-			function(id) 
+			function(id)
+				-- check group arg
 				if  group == ENV.all_user then
 					return true
 				else
-					id = tostring(id); 
-					if id  == user then 
+					if group == ENV.authenticated_user and self.authenticated_user() then
+						return true
+					elseif id  == user then 
 						return true  
 					end 
 				end
@@ -127,7 +129,8 @@ function AUTHORIZATION:make_engine( auth_statement  )
 
 	local stat = assert( loadstring( auth_statement ) )
 	setfenv( stat, environment )()
-	
+
+	-- execute authorization statement
 	return function( user )
 		for _, check in ipairs( self.check_chain ) do
 			if check(user) then

@@ -107,20 +107,20 @@ ALTER TABLE student ADD  COLUMN  classId integer  REFERENCES class;
 -- 存储过程
 --========================================================================
 -- 添加一个tutor --
-INSERT INTO "role"(userId, userName,  userCategory, userBorn, userSex) VALUES(1918, '曾海波', 33, '1970-02-02', 'M');
+--INSERT INTO "role"(userId, userName,  userCategory, userBorn, userSex) VALUES(1918, '曾海波', 33, '1970-02-02', 'M');
 
 -- 添加clerk --
-INSERT INTO "role"(userId, userName,  userCategory, userBorn, userSex) VALUES(99, '赵丹', 21, '1985-09-21', 'W');
+--INSERT INTO "role"(userId, userName,  userCategory, userBorn, userSex) VALUES(99, '赵丹', 21, '1985-09-21', 'W');
 
 --- 添加学院 --- 
-INSERT INTO "school"(schoolId, schoolName, clerkId) VALUES( 1, '媒体管理学院',  99);
+--INSERT INTO "school"(schoolId, schoolName, clerkId) VALUES( 1, '媒体管理学院',  99);
 
 
 --- 添加专业  ---
-INSERT INTO "major"(majorId, majorName, schoolId) VALUES(42, '信息管理和信息系统', 1);
+--INSERT INTO "major"(majorId, majorName, schoolId) VALUES(42, '信息管理和信息系统', 1);
 
 --- 添加班级 ---
-INSERT INTO "class"(classId, majorId, admissionYear, tutorId) VALUES(77, 42, 2007, 1918 );
+--INSERT INTO "class"(classId, majorId, admissionYear, tutorId) VALUES(77, 42, 2007, 1918 );
 
 ------
 --- 添加学生
@@ -133,9 +133,9 @@ RETURNS void AS $PROC$
 $PROC$ LANGUAGE SQL;
 
 
-SELECT addStudent(200704213014, '费昊', 2, 'M', '1988-11-18', 77);
-SELECT addStudent(200704213005, '尹成龙', 2, 'M', '1989-01-01', 77);
-SELECT addStudent(200704213006, '王慧慧', 2, 'W', '1989-01-01', 77);
+--SELECT addStudent(200704213014, '费昊', 2, 'M', '1988-11-18', 77);
+--SELECT addStudent(200704213005, '尹成龙', 2, 'M', '1989-01-01', 77);
+--SELECT addStudent(200704213006, '王慧慧', 2, 'W', '1989-01-01', 77);
 
 
 

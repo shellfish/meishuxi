@@ -67,8 +67,7 @@ function TR:handle_request( request, response )
 	if check_engine( self.authentication:user() ) then
 
 	-- make argument
-		local arguments = { GET = request.GET, POST = request.POST }
-		output = self.launcher:getJson( node.Run, arguments )
+		output = Json.Encode( self.launcher:run( node.Run ) )
 
 		response.status = 200
 		response.header = {['Content-type'] = node.Type }

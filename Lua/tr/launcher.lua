@@ -35,6 +35,8 @@ local function make_sanbox( tr_object )
 	}
 	env.lib = lib
 
+	env.global = _G
+
 	return env	
 end
 
@@ -50,9 +52,4 @@ function LAUNCHER:run( section  )
 	setfenv( toExec, env )
 
 	return toExec()
-end
-
---- run and convert result to Json format
-function LAUNCHER:getJson( section )
-	return Json.Encode( self:run( section ) )
 end
