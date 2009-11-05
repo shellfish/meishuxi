@@ -163,3 +163,7 @@ end)();
 end)()
 
 
+-- update password
+dofile'update_passwd.lua'
+
+

@@ -1,5 +1,5 @@
 (function() {
-	dojo.registerModulePath( 'app', '/ui/lib/modules' ); 
+	dojo.registerModulePath( 'app', '/ui/lib/app' ); 
 	
 	dojo.require('app.core')
 
