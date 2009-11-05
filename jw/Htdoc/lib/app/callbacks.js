@@ -20,7 +20,7 @@
 
 		dojo.subscribe('ui/logout', function() {	
 			dojo.xhrGet({
-				url:'/tr.ws?p=authentication&action=logout',
+				url:app.core.serviceUrl + '?p=authentication&action=logout',
 				handleAs:'json',
 				load:function(response) {
 					   if ( response.ok ) {
@@ -56,7 +56,7 @@
 		// 用户登录成功， 更新1、状态 2、可用navigator
 		dojo.subscribe('signal/login', function() {
 			dojo.xhrGet({
-				url:'/tr.ws?p=info',
+				url:app.core.serviceUrl + '?p=info',
 				handleAs:'json',
 				load:function(response) {
 					// set toolbar prompt

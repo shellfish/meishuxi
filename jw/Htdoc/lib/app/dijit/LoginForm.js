@@ -45,7 +45,7 @@ dojo.declare('app.dijit.LoginForm',
 		self.setPrompt('connectting')
 
 		dojo.xhrPost({
-			url: this.url || "/tr.ws?p=authentication&action=login",
+			url: this.url || app.core.serviceUrl  + "?p=authentication&action=login",
 			form:this.form,
 			handleAs:'json',
 			load: function( response ) {
