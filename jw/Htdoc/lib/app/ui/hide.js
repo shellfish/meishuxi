@@ -16,7 +16,7 @@
 	{
 		var dialog = new dijit.Dialog({
 				id:"login:dialog",
-				style:"width:250px; height:100px;",
+				style:"width:400px; height:900px;",
 				title:'登录',
 			})
 
