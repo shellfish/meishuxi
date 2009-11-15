@@ -17,7 +17,7 @@ local function make_sanbox( tr_object )
 	}
 
 	local map2 = {
-		'tostring', 'ipairs', 'pairs', 'string', 'table', 'math',
+		'tostring', 'tonumber','ipairs', 'pairs', 'string', 'table', 'math',
 		"pcall", "error","Json", "assert",'type', 
 	}
 
