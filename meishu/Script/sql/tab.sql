@@ -51,6 +51,7 @@ CREATE TABLE TestPlace (
 CREATE TABLE Student (
 	_user_type CHAR(1) DEFAULT 's',
 
+	id                TEXT PRIMARY KEY,
 	sign_year         T_YEAR,      -- 注册年
 	graduate_school   TEXT,        -- 毕业学校
 	test_place        INTEGER REFERENCES   TestPlace(place_id) -- 考点
@@ -59,20 +60,11 @@ CREATE TABLE Student (
 CREATE TABLE Teacher (
 	_user_type CHAR(1) DEFAULT 't',
 
+	id                TEXT PRIMARY KEY,
 	level TEXT      -- 职称
 ) INHERITS(Role);
 
 
-INSERT INTO Student(id, name, sex, politics, password) VALUES(
-	'12345','宋江', 1, 1, '12345');
-
-INSERT INTO Student(id, name, sex, politics, password) VALUES(
-	'123456','清明', 1, 1, '123456');
-
-UPDATE Student SET email = 'shen@gmail.com',
-					phone_number = 123456,
-					cell_number = 88888,
-					national_identity = '123455676';
 
 COMMIT;
 

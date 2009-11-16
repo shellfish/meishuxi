@@ -9,6 +9,34 @@ local value = nil
 
 module(..., package.seeall)
 
+-----------------------------------------------------------------------------
+-- Splits a string on a delimiter. 
+-- Adapted from http://lua-users.org/wiki/SplitJoin.
+-- 
+-- @param text           the text to be split.
+-- @param delimiter      the delimiter.
+-- @return               unpacked values.
+-----------------------------------------------------------------------------
+function split(text, delimiter)
+   local list = {}
+   local pos = 1
+   if string.find("", delimiter, 1) then 
+      error("delimiter matches empty string!")
+   end
+   while 1 do
+      local first, last = string.find(text, delimiter, pos)
+      if first then -- found?
+	 table.insert(list, string.sub(text, pos, first-1))
+	 pos = last+1
+      else
+	 table.insert(list, string.sub(text, pos))
+	 break
+      end
+   end
+   return unpack(list)
+end
+
+
 ----------------------------------------------------------------------------
 -- Serializes a table.
 -- @param tab Table representing the session.
