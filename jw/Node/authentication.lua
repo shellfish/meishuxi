@@ -5,22 +5,25 @@ AccessControl =[[
 Type = "text/javascript"
 
 Run = [==[
-	
-	local status, message = pcall( function()
-		local action = arg.GET.action
-		if action == 'login' then
-			local user, passwd = arg.POST.user, arg.POST.passwd
-			local ok, msg = lib.authentication:login( user, passwd )
-			if not ok then
-				error(msg)
-			end
-		elseif action == 'logout' then
-			lib.authentication:logout()
-		else
-			error'Unknown action(must be login or logout.'
-		end
-	end)
 
-	return { ok = status, msg = message }
-]==]
+	local action = arg.GET.action
+
+	if action == 'login' then
+		local user, passwd  = arg.POST.user, arg.POST.passwd
+		local ok, info = lib.authentication:login(user, passwd)
+		
+		if ok then
+			return {ok = true, userInfo = info}
+		else
+			return {ok = false, msg = info}
+		end
+
+	elseif action == 'logout' then
+		local ok, msg = pcall(function() lib.authentication:logout() end)
+		return {ok = ok, msg = msg}
+	else
+		error(('Unknown action:%s, must be login or logout!'):format(action))
+	end
+	
+	]==]
 
