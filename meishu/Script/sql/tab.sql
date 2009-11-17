@@ -26,6 +26,8 @@ CREATE DOMAIN T_POLITICS AS INTEGER CHECK (VALUE IN (1, 2, 3, 4, 5));
 CREATE DOMAIN T_YEAR AS INTEGER CHECK (VALUE BETWEEN 1000 AND 9999 );
 CREATE DOMAIN T_EMAIL AS TEXT CHECK (VALUE LIKE '%@%.%');
 
+
+
 CREATE TABLE Role (
 	id                TEXT,
 	name              TEXT,
@@ -64,7 +66,29 @@ CREATE TABLE Teacher (
 	level TEXT      -- 职称
 ) INHERITS(Role);
 
+/*
+* 1=> 素描
+* 2=> 速写
+* 3=> 色彩
+*/
+CREATE DOMAIN T_RATING_TYPE AS INTEGER CHECK (VALUE BETWEEN 1 AND 3);
 
+-- 每个学生每个项目只能打五个分数
+CREATE DOMAIN T_RATING_NUM AS INTEGER CHECK( VALUE BETWEEN 1 AND 5);
+
+CREATE DOMAIN T_SCORE AS INTEGER CHECK( VALUE BETWEEN 0 AND 100);
+
+-- 教师打分表
+CREATE TABLE Rating (
+	student_id 	 TEXT REFERENCES Student(id),
+	rating_num   T_RATING_NUM,
+	rating_type  T_RATING_TYPE,
+	score        T_SCORE,
+	teacher_id   TEXT REFERENCES Teacher(id), 
+
+	
+	PRIMARY KEY(student_id, rating_type, rating_num)
+);
 
 COMMIT;
 

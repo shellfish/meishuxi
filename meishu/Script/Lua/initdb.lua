@@ -36,6 +36,8 @@ local role_tab = (function()
 	return resultSey
 end)();
 
+-- 开始会话
+assert(coon:execute('BEGIN;'));
 
 (function()
 	local stat = [[
@@ -49,3 +51,7 @@ end)();
 	print('UPDATE Role.password(和用户名相同)...')
 	assert(coon:execute('UPDATE Role AS orig SET password = (SELECT id FROM Role WHERE id = orig.id);'))
 end)()
+
+
+-- 提交会话
+assert(coon:execute('COMMIT;'))
