@@ -17,7 +17,7 @@ local function make_sanbox( tr_object )
 	}
 
 	local map2 = {
-		'tostring', 'tonumber','ipairs', 'pairs', 'string', 'table', 'math',
+		'tostring','ipairs', 'pairs', 'string', 'table', 'math',
 		"pcall", "error","Json", "assert",'type', 
 	}
 
@@ -37,6 +37,16 @@ local function make_sanbox( tr_object )
 
 	env.global = _G
 
+	env.require = function( lib )
+		local path = {tr.util.split(assert(lib, 'lib cannot be nil'), [[%.]])}
+		local target = _G
+		for _, v in ipairs(path) do
+			target = assert(target[v], ('cannot find lib in path:%s'):format(v))
+		end
+			
+		return target
+	end
+
 	return env	
 end
 
@@ -48,7 +58,15 @@ function LAUNCHER:run( section  )
 
 	local env = make_sanbox( self.tr_object )	
 
-	local toExec = assert( loadstring( section ) )
+	local toExec
+	if type(section) == 'string' then
+		toExec = assert( loadstring(section))
+	elseif type(section) == 'function' then
+		toExec = section
+	else 
+		error('Wrong node run type')
+	end
+
 	setfenv( toExec, env )
 
 	return toExec()

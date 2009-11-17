@@ -48,7 +48,7 @@ end
 -- @parma name the script name
 -- @return table repersent node
 function LOADER:load( name )
-	assert( name )
+	assert( name, 'loader need a node name but receive nil' )
 
 	local file_handle
 	for k, v in ipairs( self.path ) do
@@ -62,9 +62,9 @@ function LOADER:load( name )
 		local template = " local ____g = {}; setfenv( 1, setmetatable(____g, {__index = _G})) %s return ____g "
 		local src = string.format( template, file_handle:read"*all" )
 
-		local ok, func = pcall( loadstring, src )
-		if not ok then
-			error(_MODULER ..   string.format('Cannot compile node:%s.', name ))
+		local func, msg =  loadstring( src )
+		if not func then
+			error(('Compile Node:[%s] error<br /><span style="color:black;">%s</span>'):format(name, msg))
 		end
 
 		return func()
