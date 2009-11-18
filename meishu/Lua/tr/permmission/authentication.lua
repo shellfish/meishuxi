@@ -78,7 +78,7 @@ end
 function AUTH:setToken(id)
 	local index
 	repeat 
-		index = md5.sumhexa( math.random(99999999999) )
+		index = md5.sumhexa( math.random(999999999) )
 	until pcall( function()
 		self.memcached:add( index,
 			{ip = self.ip, user = id },

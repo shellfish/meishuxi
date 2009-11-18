@@ -21,11 +21,32 @@ end
 -- @return nothing, if error occurs, throw it
 function LOADER:init( config )
 
-	local path = config.NODE_LOAD_PATH
+	local separator
+
+	local os_type = config.OS_TYPE or (function() 
+		if os.getenv('OS') then
+			return 'windows'
+		else
+			return 'linux'
+		end
+	end)();
+
+	if  os_type:lower()  == 'windows' then
+		separator = [[\]]
+	elseif os_type:lower() == 'linux' then
+		separator = [[/]]
+	else
+		error(('Unknown OS Type:%s'):format(os_type))
+	end
+
+	self.separator = separator 
+
+
+	local path = assert(config.NODE_LOAD_PATH, 'config error: missing NODE_LOAD_PATH')
 	
 	local function addDirSeparator(s)
-		if s:byte(#s) ~= string.byte('/') then
-			return s .. '/'
+		if s:byte(#s) ~= string.byte(separator) then
+			return s ..separator
 		else
 			return s
 		end
@@ -49,6 +70,11 @@ end
 -- @return table repersent node
 function LOADER:load( name )
 	assert( name, 'loader need a node name but receive nil' )
+
+	-- prepare process name "format"
+	if self.separator == [[\]] then
+		name = name:gsub([[/]], [[\]])
+	end
 
 	local file_handle
 	for k, v in ipairs( self.path ) do

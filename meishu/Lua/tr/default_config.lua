@@ -17,6 +17,7 @@ module(...)
 -- <hr /><h3> Memcached related </h3>
 -- @field MEMCACHED_HOST N/A
 -- @field MEMCACHED_PORT N/A
+-- @field OS_TYPE => 'WINDOWS/Linux' DEFAULT TO Linux
 local default_options = {
 	DATABASE_SOURCE = "jwdb",
 	DATABASE_USER  = 'jwuser',
@@ -28,6 +29,9 @@ local default_options = {
 	AUTH_PASSWD_SALT = "5d41402abc4b2a76b9719d911017c592", -- 影子密码加密key
 
 	NODE_LOAD_PATH = '/home/zhousiyv/桌面/trunk/meishu/Node',
+
+	-- operating system type, for perdermance
+	OS_TYPE = 'Linux',
 }
 
 return default_options

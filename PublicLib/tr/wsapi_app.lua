@@ -82,13 +82,14 @@ function make_error_app( config, err_msg  )
 		</html>
 ]]
 	
-
 	return function( wsapi_env  )
 		local summary = "<h1 style=\"color:pink;\">Oops, An unexpected error occurs!</h1>"
 		local message = string.format( HTML_MESSAGE, summary, 
 			config.SHOW_STACK_TRACE and  transalte( err_msg )  or "Please Contact Site admin" )
 
-		io.open('/tmp/lua-logile', 'w'):write(tostring(err_msg))
+		-- #TODO log file
+		-- io.open((os.getenv('TMP') or '/tmp') .. '/lua-logile', 'w'):write(tostring(err_msg))
+
 		local response = wsapi.response.new(500, 
 			{ ['Content-type'] = 'text/html' }
 		)
