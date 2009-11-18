@@ -70,7 +70,7 @@ function TR:handle_request( request, response )
 		output = Json.Encode( self.launcher:run( node.Run ) )
 
 		response.status = 200
-		response.header = {['Content-type'] = node.Type }
+		response.header = {['Content-type'] = node.Type or 'text/plain' }
 		response:write( output )
 	else
 		response.status = 200
