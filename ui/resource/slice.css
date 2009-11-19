@@ -1,0 +1,41 @@
+.plusIcon, .plusBlockIcon {
+	background-image: url(./images/plus.gif);   /* 相对于css */
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 18px;
+	height: 18px;
+}
+
+.plusBlockIcon {
+	display: block !important;
+}
+.noteIcon {
+	background-image: url(./images/note.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 18px;
+	height: 18px;
+}
+.flatScreenIcon {
+	background-image: url(./images/flatScreen.gif);
+	background-repeat: no-repeat;
+	width: 32px;
+	height: 32px;
+}
+
+
+
+
+
+/*some stylesheet from jw.cuc(helper to make a table */
+table.form { width:92%;border:0;padding:0;margin:0 auto;text-align:left;}
+
+table.form{	border-color: #C49760;  	border-width: 1px;  	border-style: dashed dashed solid dashed; 	border-collapse: separate !important; border-spacing: 0px; border-collapse:collapse;margin-bottom:1px;}
+table.form tbody{ 	border-right:1px dashed #c49760 !important;	border-bottom:1px solid #c49760 !important; border:1px solid #fff;}
+table.form th{background:#FAF1C9;	padding:0 10px 0 20px; white-space: nowrap;height:23px;	font:normal 13px/150% "ËÎÌå";letter-spacing:1px; 	border-right:1px solid #fff;border-bottom:1px solid #fff; }
+table.form td{ background:#EEE;	padding-left:10px; line-height:23px;	height:23px;  	font-size: 13px;  font-family: "ËÎÌå"; letter-spacing: 1px; border-right:1px solid #fff; border-bottom:1px solid #fff;padding-right:5px;}
+table.form td.subtable {padding:0;border:0}
+table.form td.subtable table{width:100%;}
+table.form td span.space{margin:0 10px;}
+
+table.form th.t{ vertical-align:top;padding-top:5px;}
