@@ -6,15 +6,13 @@
 	_M.bindApp = lib.core.bindApp = function() {
 		var root = new  lib.dijit.LoginForm({
 			id:'login',
-			url:'/service/jw.ws?p=authentication&action=login',
+			url:'/service/meishuxi.ws?p=authentication&action=login&redirect=/ui',
 			postLogin:function() { alert('success') }
 		})
 
 		root.placeAt(dojo.body())	
 
-
 		root.startup()
-
 
 	}
 })()

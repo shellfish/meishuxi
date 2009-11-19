@@ -4,7 +4,7 @@ allow(all_user)
 
 -- client can get user info from here
 -- client should be an authenticated user
-Run = [[
+Run = function()
 		
 	return  	{
 		["authentication/login"] = {
@@ -26,4 +26,4 @@ Run = [[
 	}	
 
 
-]]
+end

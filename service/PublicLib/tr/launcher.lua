@@ -39,12 +39,27 @@ local function make_sanbox( tr_object )
 
 	env.require = function( lib )
 		local path = {tr.util.split(assert(lib, 'lib cannot be nil'), [[%.]])}
-		local target = _G
-		for _, v in ipairs(path) do
-			target = assert(target[v], ('cannot find lib in path:%s'):format(v))
-		end
-			
-		return target
+
+		local _, lib_from_tr = pcall(function() 
+			local target = tr_object 
+			for _, v in ipairs(path) do
+				target = assert(target[v])
+			end
+
+			return target
+		end)
+
+		if lib_from_tr then return lib_from_tr end
+
+		local _, lib_from_global = pcall(function() 
+			local target = _G
+			for _, v in ipairs(path) do
+				target = assert(target[v])
+			end
+			return target
+		end)
+
+		return assert(lib_from_global, ('cannot find lib:%s'):format(lib))
 	end
 
 	return env	

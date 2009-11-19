@@ -68,7 +68,6 @@ var bootstrap =   (function() {
 			baseUrl:baseUrl,               // 基url
 			serviceUrl:config.service_url   // 后台服务url
 		}
-
 		// dojo.require('lib.test.testNav')
 		//dojo.require('lib.test.testLoginForm')
 		//dojo.require('lib.test.testHeader')

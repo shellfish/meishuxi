@@ -4,16 +4,24 @@ AccessControl =[[
 
 Type = "text/javascript"
 
-Run = [==[
+Run = function()
 
 	local action = arg.GET.action
 
 	if action == 'login' then
 		local user, passwd  = arg.POST.user, arg.POST.passwd
 		local ok, info = lib.authentication:login(user, passwd)
+
 		
 		if ok then
-			return {ok = true, userInfo = info}
+			if arg.GET.redirect  then
+				local res = require"response"
+				res.status = 302
+				res.headers = {location =  arg.GET.redirect}
+				res:set_cookie('userInfo', Json.Encode(userInfo))
+			else
+				return {ok = true, userInfo = info}
+			end
 		else
 			return {ok = false, msg = info}
 		end
@@ -25,5 +33,5 @@ Run = [==[
 		error(('Unknown action:%s, must be login or logout!'):format(action))
 	end
 	
-	]==]
+end
 
