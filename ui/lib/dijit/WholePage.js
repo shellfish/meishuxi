@@ -17,7 +17,7 @@
 			id:"header",
 			gutters:false,
 			region:'top',
-			style:'height:100px;'
+			style:'height:2em;'
 		});
 
 
@@ -70,11 +70,15 @@
 
 
 			// logo 图片
+			/*
 			this.addChild(new dijit.layout.ContentPane({
-				region:'center',
-				content:'<img src="/img/banner.jpg"' + 
-					' style="width:100%; height:100%;">'
+					region:'center',
+					content:'<img src="/img/banner.jpg"' + 
+						' style="width:100%; height:100%;">'
 			}))
+			*/
+
+
 		}) )();
 
 		return header

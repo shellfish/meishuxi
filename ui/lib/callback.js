@@ -49,7 +49,7 @@
 		function clean_after_logout()
 		{
 			// clean cookie
-			dojo.cookie('userInfo', null)	
+			dojo.cookie('userInfo', null, {path:'/ui/'})	
 			// update ui
 			dojo.publish('ui/adjust')
 
@@ -135,7 +135,7 @@
 	{
 		dojo.subscribe('action/login_success', function(userInfo) {
 			// write persisit cookie[userInfo]	
-			dojo.cookie('userInfo', dojo.toJson(userInfo))
+			dojo.cookie('userInfo', dojo.toJson(userInfo), {path:'/ui/'})
 			dojo.publish('msg/toaster', [{
 							message:'登入成功',
 							type:'messge'

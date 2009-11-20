@@ -88,9 +88,10 @@ function LOADER:load( name )
 		local template = " local ____g = {}; setfenv( 1, setmetatable(____g, {__index = _G})) %s return ____g "
 		local src = string.format( template, file_handle:read"*all" )
 
-		local func, msg =  loadstring( src )
+		local func, msg =  loadstring( src, 'Virtual Node: ' .. name )
 		if not func then
-			error(('Compile Node:[%s] error<br /><span style="color:black;">%s</span>'):format(name, msg))
+		--	error(('Compile Node:[%s] error<br /><span style="color:black;">%s</span>'):format(name, msg))
+			error( msg )
 		end
 
 		return func()

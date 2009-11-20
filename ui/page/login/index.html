@@ -1,0 +1,238 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 transitional//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-transitional.dtd">
+<html>
+	<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    	<title>美术系评卷小组评分评估管理系统登录页面</title>
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="bookmark" href="favicon.ico" />
+		<link href="css/global.css" type=text/css rel=stylesheet>
+		<script type="text/javascript" src="/js/dojo-svn/dojo/dojo.js"></script>
+		<style type="text/css">
+			<!--
+			.style1 {
+				color: #000000;
+				font-weight: bold;
+			}
+			-->
+			a:link {text-decoration: underline;}
+			a:visited {text-decoration: underline;}
+			a:hover {text-decoration: underline;}
+			a:active {text-decoration: underline;}
+			
+		</style>
+		<script>
+			function check(){
+				var frm = document.form1;
+				if(frm.j_username.value==""){
+					alert("用户名不能为空!");
+					document.form1.j_username.focus();
+					return false;
+				}else if(frm.j_password.value==""){
+				    alert("登录密码不能为空!");
+				    frm.j_password.focus();
+				    return false;
+				}else {
+					return true;
+				}
+			}
+		</script>
+
+		<script type="text/javascript">
+			dojo.require('dojo.cookie');
+
+
+			function submit_form()
+			{
+				dojo.xhrPost({
+					url:'/service/meishuxi.ws?p=authentication&action=login',
+					form:dojo.byId('login_form'),
+					handleAs:'json',
+					load:function(response) {
+						if (response.ok === true) {
+							dojo.cookie('userInfo', dojo.toJson(response.userInfo), {path:'/ui/'})
+							dojo.global.location = '/ui/release'
+						}else {
+							alert('登录失败:' + response.msg)
+						}
+					},
+					error:function() {
+						alert('远程服务器无响应')
+					}
+				})
+
+				return false
+			}
+			
+		</script>
+	</head>
+	<body bgcolor=#ffffff leftmargin=0 topmargin=0 rightmargin=0 marginheight="0" marginwidth="0" onload="javascript:document.form1.j_username.focus();">
+		<center>
+			<div style="width: 100%; background-color: #ffffff">
+				<img height=3 src="images/spacer.gif" width=1>
+				<br>
+				<table cellspacing=0 cellpadding=0 width="100%" border=0>
+					<tbody>
+						<tr>
+							<td valign=top align="center">
+								<table id=mouseovers cellspacing=0 cellpadding=0 width="776"
+									border=0>
+									<tbody>
+										<tr>
+											<td valign=top nowrap align=center height=60></td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#ffffff" colspan=4 height=3>
+								<img height=10 src="images/spacer.gif" width=1>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id=content>
+				<div class=module_darkgray>
+					<div class=bottomedge_darkgray>
+						<div class=topleft_darkgray></div>
+						<div class=topright_darkgray></div>
+						<div class=moduleborder>
+							<div class=module_inset_darkgray>
+								<div class=bottomedge_inset_darkgray>
+									<div class=topleft_inset_darkgray></div>
+									<div class=topright_inset_darkgray></div>
+									<div style="left: 735px; padding-top: 5px; position: absolute">
+										<img height=20 src="images/white_lock.gif" width=14 border=0>
+									</div>
+									<div style="padding-left: 35px; padding-bottom: 20px; padding-top: 40px; align: left; font-size: 20;font-family: '幼圆'"><img src="images/xietong.gif">美术系评卷小组评分评估管理系统登录页</div>
+									<div style="padding-right: 15px; padding-left: 35px">
+										<table cellspacing=0 cellpadding=0 width=689 border=0>
+											<tbody>
+												<tr>
+													<td style="padding-right: 20px" width=318>
+														<table cellspacing=0 cellpadding=0 border=0>
+															<tbody>
+																<tr>
+																	<td style="margin-bottom: 10px" valign=top>
+																		<strong>用户登录</strong>
+																	</td>
+																</tr>
+																<tr>
+																	<td class=content_gray_bold>请输入您的用户名和密码登录系统。</td>
+																</tr>
+															</tbody>
+														</table>
+														<!-- begin form -->
+														<form method="post" action="#" name="form1" id="login_form" onsubmit="return check() && submit_form() ">
+															<table cellspacing=0 cellpadding=0 width=318 border=0>
+																<tbody>
+																	<tr>
+																		<td height=15>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td align=left>
+																			<span class=content_black_bold>用户名</span>
+																			<br>
+																			<font class=form>
+																			<input class=form  size="25" name="user" id="j_username"></font>
+																			
+																		</td>
+																	</tr>
+																	<tr>
+																		<td height=8>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td align=left>
+																			<span class=content_black_bold>密码</span>
+																			<br>
+																			<font class=form>
+																			<input class=form type="password" name="passwd" id="j_password" size="25">
+																			</font>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td height=10>
+																			<img height=10 alt="" src="images/spacer.gif" width=1 border=0 />
+																		</td>
+																	</tr>
+																	<tr>  
+															            <td colspan="2"><input type="checkbox" name="_spring_security_remember_me">保存密码 
+															            &nbsp;&nbsp;
+															            </td>  
+															        </tr> 
+																	<tr>
+																		<td colspan="2" nowrap align=right>
+																			<span style="padding-right: 20px;"><input type="submit" value="登  录"/></span>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</form>
+													</td>
+													<!-- end form -->
+													<td valign=top>
+														<table cellspacing=0 cellpadding=0 border=0>
+															<tbody>
+																<tr>
+																	<td style="background-color: #e3e3e3" width=2
+																		height=200></td>
+																</tr>
+															</tbody>
+														</table>
+													</td>
+													<td style="padding-left: 30px" valign=top width=318>
+														<!-- message 2 -->
+														<table cellspacing=0 cellpadding=0 border=0>
+															<tbody>
+																<tr>
+																	<td class=content_gray valign=top>
+																		<embed width="330" height="152" src="images/banner.swf" menu="false" />
+																		<br/>
+																		为了给予美术系历年来的评卷工作更加公平、公正、合理
+																		<br />
+																		的评估.
+																		<br />
+																		<br />
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<table cellspacing=0 cellpadding=0 width=776 align=center border=0>
+					<tbody>
+						<tr>
+							<td valign=top align="center" width=776><img src="images/spider.gif" style="margin-bottom:-5px;">07信管冰点小组出品&nbsp; &nbsp;<img src="images/logo.gif" style="margin-bottom:-5px;"><a href="http://cctedu.cuc.edu.cn/">中国传媒大学影视艺术学院美术系版权所有&nbsp;&nbsp;</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- end content_gray -->
+			<table cellspacing=0 cellpadding=0 width="100%" border=0>
+				<tbody>
+					<tr>
+						<td align="center">
+							<font class=disclaimer face="geneva, verdana, arial, helvetica"
+								color=#999999 size=1>©&nbsp;copyright 2008-2009  </font>
+							<br>
+							<br>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</center>
+	</body>
+</html>

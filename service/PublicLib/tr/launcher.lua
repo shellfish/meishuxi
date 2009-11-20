@@ -111,7 +111,7 @@ function LAUNCHER:run( section  )
 
 	local toExec
 	if type(section) == 'string' then
-		toExec = assert( loadstring(section))
+		toExec = assert( loadstring(section), 'A Virtual Node trunk')
 	elseif type(section) == 'function' then
 		toExec = section
 	else 
