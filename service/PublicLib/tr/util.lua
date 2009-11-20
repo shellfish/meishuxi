@@ -149,3 +149,18 @@ value = function (v, outf, ind, pre)
 		outf (format ("%q", tostring(v)))
 	end
 end
+
+-- very bad implement, not use it!
+function mixin(...)
+	local out = {}
+	
+	local mixin_tabs = {...}
+
+	for _, v in ipairs(mixin_tabs) do
+		for key, value in pairs(v) do
+			out[key] = value
+		end
+	end
+
+	return out
+end

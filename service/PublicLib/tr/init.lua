@@ -5,6 +5,7 @@ module(..., package.seeall)
 
 TR = {}
 
+
 --- merge config
 -- @parma bootstrap_config
 -- @return A instance of prototype TR
@@ -33,6 +34,14 @@ function TR:load_libs( request, response )
 	self.request = request
 	self.response = response
 	self.wsapi_env = request.wsapi_env
+
+
+	-- now execute the user custom initialize function in self
+	local custom_init = self.config.CUSTOM_INIT_FUNCTION
+	if custom_init then
+		setfenv(custom_init, setmetatable(self, {__index = _G}) )
+		custom_init(self.config)
+	end
 
 	-- initialize base utility
 	self.database = tr.store.database.new( self.config )

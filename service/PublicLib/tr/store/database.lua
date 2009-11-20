@@ -7,32 +7,56 @@
 
 module(..., package.seeall)
 
-local ENV  = nil
-local COON = nil
-local CONFIG = nil
 
-local function make_coon(  )
-	if not ENV then
-		local driver = CONFIG.DATABASE_DRIVER
-		require ("luasql." .. driver)
-		ENV = luasql[driver]()
-	end
+local function make_coon( config )
 
-	if not COON then
-		COON = assert(ENV:connect(
-			CONFIG.DATABASE_SOURCE,
-			CONFIG.DATABASE_USER,
-			CONFIG.DATABASE_PASSWD,
-			CONFIG.DATABASE_HOST,
-			CONFIG.DATABASE_PORT
-		))
+	-- the meta method
+	local  coon_meta_method = (function()
+		local persist_luasql_env = nil
+		local persist_coon = nil
 
-		if CONFIG.DATABASE_INITSTAT then
-			assert( COON:execute(CONFIG.DATABASE_INITSTAT) )
+		function get_coon()
+			if not persist_luasql_env then
+				local driver_name = config.DATABASE_DRIVER
+				local luasql = require('luasql.' .. driver_name)
+				persist_luasql_env = luasql[driver_name]()
+			end
+
+			if not persist_coon then
+				persist_coon = assert(persist_luasql_env:connect(
+					config.DATABASE_SOURCE,
+					config.DATABASE_USER,
+					config.DATABASE_PASSWD,
+					config.DATABASE_HOST,
+					config.DATABASE_PORT
+				))
+			end
+
+			if config.DATABASE_INITSTAT then
+				assert( persist_coon:execute(config.DATABASE_INITSTAT) )
+			end
+
+			return persist_coon	
 		end
-	end
 
-	return COON
+
+		-- the real metamethod
+		return function(tab, key)
+			-- 从一个包装过的数据库连接中返回方法
+			-- self是没用的 
+			local real_coon = get_coon()
+			local real_method = assert(real_coon[key], 'database coon dosn\'t has method:' .. key)
+
+			return function(  ... )
+				-- call real method
+				-- drop the first argument for compatiable the : syntax
+				return real_method(real_coon, select(2, ...))
+			end
+		end
+
+	end)();
+
+	return setmetatable({}, {__index = coon_meta_method})
 end
 
 --------------------------------------------------------------------------
@@ -41,6 +65,5 @@ end
 -- @return the luasql connect object 
 --------------------------------------------------------------------------
 function new( config )
-	CONFIG = config
-	return make_coon()
+	return make_coon( config )
 end

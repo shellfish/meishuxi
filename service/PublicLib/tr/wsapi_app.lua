@@ -53,7 +53,6 @@ function make_error_app( config, err_msg  )
 	
 	local function transalte( src )
 
-
 		local a, b = src:find":%d+:"
 		local c, d = src:find( "stack traceback:", b + 1)
 		local part1 = string.sub(src, 1, a - 1)
