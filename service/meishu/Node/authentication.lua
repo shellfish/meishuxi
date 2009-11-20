@@ -27,7 +27,7 @@ Run = function()
 		end
 
 	elseif action == 'logout' then
-		local ok, msg = pcall(function() lib.authentication:logout() end)
+		local ok, msg = pcall(function() tr.authentication:logout() end)
 		return {ok = ok, msg = msg}
 	else
 		error(('Unknown action:%s, must be login or logout!'):format(action))

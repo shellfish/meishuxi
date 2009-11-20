@@ -79,19 +79,24 @@ var bootstrap =   (function() {
 		lib.core.bindApp() 
 	}
 
+	var rotated_time = 0
+
 	var flag = setInterval(function() {
-		if ( typeof(dojo) !== 'undefined') {
-			load_app()
-			clearInterval(flag)
+		try {
+			if ( typeof(dojo) !== 'undefined') {
+				load_app()
+				clearInterval(flag)
+			}
+		} finally {
+			console.log('rotate once, now:' + ++rotated_time)
 		}
-	}, 20)
+	}, 5)
 })
 
 // is IE
 if (navigator.userAgent.indexOf("MSIE")>0) {
 	window.onload = bootstrap
 }else {
-	console.log('browser is not IE>>>')
 	bootstrap()
 }
 

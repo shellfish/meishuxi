@@ -13,12 +13,12 @@ local function make_sanbox( tr_object )
 	local env = {}
 	local lib = {}
 	local map1 = {
-		"database", "memcached", 'authentication', "authorization", "config",
+		"database", 'authentication', "authorization", "config",
 	}
 
 	local map2 = {
-		'tostring','ipairs', 'pairs', 'string', 'table', 'math',
-		"pcall", "error","Json", "assert",'type', 
+		'tostring','ipairs', 'pairs', 'string', 'table',
+		"pcall", "error", "assert",'type', 
 	}
 
 	for _, v in ipairs( map1 ) do
@@ -35,35 +35,71 @@ local function make_sanbox( tr_object )
 	}
 	env.lib = lib
 
-	env.global = _G
+	env.require = function( libname, load_type )
 
-	env.require = function( lib )
-		local path = {tr.util.split(assert(lib, 'lib cannot be nil'), [[%.]])}
+		-- all three loaders
+		local loader = {}
+		function loader.from_libtr(path) 
 
-		local _, lib_from_tr = pcall(function() 
-			local target = tr_object 
-			for _, v in ipairs(path) do
-				target = assert(target[v])
+			local ok, lib_from_tr = pcall(function() 
+				local target = tr_object 
+				for _, v in ipairs(path) do
+					target = assert(target[v])
+				end
+
+				return target
+			end)
+
+			if ok and lib_from_tr then return lib_from_tr end
+		end
+
+		-- return lib from _G(global space)
+		function loader.from_global(path)
+			local ok, lib_from_global = pcall(function() 
+				local target = _G
+				
+				for _, v in ipairs(path) do
+					target = assert(target[v])
+				end
+				return target
+			end)
+			if ok and lib_from_global then return lib_from_global end
+		end
+
+		-- require external lib
+		function loader.from_luapath( libname )
+			local ok, lib =  pcall(function() return require(libname) end)
+			return ok and lib or nil
+		end
+
+
+		function gen_err() return 'loader fail to load lib:' .. libname end
+		function gen_path(lib) return { tr.util.split(lib, '%.') } end
+
+		-- do general load
+		if not load_type then
+
+			return loader.from_libtr(gen_path(libname)) or 
+				loader.from_global(gen_path(libname)) or
+				assert(loader.from_luapath(libname), gen_err())
+		-- do a custom load
+		else
+			if load_type == 'tr' then
+				return assert( loader.from_libtr(gen_path(libname)), get_err() )	
+			elseif load_type == 'global' then
+				return assert( loader.from_global(gen_path(libname)), gen_err())	
+			elseif load_type == 'external' then
+				return assert( loader.from_luapath(libname), gen_err() )
+			else
+				error("Invalid usage: wrong arg:" .. load_type)
 			end
+		end
 
-			return target
-		end)
-
-		if lib_from_tr then return lib_from_tr end
-
-		local _, lib_from_global = pcall(function() 
-			local target = _G
-			for _, v in ipairs(path) do
-				target = assert(target[v])
-			end
-			return target
-		end)
-
-		return assert(lib_from_global, ('cannot find lib:%s'):format(lib))
-	end
+	end -- end of env.require
 
 	return env	
 end
+
 
 
 --- run node section and return the result table

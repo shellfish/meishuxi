@@ -1,8 +1,6 @@
 ----------------------------------------------------------------------------
 -- @release Main module  [AT] Mon Oct  5 23:19:47 CST 2009
 ----------------------------------------------------------------------------
-require "Json"
-
 module(..., package.seeall)
 
 TR = {}
@@ -26,6 +24,7 @@ function TR:load_libs( request, response )
 
 	require "Json"
 
+	require "tr.util"
 	require "tr.store"
 	require "tr.permmission"
 	require "tr.launcher"

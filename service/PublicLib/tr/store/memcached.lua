@@ -3,7 +3,6 @@
 -- Interface for Lua Memcached module
 --------------------------------------------------------------------------
 require "Memcached"
-require "tr.util"
 
 module(..., package.seeall)
 
