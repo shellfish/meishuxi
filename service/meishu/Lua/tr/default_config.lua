@@ -28,7 +28,7 @@ local default_options = {
 	AUTH_TOKEN_NAME = 'userHash',
 	AUTH_PASSWD_SALT = "5d41402abc4b2a76b9719d911017c592", -- 影子密码加密key
 
-	NODE_LOAD_PATH = '/home/zhousiyv/桌面/trunk/meishu/Node',
+	NODE_LOAD_PATH = '/home/zhousiyv/桌面/trunk/service/meishu/Node',
 
 	-- operating system type, for perdermance
 	OS_TYPE = 'Linux',

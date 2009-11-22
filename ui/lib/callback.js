@@ -3,6 +3,10 @@
 	dojo.require('lib.dijit.TabPane')
 	dojo.require('lib.dijit.DataTable')
 	dojo.require('dijit.Dialog')
+	dojo.require('dojox.grid.DataGrid')
+	dojo.require("dojo.data.ItemFileReadStore");
+
+
 	
 	// 所有的回调链
 	var callback_chain = _M.callback_chain =  {}
@@ -151,34 +155,33 @@
 	* */
 	callback_chain.newtab = function()
 	{
+		
+
 		// 查看用户信息
 		dojo.subscribe('newtab/information', function() {
+			// the model
+				var s = {'cells':[[
+					{name:'属性', field:'attribute', width:'10em'},
+					{name:'值', field:'value', width:'10em'}
+				]]}
 
 			var id = dojo.fromJson(dojo.cookie('userInfo')).id
-			dojo.xhrGet({
-				url:lib.util.getApi('information/see').url,
-				content:{id:id},
-				handleAs:'json',
-				load:function(response) {
-					var workspace = dijit.byId('workspace')
-					var pane = new lib.dijit.TabPane({
-						title:"用户信息"
-					})
-					
-					var tab = new lib.dijit.DataTable({
-						dataSource:response,
-						rowSize:2
-					})
-					pane.attr('content', tab)
 
-					workspace.addPane(pane)		
-				},
-				error:function() {
-					alert('载入用户信息失败')
-				}
+			var store =  new  dojo.data.ItemFileReadStore({
+				url:lib.util.getApi('information/see').url + '&id=' + id
 			})
-				
 		
+			var grid =  new dojox.grid.DataGrid({
+				selectable: true,    // make it can copy
+				autoWidth:true,
+				store:store,
+				structure:s
+			})
+
+			var pane = new lib.dijit.TabPane({title:"查看信息"})
+			pane.setContent(grid)
+			dijit.byId('workspace').addPane(pane)
+
 		})
 	
 

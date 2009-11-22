@@ -66,6 +66,14 @@ CREATE TABLE Teacher (
 	level TEXT      -- 职称
 ) INHERITS(Role);
 
+CREATE TABLE Admin (
+	_user_type CHAR(1) DEFAULT 'a',
+	
+	id               TEXT PRIMARY KEY,
+	level TEXT
+
+) INHERITS(Role);
+
 /*
 * 1=> 素描
 * 2=> 速写

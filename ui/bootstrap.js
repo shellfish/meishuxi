@@ -41,6 +41,8 @@ var bootstrap =   (function() {
 
 	// load source like dojo and its theme
 	loadCss(config.dojoroot + '/dojo/resources/dojo.css')
+	loadCss(config.dojoroot + '/dojox/grid/resources/' + config.dijittheme + 
+		'Grid.css')
 	loadCss(config.dojoroot + '/dijit/themes/' + config.dijittheme + '/' + config.dijittheme + '.css')
 	
 	// dojox - toaster
@@ -68,6 +70,7 @@ var bootstrap =   (function() {
 			baseUrl:baseUrl,               // 基url
 			serviceUrl:config.service_url   // 后台服务url
 		}
+
 		// dojo.require('lib.test.testNav')
 		//dojo.require('lib.test.testLoginForm')
 		//dojo.require('lib.test.testHeader')
@@ -76,6 +79,7 @@ var bootstrap =   (function() {
 		//dojo.require('lib.test.testFileUpload')
 		//dojo.require('lib.test.testAjax')
 		//dojo.require('lib.test.testAlterPassword')
+		//dojo.require('lib.test.testGrid')
 		lib.core.bindApp() 
 	}
 
@@ -88,7 +92,7 @@ var bootstrap =   (function() {
 				clearInterval(flag)
 			}
 		} finally {
-			console.log('rotate once, now:' + ++rotated_time)
+			//console.log('rotate once, now:' + ++rotated_time)
 		}
 	}, 5)
 })

@@ -16,11 +16,11 @@ Run = function()
 			['summary'] = '不需要参数，返回结果'
 		},
 		['information/see'] = {
-			['url'] = 'p=information&action=see',
+			['url'] = 'p=info&action=see',
 			['summary'] = '提供参数id'
 		},
 		["information/alterpassword"] = {
-			['url'] = 'p=information&action=alterpassword',
+			['url'] = 'p=info&action=alterpassword',
 			['summary'] = '提供原始密码和修改密码，original_passorwd|password'
 		},
 	}	

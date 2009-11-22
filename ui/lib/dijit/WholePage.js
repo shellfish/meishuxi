@@ -17,7 +17,7 @@
 			id:"header",
 			gutters:false,
 			region:'top',
-			style:'height:2em;'
+			style:'height:200px;' //1.4em;'
 		});
 
 
@@ -51,7 +51,7 @@
 
 			// 添加工具栏提示
 			var prompt = new dijit.layout.ContentPane({
-				style:'float:left; font-size:1.3em; color:#29189C; padding:0 20px;',
+				style:'margin:0.1em; float:left; font-size:1em; color:#29189C; padding:0 20px;',
 				setPrompt:function( arg ) {
 					if ( dojo.isString( arg ) ) {
 						this.attr( 'content', arg )
@@ -70,13 +70,14 @@
 
 
 			// logo 图片
-			/*
+			
 			this.addChild(new dijit.layout.ContentPane({
 					region:'center',
-					content:'<img src="/img/banner.jpg"' + 
-						' style="width:100%; height:100%;">'
+					content:lib.util.format('<img src="%s"' + 
+					' style="width:100%; height:100%;">', 
+					lib.util.getResource('images/mainbanner3.jpg'))
 			}))
-			*/
+			
 
 
 		}) )();
@@ -111,7 +112,7 @@
 
 	dojo.declare('lib.dijit.Root', dijit.layout.BorderContainer, {
 		style:'width:100%; height:100%;',         // 充满屏幕
-		gutters:true,
+		gutters:false,
 		startup_has_finished:false,               // 是否完成布局
 		startup:function() {
 			this.inherited(arguments)
@@ -136,7 +137,7 @@
 				})
 
 				var statusbar = new dijit.layout.ContentPane({
-						style:"background:#BFD7F1; height:1em; text-align:center;",
+						style:"background:#BFD7F1; height:1.2em; text-align:center;",
 						region:"bottom",
 						content:"©Copyright 2009 <a href='http://mms.cuc.edu.cn'>mms.cuc.edu.cn</a> All Rights Reserved"
 					})
