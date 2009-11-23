@@ -8,7 +8,7 @@ var bootstrap =   (function() {
 
 	/****************** our configuration **********************************/
 	var config = {
-		dojoroot : '/js/dojo-svn',
+		dojoroot : '/js/dojo-1.4.0b2',
 		dijittheme : 'soria', 
 		// tundra(冻土) soria(蓝色) a11y(辅助) nihilo(绿色)
 		service_url : '/service/meishuxi.ws'
@@ -91,8 +91,7 @@ var bootstrap =   (function() {
 				load_app()
 				clearInterval(flag)
 			}
-		} finally {
-			//console.log('rotate once, now:' + ++rotated_time)
+		} catch(e) {
 		}
 	}, 5)
 })

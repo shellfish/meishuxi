@@ -17,7 +17,7 @@
 			id:"header",
 			gutters:false,
 			region:'top',
-			style:'height:200px;' //1.4em;'
+			style:'height:120px;' //1.4em;'
 		});
 
 
@@ -101,8 +101,6 @@
 				title:item.label,
 				actionList:item.items
 			})
-			var image_path = lib.util.getResource('/images/sidebar.jpg')
-			dojo.style(pane.domNode, 'background', 'url(' + image_path + ')')
 			root.addChild( pane )
 		})
 

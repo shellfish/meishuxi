@@ -58,24 +58,35 @@
 		actionList:[{name:"doAction", signal:'signal1'}],
 		style:'background:silver;',
 		postCreate:function() {
-				
+		
+			//this.addClass('custom navgator')
+			dojo.addClass( this.domNode, 'customNavigator')
+
 			// use this.actionList to init this pane
 			var menu = new dijit.Menu({
-				style:' width:100%; background:#AAD2B0; '
+				style:'width:100%; background:inherit;'
 			})
 
 			dojo.forEach(this.actionList, function( item ) {
 				menu.addChild(new dijit.MenuItem({
 					label: item.name,
 					iconClass:'plusIcon',
-					style:'font-size:1.4em; height:1.4em;',
-					onClick:function() { dojo.publish( item.signal ) }
+					//style:'font-size:1.4em; height:1.4em;',
+					class:'customNavigatorMenuItemNormal',
+					onClick:function() { dojo.publish( item.signal ) },
+					onMouseOver:function() {
+						dojo.addClass(this.domNode, 
+							'customNavigatorMenuItemMouseOver')
+					},
+					onMouseOut:function() {
+						dojo.removeClass(this.domNode, 
+							'customNavigatorMenuItemMouseOver')
+					}
 				}))
 			})
 			
 			this.containerNode.appendChild( menu.domNode )
 		}
-
 	})
 
 })()
