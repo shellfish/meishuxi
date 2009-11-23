@@ -71,8 +71,8 @@
 				menu.addChild(new dijit.MenuItem({
 					label: item.name,
 					iconClass:'plusIcon',
+					postCreate:function() { 	dojo.addClass(this.domNode, 'customNavigatorMenuItemNormal') },
 					//style:'font-size:1.4em; height:1.4em;',
-					class:'customNavigatorMenuItemNormal',
 					onClick:function() { dojo.publish( item.signal ) },
 					onMouseOver:function() {
 						dojo.addClass(this.domNode, 

@@ -1,7 +1,6 @@
 (function(_M) {
 	_M = dojo.provide('lib.core')
 	dojo.require('lib.callback')
-
 	dojo.require('lib.shadow')
 	dojo.require('lib.util')
 	dojo.require('dojo.cookie')

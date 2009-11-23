@@ -1,6 +1,6 @@
 // dojo config
 var djConfig = {
-	//isDebug:true
+	isDebug:true
 };
 
 
@@ -8,7 +8,7 @@ var bootstrap =   (function() {
 
 	/****************** our configuration **********************************/
 	var config = {
-		dojoroot : '/js/dojo-1.4.0b2',
+		dojoroot : '/js/dojo-1.3.2',
 		dijittheme : 'soria', 
 		// tundra(冻土) soria(蓝色) a11y(辅助) nihilo(绿色)
 		service_url : '/service/meishuxi.ws'
@@ -64,12 +64,14 @@ var bootstrap =   (function() {
 
 		dojo.registerModulePath('lib', baseUrl + 'lib/')	
 
+
 		dojo.require('lib.core')
 		// 加入一些环境变量
 		lib.core.env = {
 			baseUrl:baseUrl,               // 基url
 			serviceUrl:config.service_url   // 后台服务url
 		}
+
 
 		// dojo.require('lib.test.testNav')
 		//dojo.require('lib.test.testLoginForm')
@@ -85,6 +87,7 @@ var bootstrap =   (function() {
 
 	var rotated_time = 0
 
+
 	var flag = setInterval(function() {
 		try {
 			if ( typeof(dojo) !== 'undefined') {
@@ -95,6 +98,7 @@ var bootstrap =   (function() {
 		}
 	}, 5)
 })
+
 
 // is IE
 if (navigator.userAgent.indexOf("MSIE")>0) {

@@ -156,7 +156,6 @@
 	callback_chain.newtab = function()
 	{
 		
-
 		// 查看用户信息
 		dojo.subscribe('newtab/information', function() {
 			// the model
@@ -183,7 +182,6 @@
 			dijit.byId('workspace').addPane(pane)
 
 		})
-	
 
 	// 修改用户密码
 		dojo.subscribe('newtab/alterpassword', function() {
