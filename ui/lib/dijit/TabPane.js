@@ -19,9 +19,9 @@
 		},
 		postCreate:function() {
 
-			var img_path =	 lib.util.getResource( '/images/background.jpg' )
+			//var img_path =	 lib.util.getResource( '/images/background.jpg' )
 			// change its background
-			dojo.style( this.domNode, { 'background': 'url(' + img_path + ')' })
+			//dojo.style( this.domNode, { 'background': 'url(' + img_path + ')' })
 		}
 	})
 

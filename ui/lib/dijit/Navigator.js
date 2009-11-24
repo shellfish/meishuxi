@@ -43,7 +43,7 @@
 		},
 
 		show:function() {
-			dojo.style( this.domNode, 'display', 'block')
+			dojo.style( this.domNode, 'display', 'inline')
 			this.getParent().layout()
 		},
 

@@ -93,15 +93,20 @@ end
 --- check id with passwd, is correct match, then login
 -- @return boolean value points if is loged now
 function AUTH:login( id, passwd )
-	local _check = method[self.method]
-	local ok, msg = _check( id, passwd )
+	local ok, msg = self:check(id, passwd)
 	if ok then
 		self:setToken(id)
 		USER = id
-		return true, msg -- msg(userInfo table)
-	else
-		return false, msg
 	end
+
+	return ok, msg
+end
+
+function AUTH:check(id, passwd)
+	local _check = method[self.method]
+	local ok, msg = _check( id, passwd )
+
+	return ok, msg
 end
 
 --- get userId if the current is loged now

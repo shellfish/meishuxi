@@ -4,7 +4,7 @@
 	dojo.require('lib.dijit.DataTable')
 	dojo.require('dijit.Dialog')
 	dojo.require('dojox.grid.DataGrid')
-	dojo.require("dojo.data.ItemFileReadStore");
+	dojo.require("dojo.data.ItemFileWriteStore");
 
 
 	
@@ -109,7 +109,7 @@
 			var userInfo = dojo.fromJson( dojo.cookie('userInfo') )
 			if ( !!userInfo ) {
 				// 提取userType
-				
+
 				userInfo.typename = ( userInfo.type == 't' ) && '教师' 
 					|| (userInfo.type == 's') && '学生' 
 					|| (userInfo.type == 'a') && '管理员' || null
@@ -161,15 +161,15 @@
 			// the model
 				var s = {'cells':[[
 					{name:'属性', field:'attribute', width:'10em'},
-					{name:'值', field:'value', width:'10em'}
+					{name:'值', field:'value', width:'10em', editable:true}
 				]]}
 
 			var id = dojo.fromJson(dojo.cookie('userInfo')).id
 
-			var store =  new  dojo.data.ItemFileReadStore({
+			var store =  new  dojo.data.ItemFileWriteStore({
 				url:lib.util.getApi('information/see').url + '&id=' + id
 			})
-		
+
 			var grid =  new dojox.grid.DataGrid({
 				selectable: true,    // make it can copy
 				autoWidth:true,
@@ -178,7 +178,7 @@
 			})
 
 			var pane = new lib.dijit.TabPane({title:"查看信息"})
-			pane.setContent(grid)
+			pane.attr('content', grid)
 			dijit.byId('workspace').addPane(pane)
 
 		})

@@ -1,6 +1,6 @@
 // dojo config
 var djConfig = {
-	isDebug:true
+//	isDebug:true
 };
 
 

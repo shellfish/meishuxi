@@ -40,9 +40,11 @@ CREATE TABLE Role (
 	email             T_EMAIL,
 	_user_type        CHAR(1) NOT NULL,
 
-	password     TEXT NOT NULL DEFAULT '54321',       -- 加密后的密码
+	password     TEXT NOT NULL DEFAULT '54321'       -- 加密后的密码
 
-	PRIMARY KEY(id)
+	-- not difference, for the table is readonly
+	-- maybe, it shoule be a view
+	--PRIMARY KEY(id) 
 );
 
 CREATE TABLE TestPlace (
@@ -70,9 +72,12 @@ CREATE TABLE Admin (
 	_user_type CHAR(1) DEFAULT 'a',
 	
 	id               TEXT PRIMARY KEY,
-	level TEXT
+	level            TEXT
 
 ) INHERITS(Role);
+
+
+
 
 /*
 * 1=> 素描
@@ -97,6 +102,35 @@ CREATE TABLE Rating (
 	
 	PRIMARY KEY(student_id, rating_type, rating_num)
 );
+
+-- 为三个子用户表创建更新规则
+CREATE FUNCTION check_role_isvalid() RETURNS trigger AS $PROC$
+BEGIN
+	if (SELECT _user_type FROM Role WHERE id = NEW.id)  IS NOT NULL then
+		raise exception 'role has exists, fail to update/insert, try another id';
+	end if;
+
+	return NEW;
+END;
+$PROC$ LANGUAGE plpgsql;
+
+CREATE FUNCTION prevent_operation() RETURNS trigger AS $PROC$
+BEGIN
+	raise exception 'operation is not allowed';
+END;
+$PROC$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_student BEFORE INSERT  ON Student
+	FOR EACH ROW EXECUTE PROCEDURE check_role_isvalid();
+
+CREATE TRIGGER check_teacher BEFORE INSERT  ON Teacher 
+	FOR EACH ROW EXECUTE PROCEDURE check_role_isvalid();
+
+CREATE TRIGGER check_admin BEFORE INSERT  ON Admin
+	FOR EACH ROW EXECUTE PROCEDURE check_role_isvalid();
+
+CREATE TRIGGER role_is_limited BEFORE INSERT OR DELETE ON Role
+	FOR EACH  STATEMENT EXECUTE PROCEDURE prevent_operation();
 
 COMMIT;
 

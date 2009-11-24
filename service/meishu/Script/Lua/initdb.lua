@@ -48,10 +48,20 @@ assert(coon:execute('BEGIN;'));
 		assert(coon:execute( stat:format(v.id, v.name, v.sex, v.politics, v.year))	)
 	end
 
-	print('UPDATE Role.password(和用户名相同)...')
-	assert(coon:execute('UPDATE Role AS orig SET password = (SELECT id FROM Role WHERE id = orig.id);'))
-end)()
 
+
+
+	assert(coon:execute([[
+		INSERT INTO Teacher(id, name, sex) VALUES('teacher', '老师甲', '1');
+	]]))
+
+	assert(coon:execute([[
+		INSERT INTO Admin(id, name, sex) VALUES('admin', '管理员乙', '1');
+	]]))
+
+	-- 更新初始密码
+	assert( coon:execute([[UPDATE Role AS orig SET password = (SELECT id FROM Role WHERE id = orig.id);]]) )
+end)()
 
 -- 提交会话
 assert(coon:execute('COMMIT;'))

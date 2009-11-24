@@ -104,7 +104,6 @@
 			root.addChild( pane )
 		})
 
-		root.startup()
 		return root
 	}
 

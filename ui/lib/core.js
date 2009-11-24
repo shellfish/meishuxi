@@ -30,7 +30,6 @@
 				//id:'root'     // 依赖此id，不要轻易修改
 			})
 			root.placeAt(dojo.body())
-
 			root.startup()
 
 			_M.init()
