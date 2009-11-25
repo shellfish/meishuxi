@@ -85,28 +85,16 @@ function AUTHORIZATION:make_basic_environment()
 	end
 
 	function ENV.type( user )
-		user = tostring( assert( user ))
+		user =  assert( user )
 
 		local cursor = assert( self.database:execute(string.format(
-		"SELECT userCategory FROM role WHERE userId = %s;", user )))
+		"SELECT _user_type FROM role WHERE userId = '%s';", user )))
 		local result = cursor:fetch({})[1]
+
+		return result
 		
-
-		local roles = {}
-		if result % 2 == 0 then  roles.student = true end
-		if result % 3 == 0 then  roles.teacher = true end
-		if result % 7 == 0 then  roles.clerk   = true end
-		if result % 11 == 0 then roles.tutor   = true end
-
-		return roles
 	end
 
-
-	function ENV.get_tutor( user )
-		self.database:execute([[SELECT ]] )
-
-		return "1234567"
-	end
 
 	-- just for debug
 	function ENV.error( msg )

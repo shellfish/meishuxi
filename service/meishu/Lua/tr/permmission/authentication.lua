@@ -14,6 +14,9 @@ local USER = nil
 local db_coon = nil
 local global_config = nil
 
+
+local password_mapper = nil     -- 对原始密码进行转换
+
 --- new a authentication object
 -- @return AUTH instance
 function new( tr_object )
@@ -39,6 +42,8 @@ function AUTH:init( tr_object )
 	self.method  = config.AUTH_METHOD or 'simple'
 	self.token   = config.AUTH_TOKEN_NAME or 'userhash'
 	self.timeout = config.AUTH_TIMEOUT or 600  -- default 10 mimute 
+
+	password_mapper = config.AUTH_PASSWORD_MAPPER or function(x) return x end
 end
 
 
@@ -66,7 +71,7 @@ method.database_simple = function(id, passwd)
 		return false, ('No this user:%s'):format( id )
 	end
 
-	if passwd == result['password'] then
+	if password_mapper( passwd, _G ) == result['password'] then
 		return true, {name = result.name, type = result._user_type, id = id} 
 	else
 		return false,  'Wrong password'

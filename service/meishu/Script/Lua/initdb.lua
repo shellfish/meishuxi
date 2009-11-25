@@ -4,9 +4,19 @@ if arg[1] == 'help' then
 end
 
 local util = require"tr.util"
+local md5 = require'md5'
 require"tr.store"
 local config = require('tr.default_config')
 local base_path = config.NODE_LOAD_PATH:match([[^(.+)/.-$]])
+local password_mapper = (function() 
+	if config.AUTH_PASSWORD_MAPPER then
+		return function(x) 
+			return config.AUTH_PASSWORD_MAPPER(x, _G)
+		end
+	else
+		return function(x) return x end
+	end
+end)();
 
 -- 建立连接
 local coon = tr.store.database.new(config);
@@ -50,17 +60,41 @@ assert(coon:execute('BEGIN;'));
 
 
 
-
+	print'new teacher'
 	assert(coon:execute([[
 		INSERT INTO Teacher(id, name, sex) VALUES('teacher', '老师甲', '1');
 	]]))
 
+	print'new admin'
 	assert(coon:execute([[
 		INSERT INTO Admin(id, name, sex) VALUES('admin', '管理员乙', '1');
 	]]))
 
+
+	print'update password'
+	local last_role_list = assert(coon:execute([[
+		SELECT id FROM Role;
+	]]))
+	local role_id = (last_role_list:fetch{})
+	local template = [[UPDATE Role SET password = '%s' WHERE id = '%s';]]
+
+	while role_id do
+		role_id = role_id[1]
+
+		-- update
+		assert(coon:execute(template:format(
+			password_mapper(role_id),
+			role_id
+		)))
+
+		-- another fetch
+		role_id = (last_role_list:fetch{})
+	end
+
+	
+
 	-- 更新初始密码
-	assert( coon:execute([[UPDATE Role AS orig SET password = (SELECT id FROM Role WHERE id = orig.id);]]) )
+--	assert( coon:execute([[UPDATE Role AS orig SET password = (SELECT id FROM Role WHERE id = orig.id);]]) )
 end)()
 
 -- 提交会话

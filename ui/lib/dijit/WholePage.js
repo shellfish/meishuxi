@@ -17,7 +17,8 @@
 			id:"header",
 			gutters:false,
 			region:'top',
-			style:'height:120px;' //1.4em;'
+			'class':'customHeader'
+		//	style:'height:120px;' //1.4em;'
 		});
 
 
@@ -73,9 +74,8 @@
 			
 			this.addChild(new dijit.layout.ContentPane({
 					region:'center',
-					content:lib.util.format('<img src="%s"' + 
-					' style="width:100%; height:100%;">', 
-					lib.util.getResource('images/mainbanner3.jpg'))
+					'class':'customLogo',
+					content:'<center style="margin-top:0.25em;">美术系招生系统</center>'
 			}))
 			
 
@@ -92,7 +92,7 @@
 			id:'navigator',
 			region:'left',
 			splitter:true,
-			style:'width:15%;'
+			style:'width:11%;'
 		})
 					
 		// 添加导航项目
@@ -134,7 +134,7 @@
 				})
 
 				var statusbar = new dijit.layout.ContentPane({
-						style:"background:#BFD7F1; height:1.2em; text-align:center;",
+						'class':'customFooter',
 						region:"bottom",
 						content:"©Copyright 2009 <a href='http://mms.cuc.edu.cn'>mms.cuc.edu.cn</a> All Rights Reserved"
 					})

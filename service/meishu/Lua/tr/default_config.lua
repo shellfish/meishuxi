@@ -27,11 +27,16 @@ local default_options = {
 	AUTH_METHOD = "database_simple",
 	AUTH_TOKEN_NAME = 'userHash',
 	AUTH_PASSWD_SALT = "5d41402abc4b2a76b9719d911017c592", -- 影子密码加密key
+	AUTH_PASSWORD_MAPPER = function(x, env)
+		return env.md5.sumhexa(x .. 'dswkf%2*<dkis<')
+	end,
 
 	NODE_LOAD_PATH = '/home/zhousiyv/桌面/trunk/service/meishu/Node',
 
 	-- operating system type, for perdermance
 	OS_TYPE = 'Linux',
+
+	
 }
 
 return default_options
