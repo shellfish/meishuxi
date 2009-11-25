@@ -9,7 +9,7 @@ var bootstrap =   (function() {
 	/****************** our configuration **********************************/
 	var config = {
 		dojoroot : '/js/dojo-1.4.0b2',
-		dijittheme : 'soria', 
+		dijittheme : 'tundra', 
 		// tundra(冻土) soria(蓝色) a11y(辅助) nihilo(绿色)
 		service_url : '/service/meishuxi.ws'
 	}
@@ -43,7 +43,7 @@ var bootstrap =   (function() {
 	loadCss(config.dojoroot + '/dojo/resources/dojo.css')
 	loadCss(config.dojoroot + '/dojox/grid/resources/' + config.dijittheme + 
 		'Grid.css')
-	loadCss(config.dojoroot + '/dijit/themes/' + config.dijittheme + '/' + config.dijittheme + '.css')
+	loadCss(config.dojoroot + '/dijit/themes/' + config.dijittheme + '/my_' + config.dijittheme + '.css')
 	
 	// dojox - toaster
 	loadCss(config.dojoroot + '/dojox/widget/Toaster/Toaster.css')
