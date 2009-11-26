@@ -1,11 +1,10 @@
 <div dojoType="dijit.layout.ContentPane">
-	<div dojoType="dijit.form.Form">
+	<div dojoType="dijit.form.Form" id="${id}:real_form">
 	<div dojoType="dijit.form.TextBox" selectOnClick="true"  name="user"></div>
 	<label>用户名</label><br />
 	<div dojoType="dijit.form.TextBox" type="password" name="passwd"></div>
 	<label>密码</label><br />
-	<div dojoType="dijit.form.Button" id="${id}:connect" name="connect"
-		label="登入"></div>
+	<div dojoType="dijit.form.Button" type="submit" label="登入"></div>
 	<div dojoType="dijit.form.Button" label="重设" type="reset"></div>
 	<span id="${id}:prompt" name="prompt"></span>
 </div>

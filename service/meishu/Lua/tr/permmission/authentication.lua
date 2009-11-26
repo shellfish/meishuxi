@@ -43,10 +43,16 @@ function AUTH:init( tr_object )
 	self.token   = config.AUTH_TOKEN_NAME or 'userhash'
 	self.timeout = config.AUTH_TIMEOUT or 600  -- default 10 mimute 
 
-	password_mapper = config.AUTH_PASSWORD_MAPPER or function(x) return x end
+	local original_mapper = config.AUTH_PASSWORD_MAPPER
+	if original_mapper then
+		password_mapper = (function() return 
+			function(x) return config.AUTH_PASSWORD_MAPPER(x, _G) end  
+		end)(); 
+	else
+		password_mapper =	(function(x) return x  end)
+	end
+	self.password_mapper = function(self, x) return password_mapper(x) end 
 end
-
-
 
 local method = {}
 
@@ -71,7 +77,7 @@ method.database_simple = function(id, passwd)
 		return false, ('No this user:%s'):format( id )
 	end
 
-	if password_mapper( passwd, _G ) == result['password'] then
+	if password_mapper( passwd ) == result['password'] then
 		return true, {name = result.name, type = result._user_type, id = id} 
 	else
 		return false,  'Wrong password'

@@ -2,7 +2,7 @@ Run =  function()   --------------------------------------------------------
 	local tonumber = require"tonumber"
 
 	-- generate default action
-	if not arg.GET.action then arg.GET.actiion = 'see' end
+	if not arg.GET.action then arg.GET.action = 'see' end
 
 	---
 	--
@@ -71,20 +71,33 @@ Run =  function()   --------------------------------------------------------
 	-- get two field(POST): original_password  | password
 	--
 	elseif arg.GET.action == 'alterpassword' then
-		local original = arg.POST.original_password or ''
-		local password = arg.POST.password or ''
-	
 
-		-- get original password from database
+		-- 用户提供的原密码
+		local original = arg.POST.original_password or ''
+
+		-- 用户修改成功后的密码
+		local password = arg.POST.password or ''
+
+		-- 明文和密文转换
+		local mapper  = function(a)  return lib.authentication:password_mapper(a) end
+
+		-- 用户id
+		local user = lib.authentication:user()
+
+		--  从数据库中获取真实密码real_password
 		local cursor = lib.database:execute((
-			[[SELECT password FROM Role WHERE id = '%s';]]):format(lib.authentication:user()))
-		
-		if not ((cursor:fetch{})[1] == original) then
+			[[SELECT password FROM Role WHERE id = '%s';]]):format(user))
+		local  real_password = (cursor:fetch{})[1]
+
+		-- 验证原密码正确性
+		if not (mapper(original) == real_password) then
 			return { ok = false, msg = "Original password not match", '提供:%s' }
 		else
-			-- do change
-			local ok, msg = (lib.database:execute((([[ UPDATE Role SET password = '%s' WHERE id = '%s']]):format(
-				password, lib.authentication:user()))))
+			-- 修改密码
+			local ok, msg = lib.database:execute(
+				([[ UPDATE Role SET password = '%s' WHERE id = '%s']]):format(
+				mapper( password ) , user )
+			)
 			return { ok = ok and true or false, msg = msg }
 		end
 	else

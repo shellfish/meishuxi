@@ -23,12 +23,16 @@ dojo.declare('lib.dijit.TabPane.AlterPassword',
 			return first.value === second.value
 		})
 
-		this.attr( '_form', dijit.byId(this.id + '/form') )
+		this._form = dijit.byId(this.id + '/form', this.domNode)
 
-		this.attr( '_tooltip', dijit.byId(this.id + '/msg') )
-
-		dijit.byId(this.id + '/commit').onClick = (function() {
-			self.execute()
+		var self = this
+		this._form.attr('onSubmit', function() {	
+			if (this.isValid()) {
+				self.execute()
+			}else {
+				alert('请完整填写表单')
+			}
+			return false
 		})
 	},
 	// you shoule over write thie attach point

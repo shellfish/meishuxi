@@ -27,27 +27,24 @@ dojo.declare('lib.dijit.LoginForm',
 	postCreate: function() {
 		
 		// keep a reference to our form 
-		this.form =  this.domNode.getElementsByTagName('form')[0]
+		//this.form =  this.domNode.getElementsByTagName('form')[0]
+		this.form = dijit.byId(this.id + ':real_form', this)
+
+		this.form.onSubmit = dojo.hitch(this, this.onSubmit) 
 
 		// keep a prompt and the connect button
 		this.prompt = function() { return dojo.byId(this.id + ':prompt') }
-
-		var self = this // keep outer this reference
-		// callbacks
-		dijit.byId(this.id + ':connect').onClick = function() { 
-			dojo.hitch(self, 'execute')()
-		}
 	},
 
 	// main process
-	execute: function() {
-
+	onSubmit: function() {
+		
 		var self = this
 		self.setPrompt('connectting')
 
 		dojo.xhrPost({
 			url: this.url,       // url (without arguments)
-			form:this.form,
+			form:this.form.domNode,
 			handleAs:'json',
 			load: function( response ) {
 
@@ -63,6 +60,8 @@ dojo.declare('lib.dijit.LoginForm',
 			},
 			timeout:this.timeout
 		})	
+
+		return false
 	},
 
 	// set prompt 
