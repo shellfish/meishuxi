@@ -156,6 +156,7 @@
 	callback_chain.newtab = function()
 	{
 		
+
 		// 查看用户信息
 		dojo.subscribe('newtab/information', function() {
 			// the model
@@ -166,8 +167,9 @@
 
 			var id = dojo.fromJson(dojo.cookie('userInfo')).id
 
-			var store =  new  dojo.data.ItemFileWriteStore({
-				url:lib.util.getApi('information/see').url + '&id=' + id
+			var store = new  dojo.data.ItemFileWriteStore({
+				url:lib.util.getApi('information/see').url + '&id=' + id,
+				urlPreventCache:false
 			})
 
 			var grid =  new dojox.grid.DataGrid({
@@ -182,6 +184,38 @@
 			dijit.byId('workspace').addPane(pane)
 
 		})
+
+// 查看用户信息(deprecated)
+/*
+ dojo.subscribe('newtab/information', function() {
+
+	var id = dojo.fromJson(dojo.cookie('userInfo')).id
+		dojo.xhrGet({
+		  url:'/service/meishuxi.ws?p=information&action=see',
+		  content:{id:id},
+		  handleAs:'json',
+		  load:function(response) {
+					 var workspace = dijit.byId('workspace')
+					 var pane = new lib.dijit.TabPane({
+								title:"用户信息"
+					 })
+					
+					 var tab = new lib.dijit.DataTable({
+								dataSource:response,
+								rowSize:2
+					 })
+					 pane.attr('content', tab)
+
+					 workspace.addPane(pane)        
+		  },
+		  error:function() {
+					 alert('载入用户信息失败')
+		  }
+		})
+			 
+
+}) */ 
+        
 
 	// 修改用户密码
 		dojo.subscribe('newtab/alterpassword', function() {

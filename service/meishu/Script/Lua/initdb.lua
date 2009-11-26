@@ -47,7 +47,8 @@ local role_tab = (function()
 end)();
 
 -- 开始会话
-assert(coon:execute('BEGIN;'));
+--assert(coon:execute('BEGIN;'));
+assert(coon:setautocommit(false));
 
 (function()
 	local stat = [[
@@ -98,4 +99,4 @@ assert(coon:execute('BEGIN;'));
 end)()
 
 -- 提交会话
-assert(coon:execute('COMMIT;'))
+assert(coon:commit())
