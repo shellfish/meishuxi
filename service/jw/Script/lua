@@ -1,5 +1,0 @@
-#! /bin/bash 
-
-export LUA_PATH="$LUA_PATH;/home/zhousiyv/桌面/trunk/Lua/?.lua;/home/zhousiyv/桌面/trunk/Lua/?/init.lua"
-
-lua -lluarocks.require "$*"

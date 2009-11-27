@@ -1,0 +1,41 @@
+这是美术系招生系统得git代码库
+
+## Windows 下得部署
+
+### 要在windows下开发，需要以下软件的支持
+ * PostgreSQL >= 8.4.0
+ * Memcached
+ * Web Server(需实现lua-wsapi接口| 在windows下可以直接使用Kepler项目得xavante)
+ * dojo-toolkit(now, stable version NO. reach1.3.2)
+
+### 部署代码
+ * 代码中有几处是路径依赖得，默认写得是Linux下得路径，需要改为实际路径。
+ ** ui/bootstrap.js:
+   config.service_url："service/meishuxi.ws"
+   config.dojoroot:'/js/dojo-1.4.0b2'
+ ** service/meishuxi.ws：
+    package.path = package.path  ..
+	 ';' .. root_path .. 'meishu/Lua/?.lua' ..
+	 ';' .. root_path .. 'meishu/Lua/?/init.lua' ..
+	 ";" .. root_path ..  'PublicLib/?.lua' ..
+	 ';' .. root_path .. 'PublicLib/?/init.lua'
+  ** service/meishu/Lua/tr/default_config.lua(依照数据库和mencached部署情况更改):
+     DATABASE_SOURCE   ==> (数据库名)
+     DATABASE_USER     ==> (数据库用户名)
+     DATABASE_PASSWORD ==> (optional 数据库密码)
+     
+     NODE_LOAD_PATH    ==> Node节点存放的目录路径(string|table)
+     
+	 
+  * 导入数据
+  ** 数据库脚本 service/Script/sql/tab.sql
+  ** 重建数据库数据 service/meishu/Script/lua.sh lua/initdb.lua init
+     Windows： service\meishu\Script\lua.bat lua\initdb.lua init
+     NOTE:lua.sh和lua.bat需要注意①lua得可执行文件名 
+                                       ②LUA_PATH和 meishuxi.ws中相同
+    
+   
+
+ 
+
+ 

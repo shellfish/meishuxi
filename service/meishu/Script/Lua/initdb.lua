@@ -1,13 +1,26 @@
-if arg[1] == 'help' then
-	print(('use %s init to rebuild total!'):format(arg[0]))
+#! /usr/bin/env lua
+
+if arg[1] == 'help' or arg[1] == nil then
+	print(('use %s init to rebuild totally!'):format(arg[0]))
 	return false
 end
 
+-- do some guess for our os type
+local delimiter = os.getenv('OS') and '\\' or '/'
+
+-- load guess.lua to change lua_path
+local env = dofile('..' .. delimiter .. 
+		'..' .. delimiter  ..
+		'..' .. delimiter .. 'env.lua')
+
+-- now load libraries for helper
+------------------------------------------------------------
+require"tr.store"
 local util = require"tr.util"
 local md5 = require'md5'
-require"tr.store"
 local config = require('tr.default_config')
-local base_path = config.NODE_LOAD_PATH:match([[^(.+)/.-$]])
+
+
 local password_mapper = (function() 
 	if config.AUTH_PASSWORD_MAPPER then
 		return function(x) 
@@ -21,9 +34,17 @@ end)();
 -- 建立连接
 local coon = tr.store.database.new(config);
 
+-- 开始会话
+--assert(coon:execute('BEGIN;'));
+assert(coon:setautocommit(false));
+
 if arg[1] == 'init' then
 	(function()
-		local sqlfile = base_path .. '/Script/sql/tab.sql'
+		local sqlfile = env.service_root .. 
+			env.filter_path('/meishu//Script/sql/tab.sql')
+
+		print(sqlfile)
+
 		local sql = io.open(sqlfile):read"*all"
 		print(('Rebuild database schema, read from[%s]...'):format(sqlfile))
 		assert(coon:execute(sql))
@@ -34,7 +55,7 @@ end
 local role_tab = (function()
 	local resultSey = {}
 
-	local rawfile = base_path .. '/Script/raw/role_info.txt'
+	local rawfile = env.service_root .. '/meishu/Script/raw/role_info.txt'
 	print('read raw text from:' .. rawfile .. '...')
 	for l in io.lines(rawfile) do
 		local line = {}
@@ -46,9 +67,7 @@ local role_tab = (function()
 	return resultSey
 end)();
 
--- 开始会话
---assert(coon:execute('BEGIN;'));
-assert(coon:setautocommit(false));
+
 
 (function()
 	local stat = [[
