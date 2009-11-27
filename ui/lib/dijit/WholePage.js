@@ -8,6 +8,7 @@
 	dojo.require('dijit.Toolbar')
 	dojo.require('dijit.form.Button')
 	dojo.require('dijit.layout.TabContainer')
+	dojo.require("dojox.layout.ToggleSplitter");
 
 
 	function createHeader() 
@@ -18,7 +19,6 @@
 			gutters:false,
 			region:'top',
 			'class':'customHeader'
-		//	style:'height:120px;' //1.4em;'
 		});
 
 
@@ -111,6 +111,7 @@
 		style:'width:100%; height:100%;',         // 充满屏幕
 		gutters:false,
 		startup_has_finished:false,               // 是否完成布局
+		_splitterClass:'dojox.layout.ToggleSplitter',
 		startup:function() {
 			this.inherited(arguments)
 

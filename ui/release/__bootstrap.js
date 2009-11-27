@@ -1,6 +1,6 @@
 // dojo config
 var djConfig = {
-//	isDebug:true
+	//isDebug:true
 };
 
 
@@ -9,7 +9,7 @@ var bootstrap =   (function() {
 	/****************** our configuration **********************************/
 	var config = {
 		dojoroot : '/js/dojo-1.4.0b2',
-		dijittheme : 'soria', 
+		dijittheme : 'nihilo', 
 		// tundra(冻土) soria(蓝色) a11y(辅助) nihilo(绿色)
 		service_url : '/service/meishuxi.ws'
 	}
@@ -43,20 +43,10 @@ var bootstrap =   (function() {
 	loadCss(config.dojoroot + '/dojo/resources/dojo.css')
 	loadCss(config.dojoroot + '/dojox/grid/resources/' + config.dijittheme + 
 		'Grid.css')
-	loadCss(config.dojoroot + '/dijit/themes/' + config.dijittheme + '/' + config.dijittheme + '.css')
+	loadCss(config.dojoroot + '/dijit/themes/' + config.dijittheme + '/my_' + config.dijittheme + '.css')
 	
 	// dojox - toaster
 	loadCss(config.dojoroot + '/dojox/widget/Toaster/Toaster.css')
-
-	// toggle splitter
-	loadCss(config.dojoroot + '/dojox/layout/resources/ToggleSplitter.css')
-
-	loadCss(config.dojoroot + '/dojox/form/resources/FileInput.css')
-
-
-	var baseUrl = window.location.pathname
-	baseUrl = baseUrl.replace(/^(.+)\/.*$/, '$1' + '\/')
-	loadCss(baseUrl + 'resource/slice.css')     // 相对于index.html
 
 
 
@@ -64,6 +54,13 @@ var bootstrap =   (function() {
 
 		// add theme class
 		dojo.addClass(dojo.body(), config.dijittheme)
+
+
+		// make a auto suitable baseUrl for index.html or sth
+		var baseUrl = dojo.global.location.pathname
+		baseUrl = baseUrl.replace(/^(.+)\/.*$/, '$1' + '\/')
+
+		loadCss(baseUrl + 'resource/slice.css')     // 相对于index.html
 
 		dojo.registerModulePath('lib', baseUrl + 'lib/')	
 
@@ -75,7 +72,7 @@ var bootstrap =   (function() {
 		}
 
 		// dojo.require('lib.test.testNav')
-		//	dojo.require('lib.test.testLoginForm')
+		//dojo.require('lib.test.testLoginForm')
 		//dojo.require('lib.test.testHeader')
 		//dojo.require('lib.test.testRoot')
 		//dojo.require('lib.test.testDataTable')
@@ -88,15 +85,17 @@ var bootstrap =   (function() {
 
 	var rotated_time = 0
 
-
 	var flag = setInterval(function() {
+		try {
 			if ( typeof(dojo) !== 'undefined') {
 				load_app()
 				clearInterval(flag)
 			}
-		} , 5)
+		} finally {
+			//console.log('rotate once, now:' + ++rotated_time)
+		}
+	}, 5)
 })
-
 
 // is IE
 if (navigator.userAgent.indexOf("MSIE")>0) {

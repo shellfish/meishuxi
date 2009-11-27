@@ -59,7 +59,21 @@ CREATE TABLE Student (
 	sign_year         T_YEAR,      -- 注册年
 	graduate_school   TEXT,        -- 毕业学校
 	test_place        INTEGER REFERENCES   TestPlace(place_id) -- 考点
+
 ) INHERITS (Role);
+
+
+-- 在服务层保证学生上传文件的数量和有效性
+CREATE TABLE StudentFile (
+	id               TEXT REFERENCES Student(id),
+	file_path        TEXT,
+	upload_time      TIME,
+
+	summary          TEXT,
+	description      TEXT,
+
+	PRIMARY KEY(id, file_path)
+);
 
 CREATE TABLE Teacher (
 	_user_type CHAR(1) DEFAULT 't',
@@ -103,6 +117,21 @@ CREATE TABLE Rating (
 	PRIMARY KEY(student_id, rating_type, rating_num)
 );
 
+-- 为文件上传表创建规则
+CREATE FUNCTION check_file() RETURNS trigger AS $PROC$
+BEGIN
+	if (SELECT count(*) FROM StudentFile WHERE id = NEW.id) = 5 then
+		raise exception '每个学生只能上传五个文件';
+	end if;
+
+	if NEW.upload_time IS NULL then
+		NEW.upload_time := (SELECT current_time);
+	end if;
+	
+	return NEW;
+END;
+$PROC$ LANGUAGE plpgsql;
+
 -- 为三个子用户表创建更新规则
 CREATE FUNCTION check_role_isvalid() RETURNS trigger AS $PROC$
 BEGIN
@@ -131,6 +160,9 @@ CREATE TRIGGER check_admin BEFORE INSERT  ON Admin
 
 CREATE TRIGGER role_is_limited BEFORE INSERT OR DELETE ON Role
 	FOR EACH  STATEMENT EXECUTE PROCEDURE prevent_operation();
+
+CREATE TRIGGER check_student_files BEFORE INSERT OR UPDATE ON StudentFile 
+	FOR EACH ROW EXECUTE PROCEDURE check_file();
 
 COMMIT;
 

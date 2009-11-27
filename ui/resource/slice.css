@@ -99,7 +99,7 @@ table.form th.t{ vertical-align:top;padding-top:5px;}
 
 /* header */
 .customHeader {
-	height:120px;
+	height:120px !important;
 	border-bottom:inset 5px #677A98 !important;
 }
 

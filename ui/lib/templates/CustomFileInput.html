@@ -1,0 +1,20 @@
+<div>
+	<div dojoType="dijit.form.Form" id="file_form" enctype="multipart/form-data" method="post" style="width:100px;">
+	
+		<select name="number" size="1">
+			<option value="1">一</option>
+			<option value="2">二</option>
+			<option value="3">三</option>
+			<option value="4">四</option>
+			<option value="5">五</option>
+		</select><label>序号</label>
+		<div dojoType="dijit.form.TextBox"  name="summary"></div>
+		<label>摘要</label><br /><br />
+
+	<textarea dojoType="dijit.form.SimpleTextarea" name="description" 
+		value="描述作品" rows=6 style="width:100%;">
+	</textarea>
+
+	<div id="input" dojoType="dojox.form.FileInput" type="file" name="file" url="/test.ws" label="选择文件" cancelText="取消" style="width=:100%;"></div>
+	</div>
+</div>
