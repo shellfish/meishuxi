@@ -1,26 +1,28 @@
--- make_path is helper to make relative path
 
-MORE_LUA_PATH = {
-	gen_path('src/lua/?.lua'),
-	gen_path('src/lua/?/init.lua'),
-	gen_path('src/external//lua/?/init.lua'),
+-- these information are get from preload script, don't try to change them
+LOADER.MAKE_PATH = make_path
+LOADER.PATH_FILTER = path_filter
+LOADER.SEPARATOR = delimiter
+
+
+-- begin config
+
+EXTRA.LUA_PATH= {
+	make_path'lua/?.lua',
+	make_path'lua/?/init.lua',
+	make_path'external/?.lua'
+}
+EXTRA.LUA_CPATH = {
+	make_path'external/?.so',
+	make_path'external/?.dll'
 }
 
-MORE_LUA_CPATH = {
-	gen_path('src/external/lib/?.so'),
-	gen_path('src/external/lib/?.dll'),
-}
+DATABASE.SOURCE = 'jwdb'
+DATABASE.USER = 'jwuser'
+DATABASE.DRIVER = 'postgres'
 
--- postgres db config
-PG_DATABASE = 'jwdb'
-PG_USER = 'jwuser'
-PG_PORT = nil --  '5432',
-PG_HOST = nil --  '127.0.0.1'
-
--- session config
-SESSION_MODULE = 'memcached'
+DEBUG.SHOW_STACK_TRACE = true
+DEBUG.LOG_FILE = '/tmp/log.log.lua'
 
 
--- APP DIR PATH
-APPLET_ROOT_PATH = gen_path('/src/applet')
 

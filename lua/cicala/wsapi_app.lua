@@ -7,7 +7,9 @@ require "wsapi.request"
 require "wsapi.response"
 require "coxpcall"
 
-module(..., package.seeall)
+local string, unpack, error = string, unpack, error
+
+module(...)
 
 
 local make_prefered_app
@@ -84,13 +86,13 @@ function make_error_app( config, err_msg  )
 	return function( wsapi_env  )
 		local summary = "<h1 style=\"color:pink;\">Oops, An unexpected error occurs!</h1>"
 		local message = string.format( HTML_MESSAGE, summary, 
-			config.SHOW_STACK_TRACE and  transalte( err_msg )  or "Please Contact Site admin" )
+			config.DEBUG and config.DEBUG.SHOW_STACK_TRACE and  transalte( err_msg )  or "Please Contact Site admin" )
 
 		-- if define a LOG_FILE then log the error messsage
 		if config.LOG_FILE then
 			require 'logging.file'
 			local logger = logging.file(config.LOG_FILE, 
-				config.LOG_DATE_FORMAT or "%Y-%m-%d")
+				config.DEBUG and config.DEBUG.LOG_FILE or "%Y-%m-%d")
 			logger:error(err_msg)
 		end
 
