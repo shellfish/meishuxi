@@ -12,9 +12,13 @@ EXTRA.LUA_PATH= {
 	make_path'lua/?/init.lua',
 	make_path'external/share/?.lua'
 }
+
+local external_lib = os_type == 'linux'  
+	and 'external/lib/?.so' 
+	or 'external/lib_win32/?.dll'
+
 EXTRA.LUA_CPATH = {
-	make_path'external/lib/?.so',
-	make_path'external/lib_win32/?.dll'
+	make_path(external_lib)
 }
 
 DATABASE.SOURCE = 'jwdb'
