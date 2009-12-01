@@ -13,7 +13,7 @@ function Test_Loader:test_relative_load()
 	local tab = self.instance:load('sample')
 
 	for k, v in pairs(tab) do
-		print('', '|k=' , '|' , v)
+		print(('\t|%-10s = '):format(k), v)
 	end
 end
 
@@ -23,7 +23,7 @@ function Test_Loader:test_absolute_load()
 	local tab = self.instance:load('tmp')
 
 	for k, v in pairs(tab) do
-		print('', '|k=' , '|' , v)
+		print(('\t|%-10s = %s'):format(k, v))
 	end
 end
 

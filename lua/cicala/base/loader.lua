@@ -3,7 +3,13 @@
 -- load the executive node, RETURN a func
 ---------------------------------------------------------------------------
 
-module(..., package.seeall)
+local setmetatable = setmetatable
+local assert = assert
+local loadfile = loadfile
+local setfenv = setfenv
+
+
+module(...)
 
 local _MODULER = "store.loader"
 
