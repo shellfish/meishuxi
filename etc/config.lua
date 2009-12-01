@@ -10,11 +10,11 @@ LOADER.SEPARATOR = delimiter
 EXTRA.LUA_PATH= {
 	make_path'lua/?.lua',
 	make_path'lua/?/init.lua',
-	make_path'external/?.lua'
+	make_path'external/share/?.lua'
 }
 EXTRA.LUA_CPATH = {
-	make_path'external/?.so',
-	make_path'external/?.dll'
+	make_path'external/lib/?.so',
+	make_path'external/lib_win32/?.dll'
 }
 
 DATABASE.SOURCE = 'jwdb'

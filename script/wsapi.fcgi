@@ -2,8 +2,8 @@
 
 -- 定制的fastcgi launcher
 
-package.path = package.path .. ';../external/?.lua'
-package.cpath = package.cpath .. ';../external/?.so'
+package.path = package.path .. ';../external/share/?.lua'
+package.cpath = package.cpath .. ';../external/lib/?.so'
 
 local common = require "wsapi.common"
 local fastcgi = require "wsapi.fastcgi"
