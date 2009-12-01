@@ -15,25 +15,35 @@ local _MODULER = "store.loader"
 
 local LOADER ={}
 
+-- @:string os path path_separator
+LOADER.path_separator = nil 
+
+-- @:function os specific path generator, 
+-- can receive a parameter path_name, either releative or absolue
+LOADER.make_path = nil
+
+-- the search_path(:string) of loader
+LOADER.search_path = nil
+
 --- return a new  instance of LOADER
-function new( ... )
-	local config, root_path = ...
+function new( config )
+
 	local self =  setmetatable( {}, {__index = LOADER } )
 
 	--- begin init
-	self.separator = config.SEPARATOR
-	local separator = self.separator
+	self.path_separator = config.SEPARATOR
+	local path_separator = self.path_separator
 
-	assert( separator, 'you should at lesat provide SEPARATOR' )
+	assert( path_separator, 'you should at lesat provide SEPARATOR' )
 
 	self.make_path = config.MAKE_PATH
 
 	if not config.PATH_FILTER then
-		local anti_separator =  separator == '/' and '\\' or
-			separator == '\\' and '/' or error('wrong separator format!')
+		local anti_separator =  path_separator == '/' and '\\' or
+			path_separator == '\\' and '/' or error('wrong path_separator format!')
 
 		self.path_filter = function( path_orig )
-			return path_orig:gsub(anti_separator, separator)	
+			return path_orig:gsub(anti_separator, path_separator)	
 		end
 	else
 		self.path_filter = config.PATH_FILTER
@@ -41,39 +51,40 @@ function new( ... )
 
 	-- end init
 
-	-- if provide root_path extra, so call it
-	if root_path then
-		self:set_root( root_path )
-	end
-
 	return self
 end
 
 
---- set the path root of loader
+--- set/get the path root of loader
 -- should correspond the os specific path format
 -- cicala can auto strip the tail deliiter
-function LOADER:set_root( root_path )
+function LOADER:set_search_path( new_search_path )
 
+	-- temporary store new search path
+	local search_path = new_search_path
 	-- first, detect os_type from separator
-	if self.separator == '/' then
+	if self.path_separator == '/' then
 		-- absolute path
-		if root_path:find('^/') then
-			self.root_path = root_path
+		if search_path:find('^/') then
+			search_path = search_path
 		else
-			self.root_path = self.make_path( root_path ) 
+			search_path = self.make_path( search_path ) 
 		end
 	else -- ms windows
-		if root_path:find('%a:\\') then
-			self.root_path = root_path
+		if search_path:find('%a:\\') then
+			search_path = search_path
 		else
-			self.root_path = self.make_path( root_path )
+			search_path = self.make_path( search_path )
 		end
 	end
 
 	--- 
 	-- strip tail delimiter
-	self.root_path = self.root_path:gsub( self.separator .. '$', '')
+	self.search_path = search_path:gsub( self.path_separator .. '$', '')
+end
+
+function LOADER:get_search_path()
+	return self.search_path
 end
 
 
@@ -82,9 +93,9 @@ end
 -- @return table repersent node
 function LOADER:load( name )
 	assert( name , 'loader need a node name but receive nil' )
-	assert( self.root_path, 'you must set_root before use a loader')
+	assert( self.search_path, 'you must set_search_path before use a loader')
 
-	local real_path =  self.root_path .. self.separator .. 
+	local real_path =  self.search_path .. self.path_separator .. 
 		self.path_filter( name ) .. '.lua'
 	local trunk = loadfile( real_path )
 	
@@ -96,4 +107,3 @@ function LOADER:load( name )
 	
 	return clean_env
 end
-

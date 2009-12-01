@@ -2,13 +2,19 @@
 -- @class module
 -- Interface for Lua Memcached module
 --------------------------------------------------------------------------
-
 require'cicala.util.serialize'
 
-module(..., package.seeall)
+local setmetatable = setmetatable
+local require, assert, select = require, assert, select
+local serialize,deserialize = cicala.util.serialize,cicala.util.deserialize
+
+module( ... )
 
 
 local function make_coon(config)
+
+	config = config or {}
+
 	local coon_meta_method = (function()
 
 		local persist_coon = nil
@@ -20,8 +26,8 @@ local function make_coon(config)
 					config.HOST, 
 					config.PORT
 				), 'Cannot connect to memcached server')
-				persist_coon:set_decode( cicala.util.deserialize )
-				persist_coon:set_encode( cicala.util.serialize )	
+				persist_coon:set_decode( deserialize )
+				persist_coon:set_encode( serialize )	
 			end
 
 			return persist_coon

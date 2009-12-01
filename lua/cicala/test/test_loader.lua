@@ -8,7 +8,7 @@ end
 
 
 function Test_Loader:test_relative_load()
-	self.instance:set_root('lua/cicala/test/resource')
+	self.instance:set_search_path('lua/cicala/test/resource')
 	
 	local tab = self.instance:load('sample')
 
@@ -18,7 +18,7 @@ function Test_Loader:test_relative_load()
 end
 
 function Test_Loader:test_absolute_load()
-	self.instance:set_root('/tmp')
+	self.instance:set_search_path('/tmp')
 
 	local tab = self.instance:load('tmp')
 

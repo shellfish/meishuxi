@@ -76,9 +76,28 @@ end)();
 ---------------------------------------------------------------------------
 --- set extra LUA_PATH and LUA_CPATH 
 (function()
+	local make_path = environment.make_path
+	local path_separator = environment.delimiter
+
 	local function gen_path( path_tab )
 		local buffer = {}
 		for k, v in ipairs( path_tab ) do
+
+			if path_separator == '/' then
+				-- absolute path
+				if v:find('^/') then
+					v = v
+				else
+					v = make_path( v ) 
+				end
+			else -- ms windows
+				if v:find('%a:\\') then
+					v = v
+				else
+					v = self.make_path( v )
+				end
+			end
+				
 			table.insert(buffer, v)
 		end
 
