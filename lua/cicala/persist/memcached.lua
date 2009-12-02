@@ -23,8 +23,8 @@ local function make_coon(config)
 			if not persist_coon then
 				local Memcached = require"Memcached"
 				persist_coon = assert(Memcached.Connect(
-					config.HOST, 
-					config.PORT
+					config.host, 
+					config.port
 				), 'Cannot connect to memcached server')
 				persist_coon:set_decode( deserialize )
 				persist_coon:set_encode( serialize )	

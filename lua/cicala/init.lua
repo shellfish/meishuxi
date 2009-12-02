@@ -48,4 +48,7 @@ end
 function CICALA:handle_request( request, response )
 	self:load_libs( request, response )
 	self.dispatcher:run( request, response )
+
+	-- exe finalize methods
+	cicala.util.finalize()
 end

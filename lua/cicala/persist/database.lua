@@ -7,6 +7,7 @@
 
 local setmetatable, require, assert = setmetatable, require, assert
 local select = select
+local print = print
 
 module(...)
 
@@ -20,18 +21,18 @@ local function make_coon( config )
 
 		function get_coon()
 			if not persist_luasql_env then
-				local driver_name = config.DRIVER
+				local driver_name = config.driver 
 				local luasql = require('luasql.' .. driver_name)
 				persist_luasql_env = luasql[driver_name]()
 			end
 
 			if not persist_coon then
 				persist_coon = assert(persist_luasql_env:connect(
-					config.SOURCE,
-					config.USER,
-					config.PASSWORD,
-					config.HOST,
-					config.PORT
+					config.source,
+					config.user,
+					config.password,
+					config.host,
+					config.port
 				))
 			end
 

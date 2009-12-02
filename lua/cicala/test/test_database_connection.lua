@@ -3,10 +3,8 @@ local config = ...
 Test_Database =  {}
 
 function Test_Database:setUp()
-	require'cicala.base.database'
-	self.database = cicala.base.database
-	self.configdb  = config.DATABASE
-	self.coon =  self.database.new( self.configdb ) 
+	self.database = require'cicala.persist.database'
+	self.coon =  self.database.new( config.database ) 
 end
 
 --[[

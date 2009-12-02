@@ -4,8 +4,8 @@ local config = ...
 Test_memcached = {}
 
 function Test_memcached:setUp()
-	require'cicala.base.memcached'
-	self.instance =  cicala.base.memcached.new(  ) 
+	require'cicala.persist.memcached'
+	self.instance =  cicala.persist.memcached.new(  ) 
 end
 
 
