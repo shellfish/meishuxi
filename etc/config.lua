@@ -1,5 +1,5 @@
 
-path.base_dir = '..'
+path.base_dir = '../'
 
 -- database config
 database.source = 'jwdb'

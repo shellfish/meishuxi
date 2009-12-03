@@ -33,12 +33,10 @@ function run()
 	dofile'preload.lua'
 	require'lfs'
 	require'luaunit'
-	require'cicala.base'
+	local base = require'cicala.base'
 
-	local path = cicala.base.path
-	local config = cicala.base.config
 
-	local test_scripts = path.translate'lua/cicala/test/'
+	local test_scripts = base.path:translate'lua/cicala/test/'
 
 
 	local count = 0
@@ -47,7 +45,7 @@ function run()
 			full_file = test_scripts .. file
 			local trunk = assert( loadfile(full_file) )
 
-			trunk(config)
+			trunk( base )
 
 			count = count + 1
 			print('完成测试 ' .. count .. ' \n\n')
