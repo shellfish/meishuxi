@@ -172,7 +172,7 @@ local function _store(cache, op, key, value, expiry)
 
     local len = string.len(str)
 
-    expiry = expiry or 0
+    expiry = expiry or _M.default_expiry
 
     local cmd = op .. ' ' .. key .. ' ' .. flags .. ' ' .. expiry .. ' ' .. len .. '\r\n' .. str
 
@@ -341,7 +341,12 @@ local function set_decompress(cache, func)
     cache.decompress = func
 end
 
-function Connect(hostlist, port)
+function Connect(hostlist, port, default_expiry)
+
+
+	_M.default_expiry = default_expiry or 0
+	
+
     local servers = {}
 
     if type(hostlist) == 'table' then

@@ -8,8 +8,12 @@ require'cicala.util.serialize'
 local util = require'cicala.util'
 
 local setmetatable, assert, loadfile = setmetatable, assert, loadfile
+local io, ipairs, pairs, lfs, os, type =  io, ipairs, pairs, lfs, os, type
+local append, format,  ex = table.insert, string.format,  ex
+local dump, loadstring = string.dump, loadstring
+local error = error
 
-module(..., package.seeall)
+module(...)
 
 -- new a file session instance
 function new( config )
@@ -58,6 +62,7 @@ function get( self, key )
 			local last_change = lfs.attributes( path, 'change')
 			if os.time() - last_change >= self.expire then
 				self.to_remove[key] = true
+				return nil, 'session has expired'
 			end
 		end
 
@@ -70,11 +75,11 @@ function get( self, key )
 		end
 		
 		lfs.touch( path )
-		local scope, err =  loadfile( path )
+		local scope, err =  loadstring( handle:read"*all" )
 		if scope then
 			local value = scope()
 			self.pool[key] = value
-			table.insert( self.share_locks, handle )
+			append( self.share_locks, handle )
 			return value
 		else
 			lfs.unlock(handle)
@@ -121,19 +126,20 @@ end
 _M.delete = remove
 
 -- to preprocess value to write
+
 local function serialize(content)
 	local t = type(content)	
 	if t == 'number' then
 		content = content
 	elseif t == 'string' or t == 'number' then
-		content = string.format( "%q", content )
+		content = format( "%q", content )
 	elseif t == 'table' then
 		content = util.serialize( content )
 	else
 		error(('cannot serialize value of type(%s)'):format(t))
 	end
 	
-	return 'return ' ..  content
+	return 'return ' .. content
 end
 
 -- * 释放读锁
@@ -151,7 +157,7 @@ function finalize(self)
 		local path = self:key_to_path(k)
 
 		-- try to add write lock
-		local handle = io.open(path, 'w') 
+		local handle = assert( io.open(path, 'w') )
 		local lock = nil 
 
 		while true do
@@ -160,7 +166,7 @@ function finalize(self)
 			ex.sleep(0.01)
 		end
 
-		handle:write( serialize( self.pool[k] ))
+		handle:write(  serialize( self.pool[k]  ) )
 		lfs.unlock( handle )
 		handle:close()
 
