@@ -3,11 +3,13 @@ require'cicala.base'
 local  getmetatable, setmetatable, error, ipairs, type, append,  pcall = 
 getmetatable, setmetatable, error, ipairs, type, table.insert,  pcall
 
-local string, table, math = string, table, math
+local string, table, math, next = string, table, math, next
 
 local base = cicala.base
 
-module(...);
+
+
+module(..., package.seeall);
 
 -- generate random string,
 -- pick from http://lua-users.org/wiki/RandomStrings
@@ -55,18 +57,75 @@ module(...);
 end)();
 -------------------------------
 
--- mixin, use metatable to build a mixin table, which can be read out 
--- every from right preior to left parma tables
-function mixin(...)
 
-	local metatable = ... 
+-- @parma left The object to mix properties into. Also the return value.
+-- @parma right	Objects whos each child will be copied into obj. If more than one of these objects contain the same value, the one specified last in the function call will "win".
+function extend( left, right )
+	local base = clone(left)
 
-	for _, v in ipairs{...} do
-		metatable = setmetatable(v, {__index = metatable})
+	-- copy value
+	local i, v = next( right )
+	while i do
+		base[i] = v
+		i, v = next( right, i )
 	end
 
-	return setmetatable({}, {__index = metatable})
+	local function parse_metatable(mt, tab)
+		local index = mt.__index
+		if type(index) == 'function' then
+			return (function(key) return index(tab, key) end)
+		elseif type(index) == 'table' then
+			return (function(key) return index[key] end)
+		else
+			return nil
+		end
+	end
+
+	-- copy metatable
+	local mt
+	local right_mt, left_mt = getmetatable(right), getmetatable(left)
+	local left_meta_index = left_mt and parse_metatable( left_mt, left )
+	if left_meta_index then
+		local right_meta_index = right_mt and parse_metatable( right_mt, right )
+		if right_meta_index then
+			mt = {__index = function(tab, key)
+				return right_meta_index(key) or left_meta_index(key)
+			end}
+		else
+			mt = left_mt 
+		end
+	else
+		mt = right_mt
+	end
+
+	return setmetatable(base, mt)
 end
+
+-- do deep copy, include metatable
+function clone( src )
+	local out = {}
+	local i, v = next( src )
+	while i do
+		if type(v) == 'table' then
+		-- sorry, I has't solve the circulating reference, 
+		--	only check self-reference
+			if v == src then
+				out[i] = out
+			else
+				out[i] = clone(v)
+			end
+		else
+			out[i] = v
+		end
+		i, v = next( src, i )
+	end
+
+	local mt = getmetatable( src )
+	setmetatable( out, mt )
+
+	return out	
+end
+
 
 -----------------------------------------------------------------------------
 -- Splits a string on a delimiter. 
