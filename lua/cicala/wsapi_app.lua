@@ -1,53 +1,38 @@
----------------------------------------------------------------------------
--- wsapi app generator
----------------------------------------------------------------------------
+require'cicala'
+require'wsapi.request'
+require'wsapi.response'
+require'coxpcall'
 
-require "cicala"
-require "wsapi.request"
-require "wsapi.response"
-require "coxpcall"
-
-local string, unpack, error = string, unpack, error
+local cicala, wsapi, coxpcall = cicala, wsapi, coxpcall
 
 module(...)
 
-
-local make_prefered_app
-local make_error_app
-
----------------------------------------------------------------------------
---- The only method exported by this module
--- @parma bootstrap_config a user-defined configuration table
--- @return the (waapi)app function which will be lanuched by the server
-function new( bootstrap_config )
-	local preferedApp = make_prefered_app( bootstrap_config )
-	local errorApp    = make_error_app( bootstrap_config )
-	
+function new( config )
 	return function( wsapi_env )
-		local status, result = coxpcall( 
-			function() return make_prefered_app( bootstrap_config )( wsapi_env ) end,
-			function(e) return make_error_app( bootstrap_config, e)( wsapi_env ) end 
+		local ok, status, header, content = coxpcall(
+			function() return make_normal_app()( wsapi_env ) end,
+			function(e) return make_error_app( config, e)( wsapi_env ) end
 		)
 
-		return unpack(result)
+		return status, header, content
 	end
 end
 
---=========================================================================
--- Local Functions
---=========================================================================
-
-function make_prefered_app( bootstrap_config )
-	return function ( wsapi_env )
-		local req = wsapi.request.new( wsapi_env )
-		req.wsapi_env = wsapi_env
-
+function make_normal_app( )
+	return function( wsapi_env )
+		local req = wsapi.request.new(wsapi_env)
 		local res = wsapi.response.new()
 
-		local instance = cicala.new( bootstrap_config )
-		instance:handle_request( req, res )
+		local http = { 
+			request = req, 
+			response = res,
+			variables = wsapi_env
+		}
 
-		return { res:finish() }
+		-- single entry
+		cicala.run( http )
+
+		return res:finish()
 	end
 end
 
@@ -83,18 +68,13 @@ function make_error_app( config, err_msg  )
 		</html>
 ]]
 	
-	return function( wsapi_env  )
+	return function( wsapi_env )
 		local summary = "<h1 style=\"color:pink;\">Oops, An unexpected error occurs!</h1>"
 		local message = string.format( HTML_MESSAGE, summary, 
-			config.DEBUG and config.DEBUG.SHOW_STACK_TRACE and  transalte( err_msg )  or "Please Contact Site admin" )
+			config.SHOW_STACK_TRACE and  transalte( err_msg )  or "Please Contact Site admin" )
 
-		-- if define a LOG_FILE then log the error messsage
-		if config.LOG_FILE then
-			require 'logging.file'
-			local logger = logging.file(config.LOG_FILE, 
-				config.DEBUG and config.DEBUG.LOG_FILE or "%Y-%m-%d")
-			logger:error(err_msg)
-		end
+		-- #TODO log file
+		-- io.open((os.getenv('TMP') or '/tmp') .. '/lua-logile', 'w'):write(tostring(err_msg))
 
 		local response = wsapi.response.new(500, 
 			{ ['Content-type'] = 'text/html' }
@@ -104,3 +84,11 @@ function make_error_app( config, err_msg  )
 		return { response:finish() }
 	end
 end
+
+
+
+
+
+
+
+

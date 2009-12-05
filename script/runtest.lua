@@ -36,7 +36,7 @@ function run()
 	local base = require'cicala.base'
 
 
-	local test_scripts = base.path:translate'lua/cicala/test/'
+	local test_scripts = base.path:translate'script/test/'
 
 
 	local count = 0
