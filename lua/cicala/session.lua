@@ -1,16 +1,16 @@
 pcall(require, 'uuid')
 local base = require'cicala.base'
 local util = require'cicala.util'
-local md5 = require'md5'
-local uuid = uuid
-local  require, assert =  require, assert
+local  require, assert, math  =  require, assert, math
+local socket = require'socket'
+local globals = _G
 
 module(...)
 
 -- just a proxy
 function new( config )
 	config = config or base.session
-	
+
 	local module = assert( config.module, 'must specify session.module!' )
 	if module == 'file' then
 		local addon = require'cicala.persist.file'.new(config)
@@ -25,15 +25,24 @@ function new( config )
 	return _M
 end
 
+
 -- create a session
 function create(self, value )
 	local id     -- session id
-	if base.is_windows then
-		id = md5.sumhexa(util.gen_rand_string(15) .. os.time())
-	else
-		id =  md5.sumhexa( uuid.new() )
+
+	if not self.digest_algorithm then
+		self.digest = self.digest or 'md5'
+		if self.digest == 'md5' then
+			self.digest_algorithm = globals.require'md5'.sumhexa
+		elseif self.digest == 'sha1' then
+			self.digest_algorithm = globals.require'sha1'.digest
+		else
+			error('I cannot understand digest algorithm:' .. self.digest)
+		end
 	end
 
-	self:set(id, value)
+	id = self.digest_algorithm( math.random()  .. socket.gettime() )
+
+	assert( self:add(id, value) )
 	return id
 end

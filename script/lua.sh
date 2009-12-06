@@ -1,3 +1,3 @@
 #! /bin/sh
 
-exec lua   -e "`cat preload.lua`" $* 
+exec lua   -e "`cat preload.lua`" -lluaunit $* 

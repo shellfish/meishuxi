@@ -8,12 +8,12 @@ Test_pressure = {}
 local buf = {}
 
 function Test_pressure:setUp()
-	self.instance = cicala.session.new{ path = 'var/cache', expire = 2, module = 'file'}
+	self.instance = cicala.session.new{ path = 'var/cache', expire = 1, module = 'file'}
 end
 
 function Test_pressure:test_1()
 	print'step 1, 写入1000 items'
-	for k = 1,100 do 
+	for k = 1,1000 do 
 		local id = self.instance:create(k)
 		buf[k] = id 
 	end
@@ -33,10 +33,9 @@ end
 
 function Test_pressure:test_3()
 	print'step 3, 读取1000 itemfter 1s'
-	sleep(1)
 	
 	for k, v in ipairs(buf) do
-		sleep(0.05)
+	--	sleep(0.05)
 		print(self.instance:get(v))
 	end
 

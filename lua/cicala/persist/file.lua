@@ -40,7 +40,7 @@ function new( config )
 end
 
 function key_to_path( self, key )
-	return self.path .. key .. '.lua'	
+	return self.path .. key
 end
 
 function get( self, key )
@@ -101,7 +101,7 @@ end
 -- success only if there is no key exists
 function add(self, key, value)
 	if self:get(key) then
-		return nil, 'cannot add for already exists'	
+		return nil, ('cannot add for already exists key:' .. key)	
 	else
 		self:set( key, value )	
 		return true
@@ -140,6 +140,21 @@ local function serialize(content)
 	end
 	
 	return 'return ' .. content
+end
+
+-- load all session from disk to pool
+-- by the same time, we'll check expire and clear outdated one
+function loadall(self)
+	for key in lfs.dir(self.path) do
+		if  key ~= '.' and key ~= '..' then
+			self:get(key)
+		end
+	end
+
+	for k, _ in pairs( self.to_remove ) do
+		ex.remove( self:key_to_path(k) )	
+		self.to_remove[k] = nil
+	end
 end
 
 -- * 释放读锁
