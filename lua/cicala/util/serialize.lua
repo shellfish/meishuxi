@@ -26,7 +26,7 @@ function serialize(t)
 				end
 			else
 				if type(v) == 'string' then
-					v = ('%q'):fomrat(v)
+					v = ('%q'):format(v)
 				elseif type(v) == 'number' then
 					v = v
 				else
