@@ -3,7 +3,6 @@ authorization = [[
 ]]
 
 run = function(arg)
-	error'hello'
-	return {'hello'}
+	return {'hello'}, function(x) return "<textarea>" .. x .. "</textarea>" end
 
 end
