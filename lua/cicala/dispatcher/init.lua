@@ -45,8 +45,6 @@ function mt.__call(self, http)
 		end
 	end
 
-	local appid = assert(app.id)
-
 	-------------------------------------------------------------------
 	-- 运行app
 	local ok, result, method, content_type = 
