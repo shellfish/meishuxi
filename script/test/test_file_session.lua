@@ -14,10 +14,7 @@ end)(), 'dir')
 Test_File = {}
 
 function Test_File:setUp()
-	self.instance = cicala.session.new{ 
-		module = 'file',
-		path =  'var/cache',
-	}
+	self.instance = cicala.session.new( require'cicala.base'.session )
 end
 
 function Test_File:test_1_simple_get()

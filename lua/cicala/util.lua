@@ -1,8 +1,10 @@
 require'cicala.base'
 
-local  getmetatable, setmetatable, error, ipairs, type, append,  pcall = 
-getmetatable, setmetatable, error, ipairs, type, table.insert,  pcall
-local string, table, math, next = string, table, math, next
+local  getmetatable, setmetatable, error, ipairs, type, tinsert   = 
+getmetatable, setmetatable, error, ipairs, type, table.insert
+local next = next
+local loadstring = loadstring
+local concat = table.concat
 local base = cicala.base
 
 
@@ -88,16 +90,16 @@ end
 function split(text, delimiter)
    local list = {}
    local pos = 1
-   if string.find("", delimiter, 1) then 
+   if (""):find(delimiter, 1) then 
       error("delimiter matches empty string!")
    end
    while 1 do
-      local first, last = string.find(text, delimiter, pos)
+      local first, last = text:find(delimiter, pos)
       if first then -- found?
-	 table.insert(list, string.sub(text, pos, first-1))
+	 tinsert(list, text:sub(pos, first-1))
 	 pos = last+1
       else
-	 table.insert(list, string.sub(text, pos))
+	 tinsert(list, text:sub(pos))
 	 break
       end
    end
@@ -135,7 +137,7 @@ end
 	local todo_list = {}
 
 	function _M.register( func )
-		append(todo_list, func)
+		tinsert(todo_list, func)
 	end
 
 	function _M.finalize()
@@ -144,3 +146,47 @@ end
 		end
 	end
 end)();
+
+function serialize(t)
+	local mark={}
+	local assign={}
+	
+	local function ser_table(tbl,parent)
+		mark[tbl]=parent
+		local tmp={}
+		for k,v in pairs(tbl) do
+			local key =  type(k)=="number" 
+				and  '[' .. k ..  ']' 
+				or  ('[%q]'):format(k)
+			if type(v)=="table" then
+				local dotkey= parent..(type(k)=="number" and key or "."..key)
+				if mark[v] then
+					tinsert(assign,dotkey.."="..mark[v])
+				else
+					tinsert(tmp, key.."="..ser_table(v,dotkey))
+				end
+			else
+				if type(v) == 'string' then
+					v = ('%q'):format(v)
+				elseif type(v) == 'number' then
+					v = v
+				else
+					error('cannot serialize type:' .. type(v))
+				end
+				tinsert(tmp, key.."="..v)
+			end
+		end
+		return "{"..concat(tmp,",").."}"
+	end
+ 
+	return ser_table(t,"ret")..concat(assign," ") 
+end
+ 
+ 
+
+--- deserialize a string to Lua Table
+-- @parma str the string contains a complete table
+-- @return the deserializd table
+function deserialize( str )
+	return ( loadstring( 'return' .. str ) )()
+end

@@ -10,30 +10,36 @@ module(...)
 function new( config )
 	return function( wsapi_env )
 		local ok, status, header, content = coxpcall(
-			function() return make_normal_app()( wsapi_env ) end,
+			function() return make_normal_app( wsapi_env ) end,
 			function(e) return make_error_app( config, e)( wsapi_env ) end
 		)
-
 		return status, header, content
 	end
 end
 
-function make_normal_app( )
-	return function( wsapi_env )
-		local req = wsapi.request.new(wsapi_env)
-		local res = wsapi.response.new()
+function make_normal_app( wsapi_env )
 
-		local http = { 
-			request = req, 
-			response = res,
-			variables = wsapi_env
-		}
+	local req = wsapi.request.new(wsapi_env)
+	local res = wsapi.response.new()
 
-		-- single entry
-		cicala.run( http )
-
-		return res:finish()
+	local http = { 
+		request = req, 
+		response = res,
+		servervariable = wsapi_env
+	}
+	-- wrap cookie manpulation
+	function http:get_cookie( name )
+		return req.cookies[name]
 	end
+
+	function http:set_cookie( name, value )
+		return res:set_cookie( name, value )
+	end
+
+	-- single entry
+	cicala.run( http )
+
+	return res:finish()
 end
 
 function make_error_app( config, err_msg  )
@@ -70,7 +76,7 @@ function make_error_app( config, err_msg  )
 	
 	return function( wsapi_env )
 		local summary = "<h1 style=\"color:pink;\">Oops, An unexpected error occurs!</h1>"
-		local message = string.format( HTML_MESSAGE, summary, 
+		local message = HTML_MESSAGE:format(summary, 
 			config.SHOW_STACK_TRACE and  transalte( err_msg )  or "Please Contact Site admin" )
 
 		-- #TODO log file
@@ -81,7 +87,7 @@ function make_error_app( config, err_msg  )
 		)
 		response:write(message)
 
-		return { response:finish() }
+		return response:finish()
 	end
 end
 

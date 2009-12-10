@@ -10,5 +10,7 @@
 --- define global var 
 local config = dofile'preload.lua' 
 
-require'cicala'
-return cicala.wsapi_app.new( config )
+require'cicala.wsapi_app'
+return cicala.wsapi_app.new( {} )
+
+

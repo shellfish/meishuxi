@@ -1,6 +1,7 @@
 require'cicala.util'
 require'cicala.session'
 require'ex'
+local base = require'cicala.base'
 local sleep = os.sleep
 
 Test_pressure = {}
@@ -8,7 +9,7 @@ Test_pressure = {}
 local buf = {}
 
 function Test_pressure:setUp()
-	self.instance = cicala.session.new{ path = 'var/cache', expire = 1, module = 'file'}
+	self.instance = cicala.session.new( base.session )
 end
 
 function Test_pressure:test_1()

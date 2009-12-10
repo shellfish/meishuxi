@@ -6,7 +6,7 @@ Test_file_session_timestrap = {}
 
 function Test_file_session_timestrap:setUp()
 	require'cicala.persist.file'
-	self.instance =  cicala.persist.file.new( { expire = 1, path = 'var/cache'  } ) 
+	self.instance =  cicala.persist.file.new( require'cicala.base'.session) 
 end
 
 
@@ -29,7 +29,6 @@ end
 function Test_file_session_timestrap:test_table_serialize()
 	self.instance:set('test', {a = { b = {{{{ 'hello world' }}} }  }})	
 
-	require'cicala.util.serialize'
 	print('\t success get ', 
 		assert( cicala.util.serialize( self.instance:get('test') ) )
 	)

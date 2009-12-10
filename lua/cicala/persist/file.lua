@@ -4,13 +4,12 @@
 
 require'lfs'
 require'ex'
-require'cicala.util.serialize'
 local util = require'cicala.util'
 
-local setmetatable, assert, loadfile = setmetatable, assert, loadfile
+local setmetatable, assert  = setmetatable, assert 
 local io, ipairs, pairs, lfs, os, type =  io, ipairs, pairs, lfs, os, type
-local append, format,  ex = table.insert, string.format,  ex
-local dump, loadstring = string.dump, loadstring
+local tinsert,  ex = table.insert,  ex
+local loadstring = loadstring
 local error = error
 
 module(...)
@@ -79,7 +78,7 @@ function get( self, key )
 		if scope then
 			local value = scope()
 			self.pool[key] = value
-			append( self.share_locks, handle )
+			tinsert( self.share_locks, handle )
 			return value
 		else
 			lfs.unlock(handle)
@@ -132,7 +131,7 @@ local function serialize(content)
 	if t == 'number' then
 		content = content
 	elseif t == 'string' or t == 'number' then
-		content = format( "%q", content )
+		content = ("%q"):format( content )
 	elseif t == 'table' then
 		content = util.serialize( content )
 	else

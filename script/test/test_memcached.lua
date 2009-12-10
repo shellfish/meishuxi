@@ -25,8 +25,6 @@ end
 
 function Test_memcached:test_table_serialize()
 	self.instance:set('test', {a = { b = {{{{ 'hello world' }}} }  }})	
-
-	require'cicala.util.serialize'
 	print('\t success get ', 
 		assert( cicala.util.serialize( self.instance:get('test') ) )
 	)

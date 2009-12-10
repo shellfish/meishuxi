@@ -2,7 +2,7 @@
 -- @class module
 -- Interface for Lua Memcached module
 --------------------------------------------------------------------------
-require'cicala.util.serialize'
+require'cicala.util'
 require'cicala.base'
 
 local setmetatable = setmetatable
