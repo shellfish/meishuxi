@@ -90,7 +90,7 @@ function mt.__call(self, http)
 			id = appid
 		}))
 	else
-		http.response.status = 500
+		http.response.status = 200
 		http.response.header = {['Content-Type'] = content_type}
 		local err_msg =  result:match('lua:%d:%s(.+)$') or 'unknow error'
 		http.response:write(process(method, {
