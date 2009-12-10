@@ -11,6 +11,8 @@
 local config = dofile'preload.lua' 
 
 require'cicala.wsapi_app'
-return cicala.wsapi_app.new( {} )
+return cicala.wsapi_app.new( {
+	SHOW_STACK_TRACE = true
+} )
 
 

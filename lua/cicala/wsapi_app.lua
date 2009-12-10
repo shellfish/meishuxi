@@ -2,8 +2,9 @@ require'cicala'
 require'wsapi.request'
 require'wsapi.response'
 require'coxpcall'
+local error = error
 
-local cicala, wsapi, coxpcall = cicala, wsapi, coxpcall
+local cicala, wsapi, coxpcall, string = cicala, wsapi, coxpcall, string
 
 module(...)
 
@@ -20,13 +21,15 @@ end
 function make_normal_app( wsapi_env )
 
 	local req = wsapi.request.new(wsapi_env)
-	local res = wsapi.response.new()
+	local res = wsapi.response.new(200, {['Content-Type'] = 'text/plain'})
 
 	local http = { 
 		request = req, 
 		response = res,
 		servervariable = wsapi_env
 	}
+	http.GET = req.GET
+	http.POST = req.POST
 	-- wrap cookie manpulation
 	function http:get_cookie( name )
 		return req.cookies[name]

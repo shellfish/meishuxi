@@ -1,9 +1,16 @@
 local error, assert, pcall = error, assert, pcall
 local setmetatable = setmetatable
+local newproxy = newproxy
+local type = type
+local loadstring = loadstring
+local setfenv = setfenv
+local ipairs = ipairs
+local tostring = tostring
+local tinsert = table.insert
 
-local share = cicala.share
-local authentication = require'cicala.permmission.authentication'
-local dbc = assert(share.dbc)
+local registry = cicala.registry
+local authentication = registry.authentication
+local dbc = assert(registry.dbc)
 
 module(...)
 
@@ -71,8 +78,7 @@ end
 
 
 
-function access_control( statement )
-	local http = share.http
+function access_control( self, statement )
 	local me = authentication:whoami()
 
 	local basic_sandbox = self:init_sandbox()

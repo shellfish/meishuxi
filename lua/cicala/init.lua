@@ -1,25 +1,23 @@
 local base = require'cicala.base'
 local util = require'cicala.util'
-local dispatcher = require'cicala.dispatcher'
 local require, globals = require, _G
-
+local setmetatable = setmetatable
 
 module(...)
 
-share = {
-	dbc         = require'cicala.persist.database'.new( base.database ), 
-	session     = require'cicala.session'.new( base.session )
-}
-
-
--- init base modules
-share.permmission = require'cicala.permmission'.new( base.permmission )
-share.dispatcher  = require'cicala.dispatcher'.new( base.dispatcher ) 
+_M.registry = setmetatable({}, {__index = globals})
 
 -- 不可重入
 function run(http)
 	-- add http to runtime
-	share.http = http
+	registry.http = http
+
+	registry.dbc        = require'cicala.persist.database'.new( base.database )
+	registry.session     = require'cicala.session'.new( base.session )
+
+	-- init base modules
+	registry.permmission = require'cicala.permmission'.new( base.permmission )
+	registry.dispatcher  = require'cicala.dispatcher'.new( base.dispatcher ) 
 
 	-- now everything has ready, do custom init
 	local before = base.custom and base.custom.before
@@ -27,10 +25,12 @@ function run(http)
 		before(http)
 	end
 
-	share.dispatcher( http )
+	registry.dispatcher( http )
 
 	local after = base.custom and base.custom.after
 	if after and type(after) == 'function' then
 		after(http)
 	end
+
+	registry.session:finalize()
 end

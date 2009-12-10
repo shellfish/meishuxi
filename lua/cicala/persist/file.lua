@@ -6,11 +6,12 @@ require'lfs'
 require'ex'
 local util = require'cicala.util'
 
-local setmetatable, assert  = setmetatable, assert 
+local setmetatable, getmetatable  = setmetatable, getmetatable 
 local io, ipairs, pairs, lfs, os, type =  io, ipairs, pairs, lfs, os, type
 local tinsert,  ex = table.insert,  ex
+local newproxy = newproxy
 local loadstring = loadstring
-local error = error
+local error, assert = error, assert
 
 module(...)
 
@@ -32,8 +33,9 @@ function new( config )
 	obj.to_remove = {}
 
 	obj.share_locks = {}
-	-- hooking
-	util.register( function() obj:finalize() end )
+
+	obj._company = newproxy(true)
+	getmetatable(obj._company).__gc = function() obj:finalize() end
 
 	return obj
 end

@@ -18,8 +18,6 @@ function Test_pressure:test_1()
 		local id = self.instance:create(k)
 		buf[k] = id 
 	end
-
-	cicala.util.finalize()
 end
 
 function Test_pressure:test_2()
@@ -27,8 +25,6 @@ function Test_pressure:test_2()
 	for k, v in ipairs(buf) do
 		print(self.instance:get(v))
 	end
-
-	cicala.util.finalize()
 end
 
 
@@ -40,11 +36,10 @@ function Test_pressure:test_3()
 		print(self.instance:get(v))
 	end
 
-	cicala.util.finalize()
 end
 
 function Test_pressure:tearDown()
-	cicala.util.finalize()
+	self.instance:finalize()
 end
 
 LuaUnit:run()

@@ -1,9 +1,9 @@
 local error, assert, pcall = error, assert, pcall
 local setmetatable = setmetatable
 
-local share = cicala.share
-local session = assert(share.session)
-local dbc = assert(share.dbc)
+local registry = cicala.registry
+local session = assert(registry.session)
+local dbc = assert(registry.dbc)
 -- 凡是涉及http对象的，都放在回调里
 -- 因为在初始化时，http对象还没有生成
 
@@ -34,12 +34,12 @@ end
 
 -- get cookie which name corespond self.cookie_name
 function get_token(self)
-	return share.http:get_cookie(self.cookie_name)
+	return registry.http:get_cookie(self.cookie_name)
 end
 
 -- write sessionid back to cookie
 function set_token(self, value)
-	share.http:set_cookie(self.cookie_name, {
+	registry.http:set_cookie(self.cookie_name, {
 		value = value,
 		domain = self.cookie_domain,
 		path = self.cookie_path
@@ -47,7 +47,7 @@ function set_token(self, value)
 end
 
 function get_guest_ip(self)
-	return share.http.servervariable['REMOTE_ADDR']
+	return registry.http.servervariable['REMOTE_ADDR']
 end
 
 -- 怪异的用法，没抛出错误就是验证成功
@@ -70,7 +70,7 @@ end
 
 function whoami(self)
 	if not self.me then
-		local sessionid = self:get_sessionid()
+		local sessionid = self:get_token()
 		if sessionid then
 			local data = session:get( sessionid )
 			if data and data.ip == self:get_guest_ip() then

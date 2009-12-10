@@ -132,20 +132,6 @@ function path_normalizer( path, mode )
 	end
 end
 
--- define a very simple hook system
-(function()
-	local todo_list = {}
-
-	function _M.register( func )
-		tinsert(todo_list, func)
-	end
-
-	function _M.finalize()
-		for k, v in ipairs( todo_list ) do
-			v()
-		end
-	end
-end)();
 
 function serialize(t)
 	local mark={}

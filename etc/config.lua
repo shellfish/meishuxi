@@ -13,4 +13,7 @@ session.module = 'file'
 permmission.cookie_name = 'userhash'
 
 
+dispatcher.appdir = 'apps'
+
+
 
