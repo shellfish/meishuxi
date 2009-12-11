@@ -66,7 +66,7 @@ function mt.__call(self, http)
 	else
 		http.response.status = 200
 		http.response.header = {['Content-Type'] = content_type}
-		local err_msg =  result:match('lua:%d:%s(.+)$') or result or 'unknow error'
+		local err_msg =  result:match('lua:%d+:%s(.+)$') or result or 'unknow error'
 		http.response:write(method( Json.Encode {
 			result = Json.Null,
 			error = err_msg,

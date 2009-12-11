@@ -2,6 +2,9 @@ authorization = [[
 	allow(all_user)
 ]]
 
+-- 只允许客户端使用POST方法
+accept = {POST = true}
+
 api = {['json-rpc'] = {
 	parameters = 
 	{
