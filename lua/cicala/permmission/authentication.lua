@@ -1,5 +1,6 @@
 local error, assert, pcall = error, assert, pcall
 local setmetatable = setmetatable
+local md5 = require'md5'
 
 local registry = cicala.registry
 local session = assert(registry.session)
@@ -21,6 +22,7 @@ function new( config )
 	obj.cookie_name = assert(config.cookie_name)
 	obj.cookie_path = config.cookie_path
 	obj.cookie_domain = config.cookie_domain
+	obj.cookie_key = config.cookie_key or '2d%a1c2d_=8c(c384fa1/af0d6]15ab8'
 
 	obj.shadow_password = config.shadow_password or function(x) return x end
 
@@ -34,13 +36,14 @@ end
 
 -- get cookie which name corespond self.cookie_name
 function get_token(self)
-	return registry.http:get_cookie(self.cookie_name)
+	local raw_data = registry.http:get_cookie(self.cookie_name)
+	return md5.decrypt(raw_data, self.cookie_key)
 end
 
 -- write sessionid back to cookie
 function set_token(self, value)
 	registry.http:set_cookie(self.cookie_name, {
-		value = value,
+		value = md5.crypt( value, self.cookie_key ),
 		domain = self.cookie_domain,
 		path = self.cookie_path
 	})

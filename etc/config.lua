@@ -11,6 +11,7 @@ session.module = 'file'
 
 -- permmission
 permmission.cookie_name = 'userhash'
+permmission.cookie_key = 'dk023kgff.fa1/af0d6]15ab8'
 
 
 dispatcher.appdir = 'apps'
