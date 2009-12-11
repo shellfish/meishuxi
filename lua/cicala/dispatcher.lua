@@ -10,13 +10,14 @@ local error = error
 local url_decode = require'wsapi.util'.url_decode
 local base = require'cicala.base'
 local unpack = unpack
+local select = select
+local next = next
 
 module(...)
 
 local  mt = {__index = _M}
 function mt.__call(self, http)
 	self.http = http
-
 
 	self:prepare_process()
 	if not self.request_data then return self:error_404() end
@@ -28,7 +29,7 @@ function mt.__call(self, http)
 	if not ok then return self:error_404() end
 
 	-- app中的accept字段表示可接受的http 方法
-	if app.accept and not app.accept[request_method] then
+	if app.accept and not app.accept[self.request_method] then
 		return self:reject_access()
 	end
 
@@ -37,10 +38,12 @@ function mt.__call(self, http)
 	
 	-------------------------------------------------------------------
 	-- 运行app
+
 	local ok, result, method, content_type = 
 	pcall( function()
-		local arg = self.request_data.parmas
-		return setfenv( app.run, registry)( type(arg) == 'table' and  unpack(arg) or nil )
+		local arg = self.request_data.params
+		arg  = type(arg) == 'table' and arg or {}
+		return setfenv( app.run, registry)( unpack(arg) )
 	end)
 
 	-- after process =========================================================================================
@@ -54,11 +57,11 @@ function mt.__call(self, http)
 		http.response.status = 200
 		http.response.header = {['Content-Type'] = content_type}
 
-		http.response:write(method( Json.Encode{ 
+		self.http.response:write(method( Json.Encode{ 
 			result = result, 
 			error = Json.Null,
 			-- 回传
-			id = self.request_data.id
+			id = self.request_data.id,
 		} ))
 	else
 		http.response.status = 200
@@ -67,7 +70,7 @@ function mt.__call(self, http)
 		http.response:write(method( Json.Encode {
 			result = Json.Null,
 			error = err_msg,
-			id = self.request_data.id
+			id = self.request_data.id,
 		}))
 	end
 end
@@ -97,19 +100,18 @@ end
 
 -- detect from POST or GET
 function prepare_process(self)
-	-- check request method
-	self.request_method = #self.http.POST == 0 and 'get' or 'post'
-
 	local function parse(data)
 		local ok, data = pcall(Json.Decode, data)
 		if ok then return data else return nil end
 	end
 
-
-	if request_method == 'post' then
-		self.request_data = parse( http.POST.post_data )
+	self.request_method = self.http.servervariable['REQUEST_METHOD']
+	if self.request_method == 'POST' then
+		self.request_data =  parse( self.http.POST.post_data )
+	elseif self.request_method == 'GET' then
+		self.request_data =  parse( url_decode(self.http.request.query_string) )
 	else
-		self.request_data = parse( url_decode(http.request.query_string) )
+		error(('Cannot treat HTTP method: %s'):format(request_method))
 	end
 end
 
