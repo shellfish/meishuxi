@@ -48,7 +48,7 @@ var bootstrap =   (function() {
 
 		service = new dojox.rpc.Service({
 			envelope:"JSON-RPC-1.0",
-			transport:"POST",
+			transport:"GET",
 			target:"../service/script/meishuxi.ws",
 			services:{
 				test_add:{

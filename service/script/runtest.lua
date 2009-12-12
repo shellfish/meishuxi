@@ -33,11 +33,10 @@ function run()
 	dofile'preload.lua'
 	require'lfs'
 	require'luaunit'
+	local util = require'cicala.util'
 	local base = require'cicala.base'
 
-
-	local test_scripts = base.path:translate'script/test/'
-
+	local test_scripts = util.path_normalizer('script/test/', 'dir')
 
 	local count = 0
 	for file in lfs.dir( test_scripts ) do	

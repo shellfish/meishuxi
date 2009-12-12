@@ -130,6 +130,15 @@ function path_normalizer( path, mode )
 	end
 end
 
+-- normalizer base.base_dir
+-- FIXME it's repeat
+base.path.base_dir = (function(path) 
+	if path:byte(#path) ~=  (base.path.sep):byte() then
+			path = path .. base.path.sep
+	end
+	return base.path:filter( path )
+end)(base.path.base_dir);
+
 
 function serialize(t)
 	local mark={}

@@ -52,7 +52,9 @@ end)();
 
 (function() 
 	-- next, find /etc/config.lua and load user custom options
-	local usr_cfg = assert(loadfile(path:filter('../etc/config.lua')))
+	local etc_file = _M.is_windows and [[..\etc\config.lua]] or '../etc/config.lua'
+
+	local usr_cfg = assert(loadfile(path:filter(etc_file)))
 
 	-- then build the default base-config
 	-- 1. set a unnormal run environment 

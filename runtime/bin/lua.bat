@@ -3,4 +3,4 @@
 
 @SET LUA_PATH=%LUA_PATH%;%cd%\..\..\service\lua\?.lua;%cd%\..\..\service\lua\?\init.lua
 
-@lua5.1.exe %*
+@lua.exe %*

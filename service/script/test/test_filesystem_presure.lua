@@ -14,7 +14,7 @@ end
 
 function Test_pressure:test_1()
 	print'step 1, 写入1000 items'
-	for k = 1,1000 do 
+	for k = 1,100 do 
 		local id = self.instance:create(k)
 		buf[k] = id 
 	end

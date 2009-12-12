@@ -12,6 +12,8 @@ local base = require'cicala.base'
 local unpack = unpack
 local select = select
 local next = next
+local tostring = tostring
+local DEBUG = base.DEBUG
 
 module(...)
 
@@ -19,14 +21,21 @@ local  mt = {__index = _M}
 function mt.__call(self, http)
 	self.http = http
 
-	self:prepare_process()
-	if not self.request_data then return self:error_404() end
+	if DEBUG then
+		assert(pcall(self.prepare_process, self))
+	else
+		pcall(self.prepare_process, self)
+		if not self.request_data then return self:error_404() end
+	end
 
 	---------------------------------------------------
 	-- take app
-	local appname = assert(self.request_data.method):gsub('_', base.path.sep) 
-	local ok, app = pcall(self.load_app, self, appname)
-	if not ok then return self:error_404() end
+	local ok, app = pcall(self.load_app, self, self.request_data.method)
+	if DEBUG then
+		assert(ok, app)
+	else
+		if not ok then return self:error_404() end
+	end
 
 	-- app中的accept字段表示可接受的http 方法
 	if app.accept and not app.accept[self.request_method] then
@@ -38,13 +47,21 @@ function mt.__call(self, http)
 	
 	-------------------------------------------------------------------
 	-- 运行app
-
-	local ok, result, method, content_type = 
-	pcall( function()
-		local arg = self.request_data.params
-		arg  = type(arg) == 'table' and arg or {}
-		return setfenv( app.run, registry)( unpack(arg) )
-	end)
+	local ok, result, method, content_type = true 
+	if DEBUG then
+		result, method, content_type = (function()
+			local arg = self.request_data.params
+			arg  = type(arg) == 'table' and arg or {}
+			return setfenv( app.run, registry)( unpack(arg) )
+		end)();
+	else
+		local	ok, result, method, content_type = 
+		pcall( function()
+			local arg = self.request_data.params
+			arg  = type(arg) == 'table' and arg or {}
+			return setfenv( app.run, registry)( unpack(arg) )
+		end)
+	end
 
 	-- after process =========================================================================================
 	-- 默认的结果后处理 
@@ -66,7 +83,8 @@ function mt.__call(self, http)
 	else
 		http.response.status = 200
 		http.response.header = {['Content-Type'] = content_type}
-		local err_msg =  result:match('lua:%d+:%s(.+)$') or result or 'unknow error'
+		--local err_msg =  result:match('lua:%d+:%s(.+)$') or result or 'unknow error'
+		local err_msg = result or 'unknown error'
 		http.response:write(method( Json.Encode {
 			result = Json.Null,
 			error = err_msg,
@@ -82,8 +100,35 @@ function new( config )
 end
 
 function load_app( self, name )
-	local trunk = assert(loadfile(self.appdir .. name ..'.lua'))
-	local box = {}
+	-- load file
+	local filename = assert((name):gsub('_', base.path.sep))
+	local trunk = assert(loadfile(self.appdir ..filename ..'.lua'))
+
+	local box = {
+		arglist = nil, -- a table for arg types
+		name =  name,    -- provide func name
+	}
+	box._G = box -- self reference
+
+	-- @params def a table define 
+	function box.define(def)
+		local index_run = #def; assert(index_run ~= 0, 'bad def format')
+		local orig_run	 = def[index_run]
+		box.arglist = def; def[index_run] = nil
+		
+		function box.run(...)
+			-- check arg type
+			local arg = {...}
+			for k, v in ipairs(arg) do
+				local expect = box.arglist[k]
+				local provide = type(v)
+				assert(provide == expect, ('[%s]: arg#%d expect %s, but receive %s'):format(box.name, k, expect, provide))
+			end
+
+			return orig_run(...)
+		end
+	end
+
 	setfenv(trunk, box)()
 	return box
 end
