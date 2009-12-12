@@ -16,6 +16,7 @@
 ---
 -- $Id: config.lua,v 1.1 2008/06/30 14:29:59 carregal Exp $
 ------------------------------------------------------------------------------
+
 require'xavante'
 require "xavante.filehandler"
 --require "xavante.cgiluahandler"
@@ -26,8 +27,16 @@ require'wsapi.common'
 
 -- Define here where Xavante HTTP documents scripts are located
 --local webDir = XAVANTE_WEB
-local is_windows = os.getenv('OS') and getenv('COMSPEC') and true or false
-local webDir = is_windows and [[..\..\]] or '../../'
+local is_windows = os.getenv('OS') and os.getenv('COMSPEC') and true or false
+local baseDir = arg[1]
+local webDir = nil
+
+	if not baseDir then
+		webDir = (is_windows and [[..\..\]] or '../../')
+	else
+		webDir = baseDir .. (is_windows and [[\..\..\]] or '/../../')
+	end
+print("WEBROOT=\"" .. webDir .. '"')
 
 local simplerules = {
 
