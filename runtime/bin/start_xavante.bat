@@ -1,0 +1,1 @@
+@lua.bat start_xavante.lua
