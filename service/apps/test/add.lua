@@ -10,9 +10,10 @@ api = {['json-rpc'] = {
 	}
 }}
 
-run = function(N1, N2)
-	assert(type(N1) == 'number', 'N1 is not number, but' .. type(N1))
-	assert(type(N2) == 'number', 'N2 is not number, but' .. type(N2))
-
-	return N1 + N2
-end
+define{
+	'number',
+	'number',
+	function(N1, N2)
+		return N1 + N2
+	end
+}

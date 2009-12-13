@@ -1,1 +1,1 @@
-return {["test_calculate"]={["parameters"]={[1]={["type"]="number"},[2]={["type"]="number"},[3]={["type"]="string"}}}}
+return {["test_add"]={[1]="number",[2]="number"},["test_calculate"]={[1]="number",[2]="number",[3]="string"}}

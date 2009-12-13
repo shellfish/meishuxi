@@ -4,6 +4,7 @@ run = function()
 --=========================================================================
 	local base = cicala.base
 	local util = cicala.util
+	local tinert = table.insert
 
 	-- dispatcher:load_app 取真实相对路径， 但不包含最后的.lua	
 
@@ -63,25 +64,28 @@ run = function()
 	---------------------------------------
 	--- main
 
-
-	local api = session:get('api')
-	if not api then
-			api = {}
-		load_all_api(util.path_normalizer(base.dispatcher.appdir, 'dir'), api)	
-		session:set('api', api)
+	local api
+	if not base.DEBUG then
+		api = session:get('api')
 	end
 
-	
+	if not api then
+		api = {}
+		load_all_api(util.path_normalizer(base.dispatcher.appdir,'dir'), api)
+		if not base.DEBUG then session:set('api', api) end
+	end
+
+	local buf = {}	
 	for func_name, olditem in pairs(api) do
-		local newitem = {parameters={}}
+		local newitem = { parameters = {}}
 
 		for k, v in ipairs(olditem) do
 			newitem.parameters[k] = {type = v}
 		end
 
-		api[func_name] = newitem
+		buf[func_name] = newitem
 	end
 
-	return api 
+	return buf
 --=========================================================================
 end
