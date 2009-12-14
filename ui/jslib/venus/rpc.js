@@ -3,9 +3,9 @@
 	dojo.require("dojox.rpc.Service");
 	dojo.require("dojox.rpc.JsonRPC");
 
-	_M.pool = {}
 	_M.init = function(url, callback) 
 	{
+		callback = callback || function() {}
 		var boot_service = new dojox.rpc.Service({
 			envelope:"JSON-RPC-1.0",
 			transport:"GET",
@@ -13,23 +13,20 @@
 			services:{api:{}}
 		})
 
-		boot_service.addCallback(function( result ) {
+		boot_service.api().addCallback(function( result ) {
 			var service = new dojox.rpc.Service({
 				envelope:"JSON-RPC-1.0",
 				transport:"GET",
 				target:url,
+				sync:true,
 				services:result
 			})
 
-			service.addCallback(function() {
-				for (var k in service) 
-				{
-					alert(k)
-					_M[k] = service[k]
-				}
-				
-				callback()
-			}) 
+			for(var k in service)
+				_M[k] = service[k]
+
+
+			callback(service)
 		})
 	}
 })();

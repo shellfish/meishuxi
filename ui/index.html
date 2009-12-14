@@ -3,7 +3,17 @@
 		<title>MeiShuXi System(Stay HUngry, Stay Foolish)</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<script type="text/javascript" src="jslib/dojo-1.3.2/dojo/dojo.js"></script>
-		<script type="text/javascript" src="jslib/preload.js"></script>
+		<script type="text/javascript">
+			var baseUrl = window.location.pathname
+			baseUrl = baseUrl.replace(/^(.+)\/.*$/, '$1' + '\/')
+			dojo.registerModulePath('venus', baseUrl + 'jslib/venus')	
+
+			dojo.require('venus.base')
+			venus.ready(function() {
+				venus.rpc.test_add(3, 4).addCallback(function(res) { alert(res) })
+			})
+		</script>
+		<script type="text/javascript" src="test.js"></script>
 	</head>
 	<body>
 			<input id="op1" size="10"></input><label>N1</label><br />
