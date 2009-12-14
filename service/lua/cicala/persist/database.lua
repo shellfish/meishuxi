@@ -36,8 +36,8 @@ local function make_coon( config )
 				))
 			end
 
-			if config.INIT then
-				assert( persist_coon:execute(config.INIT) )
+			if config.initstat then
+				assert( persist_coon:execute(config.initstat) )
 			end
 
 			return persist_coon	

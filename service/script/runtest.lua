@@ -1,6 +1,8 @@
 #! /usr/bin/env lua
 
-local action = arg[1]
+require'luaunit'
+
+local action = arg and arg[1]
 local run = nil
 
 local function main()

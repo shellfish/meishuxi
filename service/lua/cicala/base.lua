@@ -4,6 +4,7 @@
 
 local getenv, byte, loadfile, error, rawset,  setmetatable, setfenv, assert
 = os.getenv, string.byte, loadfile, error, rawset,  setmetatable, setfenv, assert
+local _G = _G
 
 local print = print
 
@@ -69,6 +70,8 @@ end)();
 			return new
 		end
 	end}
+
+	_M._G = _G
 
 	setmetatable(_M, base_mt)
 	setfenv( usr_cfg, _M )()

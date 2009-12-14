@@ -27,6 +27,8 @@
 	// when every needed mod has loaded, call tha callback
 	// else hang it and wait
 	venus.ready = function(callback) {
-		register_callback(callback)
+		dojo.addOnLoad(function() {
+			register_callback(callback)
+		})
 	}
 })();

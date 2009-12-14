@@ -3,4 +3,7 @@
 @SET LUA_CPATH=%cd%\..\..\runtime\lib\?.dll
 @SET LUA_PATH=%cd%\..\lua\?.lua;%cd%\..\lua\?\init.lua;%LUA_PATH%
 
-lua.exe -lluaunit %*
+@echo off
+
+lua.exe %* 
+
