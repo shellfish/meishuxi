@@ -23,10 +23,24 @@ dojo.declare('venus.dijit.ctl.LoginForm',
 	widgetsInTemplate:true,
 	templateString:dojo.cache('venus', 'dijit/templates/ctl/LoginForm.html'),
 
-	/******** util for getting inner element ******************/
-	// init some properties
-	postCreate: function() {
+	get_prompt:function() {
+		return dojo.byId(this.id + ':prompt')
 	},
+
+	setPrompt:function( type, msg ) {
+		if ( !type ) {
+			this.get_prompt().innerHTML = ''
+		} else if ( type == 'connectting' ) {
+			this.get_prompt().innerHTML = 
+				'<span style="color:#C9C800;">connecting...</span>' 
+		} else if (type == 'error') {
+			this.get_prompt().innerHTML = 
+				'<span style="color:red;">' + msg + '</span>' 
+		} else {
+			console.error('invalid argument:' + type)
+		}
+	},
+
 
 	/******** tail element *************************************/
 	lastElement: null
