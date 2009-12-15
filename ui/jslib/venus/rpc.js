@@ -25,7 +25,6 @@
 			for(var k in service)
 				_M[k] = service[k]
 
-
 			callback(service)
 		})
 	}

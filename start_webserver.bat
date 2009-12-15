@@ -1,3 +1,0 @@
-@echo start web server...
-@cd runtime\bin
-@start_xavante.bat

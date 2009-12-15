@@ -2,7 +2,7 @@
 <head>
 <title>MeiShuXi System(Stay HUngry, Stay Foolish)</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<script type="text/javascript" src="/js/dojo-release-1.4.0-src/dojo/dojo.js"></script>
+<script type="text/javascript" src="jslib/dojo-1.4.0/dojo/dojo.js"></script>
 <script type="text/javascript">
 	var baseUrl = window.location.pathname
 	baseUrl = baseUrl.replace(/^(.+)\/.*$/, '$1' + '\/')
@@ -20,8 +20,13 @@
 			venus.rpc.test_calculate(N1, N2, op).addCallback(function(res) {
 				alert(res)	
 			})
-	})})
+		})
+	})
 </script>
+<style>
+	@import url(dojo-1.4.0/);
+</style>
+<script type="text/javascript" src="test.js"></script>
 </head>
 	<body>
 			<input id="op1" size="10"></input><label>N1</label><br />

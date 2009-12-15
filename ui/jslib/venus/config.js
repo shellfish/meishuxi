@@ -2,4 +2,7 @@
 	_M = dojo.provide('venus.config')
 
 	_M.service_url = '/service/script/meishuxi.ws'	
+	_M.theme = 'soria'
+
+	
 })();
