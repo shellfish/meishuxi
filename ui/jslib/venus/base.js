@@ -19,6 +19,7 @@
 	// init rpc module and wait until success
 	waiting_queue = []
 	var finish = (function() {
+
 		var counter = 2
 
 		function action() {
@@ -59,7 +60,7 @@
 				loadSource(url, callback)
 		  }
 		}
- 
+
     function loadSource(url, callback){
 			url = String(url)
 
@@ -94,6 +95,7 @@
          }
 			*/
 		  dojo.connect(node, 'load', callback)
+		 
 		  dojo.doc.body.appendChild(node)
  
     }
@@ -101,7 +103,7 @@
 	})();
 
 	venus.asyncLoad = function(url, callback) {
-		venus.ready(function() { raw_asyncLoad(url, callback) })
+		dojo.ready(function() { raw_asyncLoad(url, callback) })
 	}
 
 	venus.asyncLoad(dojo.moduleUrl('dojo', 'resources/dojo.css'))
@@ -111,5 +113,10 @@
 	venus.asyncLoad(dojo.moduleUrl('dojox', 'grid/resources/' +
 		config.theme + 'Grid.css'))
 	venus.asyncLoad(dojo.moduleUrl('dojox', 'widget/Toaster/Toaster.css'))
+
+	// add default theme
+	dojo.ready(function() {
+		dojo.addClass(dojo.body(), 'soria')
+	})
 
 })();

@@ -1,11 +1,29 @@
-<div dojoType="dijit.layout.ContentPane">
-	<div dojoType="dijit.form.Form" id="${id}:real_form">
-	<div dojoType="dijit.form.TextBox" selectOnClick="true"  name="user"></div>
-	<label>用户名</label><br />
-	<div dojoType="dijit.form.TextBox" type="password" name="passwd"></div>
-	<label>密码</label><br />
-	<div dojoType="dijit.form.Button" type="submit" label="登入"></div>
+<div>
+	<div dojoType="dijit.form.Form">
+	<div dojoType="dijit.form.TextBox"  id="${id}:username"></div>
+	<br />
+	<div dojoType="dijit.form.TextBox" type="password" id="${id}:password"></div>
+	<br />
+	<div dojoType="dijit.form.Button" label="登入">
+		<script type="dojo/method" event="onClick">
+		// 读取表单,然后将表单发送到rpc
+			var  password = dijit.byId("${id}:password").value
+			var username = dijit.byId("${id}:username").value
+			
+			var service = venus.rpc.authentication('login', username, password)
+			service.addCallback(function(result) {
+				alert(result)
+			})
+			service.addErrback(function(err) {
+				alert(err)
+			})
+
+			return false
+		</script>
+	</div>
 	<div dojoType="dijit.form.Button" label="重设" type="reset"></div>
-	<span id="${id}:prompt" name="prompt"></span>
-</div>
+	<div dojoType="dijit.Tooltip" label="输入密码"  connectId="${id}:password"></div>
+	<div dojoType="dijit.Tooltip" label="输入用户名"  connectId="${id}:username"></div>
+	<div dojoType="dijit.Tooltip" id="${id}:prompt"></div>
+	</div>
 </div>

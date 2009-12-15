@@ -19,6 +19,7 @@ function run(http)
 	registry.permmission = require'cicala.permmission'.new( base.permmission )
 	registry.dispatcher  = require'cicala.dispatcher'.new( base.dispatcher ) 
 
+
 	-- now everything has ready, do custom init
 	local before = base.custom and base.custom.before
 	if before and type(before) == 'function' then

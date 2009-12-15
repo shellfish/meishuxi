@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>MeiShuXi System(Stay HUngry, Stay Foolish)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<script type="text/javascript" src="/js/dojo-release-1.4.0-src/dojo/dojo.js"></script>
+<script type="text/javascript">
+	var baseUrl = window.location.pathname
+	baseUrl = baseUrl.replace(/^(.+)\/.*$/, '$1' + '\/')
+	dojo.registerModulePath('venus', baseUrl + 'jslib/venus')	
+
+	dojo.require('venus.base')
+
+	venus.ready(function() {
+		dojo.require('venus.dijit.ctl.LoginForm')
+		var root = new venus.dijit.ctl.LoginForm()
+		root.placeAt(dojo.body())
+		root.startup()
+	})
+</script>
+</head>
+	<body>
+	</body>
+</html>

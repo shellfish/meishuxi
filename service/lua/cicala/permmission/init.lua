@@ -1,6 +1,7 @@
 local require = require
 local setmetatable = setmetatable
 local cicala = cicala
+local pcall = pcall
 
 module(...)
 
@@ -19,18 +20,13 @@ end
 
 -- interface from authentication
 function login(self, user, pass)
-	return self.authorization:login(user, pass)
+	return self.authentication:login(user, pass)
 end
 
 function logout(self)
-	return  pcall(function() self.authentication:logout() end)
+	return  self.authentication:logout()
 end
 
 function whoami(self)
 	return self.authentication:whoami()
 end
-
-
-
-
-

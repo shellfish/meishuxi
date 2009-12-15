@@ -37,16 +37,20 @@ end
 -- get cookie which name corespond self.cookie_name
 function get_token(self)
 	local raw_data = registry.http:get_cookie(self.cookie_name)
-	return md5.decrypt(raw_data, self.cookie_key)
+	return raw_data and md5.decrypt(raw_data, self.cookie_key) or nil 
 end
 
 -- write sessionid back to cookie
 function set_token(self, value)
-	registry.http:set_cookie(self.cookie_name, {
-		value = md5.crypt( value, self.cookie_key ),
-		domain = self.cookie_domain,
-		path = self.cookie_path
-	})
+	if not value then
+		registry.http:delete_cookie( self.cookie_name )
+	else
+		registry.http:set_cookie(self.cookie_name, {
+			value = md5.crypt( value, self.cookie_key ),
+			domain = self.cookie_domain,
+			path = self.cookie_path
+		})
+	end
 end
 
 function get_guest_ip(self)
@@ -55,7 +59,7 @@ end
 
 -- 怪异的用法，没抛出错误就是验证成功
 -- if pass every assert throw nothing, mean valid 
-function validate(user, password)
+function validate(self, user, password)
 	assert(user, 'Provide user id!')
 	assert(password, 'provide password!')
 
@@ -88,6 +92,7 @@ end
 function login( self, user, password )
 	local ok, msg = pcall(self.validate, self, user, password)
 	if ok then
+		self.me = user
 		local sessionid = session:create{user = user, ip = self:get_guest_ip()}
 		self:set_token( sessionid )
 		return true

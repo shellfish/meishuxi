@@ -13,6 +13,7 @@ local unpack = unpack
 local select = select
 local next = next
 local tostring = tostring
+local globals = _G
 local DEBUG = base.DEBUG
 
 module(...)
@@ -37,6 +38,7 @@ function mt.__call(self, http)
 		if not ok then return self:error_404() end
 	end
 
+
 	-- app中的accept字段表示可接受的http 方法
 	if app.accept and not app.accept[self.request_method] then
 		return self:reject_access()
@@ -44,24 +46,15 @@ function mt.__call(self, http)
 
 	-- 检查权限
 	if app.permmission and not self:check_permmission(app) then return self:reject_access() end
+
 	
 	-------------------------------------------------------------------
 	-- 运行app
-	local ok, result, method, content_type = true 
-	if DEBUG then
-		result, method, content_type = (function()
+	local ok, result, method, content_type  = pcall( function()
 			local arg = self.request_data.params
 			arg  = type(arg) == 'table' and arg or {}
-			return setfenv( app.run, registry)( unpack(arg) )
-		end)();
-	else
-		local	ok, result, method, content_type = 
-		pcall( function()
-			local arg = self.request_data.params
-			arg  = type(arg) == 'table' and arg or {}
-			return setfenv( app.run, registry)( unpack(arg) )
-		end)
-	end
+			return  setfenv(app.run, registry)( unpack(arg))
+	end)
 
 	-- after process =========================================================================================
 	-- 默认的结果后处理 
@@ -69,27 +62,30 @@ function mt.__call(self, http)
 	content_type = content_type or app.content_type or 'text/plain' 
 
 	---------------------------------------===============================
+
+	http.response.status = 200
+	http.response.header = {['Content-Type'] = content_type}
 	if ok then
 	-- 如果app运行中未发生错误
-		http.response.status = 200
-		http.response.header = {['Content-Type'] = content_type}
-
-		self.http.response:write(method( Json.Encode{ 
+		self.http.response:write(assert(method( Json.Encode{ 
 			result = result, 
 			error = Json.Null,
 			-- 回传
 			id = self.request_data.id,
-		} ))
+		} )))
 	else
-		http.response.status = 200
-		http.response.header = {['Content-Type'] = content_type}
-		--local err_msg =  result:match('lua:%d+:%s(.+)$') or result or 'unknow error'
-		local err_msg = result or 'unknown error'
-		http.response:write(method( Json.Encode {
+		local err_msg 
+		if not DEBUG then 
+			err_msg =  result:match('lua:%d+:%s(.+)$') or result or 'unknow error'
+		else
+		 err_msg = result or 'unknown error'
+		end
+
+		http.response:write( assert( method( Json.Encode {
 			result = Json.Null,
 			error = err_msg,
 			id = self.request_data.id,
-		}))
+		})))
 	end
 end
 
@@ -108,7 +104,6 @@ function load_app( self, name )
 		arglist = nil, -- a table for arg types
 		name =  name,    -- provide func name
 	}
-	box._G = box -- self reference
 
 	-- @params def a table define 
 	function box.define(def)
@@ -122,10 +117,10 @@ function load_app( self, name )
 			for k, v in ipairs(arg) do
 				local expect = box.arglist[k]
 				local provide = type(v)
-				assert(provide == expect, ('[%s]: arg#%d expect %s, but receive %s'):format(box.name, k, expect, provide))
+				assert(expect == 'any' or provide == expect, ('[%s]: arg#%d expect %s, but receive %s'):format(box.name, k, expect, provide))
 			end
 
-			return orig_run(...)
+			return setfenv(orig_run, registry)(...)
 		end
 	end
 

@@ -39,6 +39,10 @@ function make_normal_app( wsapi_env )
 		return res:set_cookie( name, value )
 	end
 
+	function http:delete_cookie( name )
+		return res:delete_cookie(name)
+	end
+
 	-- single entry
 	cicala.run( http )
 
