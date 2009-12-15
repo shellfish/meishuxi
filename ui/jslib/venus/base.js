@@ -61,7 +61,7 @@
 		}
  
     function loadSource(url, callback){
-	 	url = String(url)
+			url = String(url)
 
         registry[url] = true
         var node = null
@@ -77,7 +77,8 @@
         }else {
             throw('bad type')
         }
- 
+
+	  		/*	
          if (node.readyState){  //IE
               node.onreadystatechange = function(){
                     if (node.readyState == "loaded" ||
@@ -91,8 +92,10 @@
                     callback();
               };
          }
+			*/
+		  dojo.connect(node, 'load', callback)
+		  dojo.doc.body.appendChild(node)
  
-         document.body.appendChild(node)
     }
     return load
 	})();
@@ -108,4 +111,5 @@
 	venus.asyncLoad(dojo.moduleUrl('dojox', 'grid/resources/' +
 		config.theme + 'Grid.css'))
 	venus.asyncLoad(dojo.moduleUrl('dojox', 'widget/Toaster/Toaster.css'))
+
 })();
