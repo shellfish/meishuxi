@@ -1,37 +1,35 @@
+local require = require
+local setmetatable = setmetatable
+local setfenv = setfenv
 local base = require'cicala.base'
 local util = require'cicala.util'
-local require, globals = require, _G
-local setmetatable = setmetatable
+local globals = _G
 
 module(...)
 
-_M.registry = setmetatable({}, {__index = globals})
+
+function new_env(http)
+	local registry = setmetatable({http = http}, {__index = globals}) 
+
+	setfenv(function()
+		-- 按照顺序注册模块
+		dbc = require'cicala.persist.database'.new(base.database, registry)
+		session = require'cicala.session'.new(base.session, registry)
+		authentication = require'cicala.permmission.authentication'.new(base.permmission, registry)
+		authorization = require'cicala.permmission.authorization'.new(base.permmission, registry)
+		dispatcher = require'cicala.dispatcher'.new(base.dispatcher, registry)
+	end, registry)();
+
+	return registry
+end
+
 
 -- 不可重入
 function run(http)
 	-- add http to runtime
-	registry.http = http
+	local registry = new_env(http)
+	registry.cicala = _M
 
-	registry.dbc        = require'cicala.persist.database'.new( base.database )
-	registry.session     = require'cicala.session'.new( base.session )
-
-	-- init base modules
-	registry.permmission = require'cicala.permmission'.new( base.permmission )
-	registry.dispatcher  = require'cicala.dispatcher'.new( base.dispatcher ) 
-
-
-	-- now everything has ready, do custom init
-	local before = base.custom and base.custom.before
-	if before and type(before) == 'function' then
-		before(http)
-	end
-
-	registry.dispatcher( http )
-
-	local after = base.custom and base.custom.after
-	if after and type(after) == 'function' then
-		after(http)
-	end
-
+	registry.dispatcher( registry )
 	registry.session:finalize()
 end

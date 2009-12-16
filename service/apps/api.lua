@@ -1,6 +1,6 @@
 
 
-run = function()
+define { function()
 --=========================================================================
 	local base = cicala.base
 	local util = cicala.util
@@ -65,14 +65,16 @@ run = function()
 	--- main
 
 	local api
-	if not base.DEBUG then
+	--if not base.DEBUG then
 		api = session:get('api')
-	end
+	--end
 
 	if not api then
 		api = {}
 		load_all_api(util.path_normalizer(base.dispatcher.appdir,'dir'), api)
-		if not base.DEBUG then session:set('api', api) end
+		--if not base.DEBUG then 
+			session:set('api', api); 
+		--end
 	end
 
 	local buf = {}	
@@ -89,3 +91,4 @@ run = function()
 	return buf
 --=========================================================================
 end
+}

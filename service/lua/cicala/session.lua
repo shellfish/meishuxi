@@ -1,5 +1,3 @@
-pcall(require, 'uuid')
-local base = require'cicala.base'
 local util = require'cicala.util'
 local  require, assert, math  =  require, assert, math
 local socket = require'socket'
@@ -9,7 +7,7 @@ module(...)
 
 -- just a proxy
 function new( config )
-	config = config or base.session
+	config = config
 
 	local module = assert( config.module, 'must specify session.module!' )
 	if module == 'file' then

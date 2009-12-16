@@ -8,21 +8,23 @@ local ipairs = ipairs
 local tostring = tostring
 local tinsert = table.insert
 
-local registry = cicala.registry
-local authentication = registry.authentication
-local dbc = assert(registry.dbc)
-
 module(...)
 
-function new( config )
+function new( config, registry )
 	local obj = setmetatable({}, {__index = _M})
+
+	setfenv(function()
+		_authentication = registry.authentication
+		_dbc = registry.dbc
+	end, obj)();
+
 	return obj
 end
 
 -- get basic use information
 function getinfo(self)
 	local template = [[SELECT * FROM Role WHERE id = '%s';]]
-	local cursor = assert(dbc:execute(template:format(authentication:whoami())))
+	local cursor = assert(self._dbc:execute(template:format(self._authentication:whoami())))
 
 	local result = assert(cursor:fetch({}, 'a'))
 	result.password = nil
@@ -61,7 +63,7 @@ function init_sandbox(self)
 	function sandbox.usertype( user )
 		assert(user)
 
-		local cursor  = assert( dbc:execute(
+		local cursor  = assert( self._dbc:execute(
 			[[SELECT _user_type FROM role WHERE userid == '%s';]],
 			user
 		))
@@ -79,7 +81,7 @@ end
 
 
 function access_control( self, statement )
-	local me = authentication:whoami()
+	local me = self._authentication:whoami()
 
 	local basic_sandbox = self:init_sandbox()
 

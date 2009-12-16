@@ -1,26 +1,31 @@
 local setmetatable = setmetatable
-local registry = assert(cicala.registry)
 local util = require'cicala.util'
 local loadfile, setfenv = loadfile, setfenv
 local assert, pcall = assert, pcall
-local http = registry.http
 local Json = require'Json'
 local type = type
 local error = error
 local url_decode = require'wsapi.util'.url_decode
 local base = require'cicala.base'
 local unpack = unpack
-local select = select
-local next = next
-local tostring = tostring
-local globals = _G
+local getfenv = getfenv
+local ipairs = ipairs
 local DEBUG = base.DEBUG
 
 module(...)
 
+
 local  mt = {__index = _M}
-function mt.__call(self, http)
-	self.http = http
+
+function new( config, registry )
+	return setmetatable({
+		appdir = util.path_normalizer(config.appdir, 'dir'),
+		registry = registry,
+		http = registry.http
+	}, mt)
+end
+
+function mt.__call(self)
 
 	if DEBUG then
 		assert(pcall(self.prepare_process, self))
@@ -51,9 +56,14 @@ function mt.__call(self, http)
 	-------------------------------------------------------------------
 	-- 运行app
 	local ok, result, method, content_type  = pcall( function()
+			-- get arguments
 			local arg = self.request_data.params
 			arg  = type(arg) == 'table' and arg or {}
-			return  setfenv(app.run, registry)( unpack(arg))
+
+			-- change env
+			setmetatable(getfenv(app.run), {__index = self.registry})
+			if app.checkarg then app.checkarg(unpack(arg)) end
+			return  app.run( unpack(arg))
 	end)
 
 	-- after process =========================================================================================
@@ -63,8 +73,8 @@ function mt.__call(self, http)
 
 	---------------------------------------===============================
 
-	http.response.status = 200
-	http.response.header = {['Content-Type'] = content_type}
+	self.http.response.status = 200
+	self.http.response.header = {['Content-Type'] = content_type}
 	if ok then
 	-- 如果app运行中未发生错误
 		self.http.response:write(assert(method( Json.Encode{ 
@@ -81,7 +91,7 @@ function mt.__call(self, http)
 		 err_msg = result or 'unknown error'
 		end
 
-		http.response:write( assert( method( Json.Encode {
+		self.http.response:write( assert( method( Json.Encode {
 			result = Json.Null,
 			error = err_msg,
 			id = self.request_data.id,
@@ -89,29 +99,43 @@ function mt.__call(self, http)
 	end
 end
 
-function new( config )
-	return setmetatable({
-		appdir = util.path_normalizer(config.appdir, 'dir')
-	}, mt)
-end
+
 
 function load_app( self, name )
 	-- load file
 	local filename = assert((name):gsub('_', base.path.sep))
 	local trunk = assert(loadfile(self.appdir ..filename ..'.lua'))
 
-	local box = {
+	local box = setmetatable({
 		arglist = nil, -- a table for arg types
 		name =  name,    -- provide func name
-	}
+	}, {__index = {assert=assert}})
 
+	box.define = setfenv(function(def) 
+		local index_run = #def; assert(index_run ~= 0, 'bad def format')
+		local orig_run = def[index_run]
+		arglist = def
+		arglist[index_run] = nil
+
+		function checkarg(...)
+			local arg = {...}
+			for k, v in ipairs(arg) do
+				local expect = box.arglist[k]
+				local provide = type(v)
+				assert(expect == 'any' or provide == expect, ('[%s]: arg#%d expect %s, but receive %s'):format(box.name, k, expect, provide))
+			end
+		end
+
+		run = orig_run
+	end, box)
+--[[
 	-- @params def a table define 
 	function box.define(def)
 		local index_run = #def; assert(index_run ~= 0, 'bad def format')
 		local orig_run	 = def[index_run]
 		box.arglist = def; def[index_run] = nil
 		
-		function box.run(...)
+		box.checkarg = setfenv(function(...)
 			-- check arg type
 			local arg = {...}
 			for k, v in ipairs(arg) do
@@ -119,10 +143,10 @@ function load_app( self, name )
 				local provide = type(v)
 				assert(expect == 'any' or provide == expect, ('[%s]: arg#%d expect %s, but receive %s'):format(box.name, k, expect, provide))
 			end
-
-			return setfenv(orig_run, registry)(...)
-		end
+		end, registry)
+		box.run = orig_run
 	end
+]]--
 
 	setfenv(trunk, box)()
 	return box
@@ -155,12 +179,12 @@ function prepare_process(self)
 	end
 end
 
-function check_permmission(app)
+function check_permmission(self, app)
 -------------------------------------------------------------------
 	-- 权限检测
 	if app.permmission then
 		if type(app.permmission) == 'string' then
-			local authorization = registry.authorization
+			local authorization = self.registry.authorization
 			return authorization:access_control( app.permmission )  
 		else
 			error'authorization statement must be string'

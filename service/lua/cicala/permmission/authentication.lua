@@ -1,10 +1,8 @@
 local error, assert, pcall = error, assert, pcall
 local setmetatable = setmetatable
 local md5 = require'md5'
-
-local registry = cicala.registry
-local session = assert(registry.session)
-local dbc = assert(registry.dbc)
+local setfenv = setfenv
+local assert = assert 
 -- 凡是涉及http对象的，都放在回调里
 -- 因为在初始化时，http对象还没有生成
 
@@ -16,36 +14,41 @@ local dbc = assert(registry.dbc)
 
 module(...)
 
-function new( config )
+function new( config, registry )
 	local obj = setmetatable({}, {__index = _M})
+	
+	setfenv(function()
+		cookie_name = assert(config.cookie_name)
+		cookie_path = config.cookie_path
+		cookie_domain = config.cookie_domain
+		cookie_key = config.cookie_key or '2d%a1c2d_=8c(c384fa1/af0d6]15ab8'
+		shadow_password = config.shadow_password or function(x) return x end
 
-	obj.cookie_name = assert(config.cookie_name)
-	obj.cookie_path = config.cookie_path
-	obj.cookie_domain = config.cookie_domain
-	obj.cookie_key = config.cookie_key or '2d%a1c2d_=8c(c384fa1/af0d6]15ab8'
+		_registry = registry
+	
+		_dbc = assert(registry.dbc)
+		_http = registry.http
+		_session = registry.session
+		-- refer to user himself
+		me = nil
+	end, obj)();
 
-	obj.shadow_password = config.shadow_password or function(x) return x end
-
-	local self = obj
-
-	-- cache current user id(not sessiond id)
-	self.me = nil
 
 	return obj
 end
 
 -- get cookie which name corespond self.cookie_name
 function get_token(self)
-	local raw_data = registry.http:get_cookie(self.cookie_name)
+	local raw_data = self._http:get_cookie(self.cookie_name)
 	return raw_data and md5.decrypt(raw_data, self.cookie_key) or nil 
 end
 
 -- write sessionid back to cookie
 function set_token(self, value)
 	if not value then
-		registry.http:delete_cookie( self.cookie_name )
+		self._http:delete_cookie( self.cookie_name )
 	else
-		registry.http:set_cookie(self.cookie_name, {
+		self._http:set_cookie(self.cookie_name, {
 			value = md5.crypt( value, self.cookie_key ),
 			domain = self.cookie_domain,
 			path = self.cookie_path
@@ -54,7 +57,7 @@ function set_token(self, value)
 end
 
 function get_guest_ip(self)
-	return registry.http.servervariable['REMOTE_ADDR']
+	return self._http.servervariable['REMOTE_ADDR']
 end
 
 -- 怪异的用法，没抛出错误就是验证成功
@@ -63,6 +66,7 @@ function validate(self, user, password)
 	assert(user, 'Provide user id!')
 	assert(password, 'provide password!')
 
+	local dbc = self._dbc
 	local template = nil
 	local result = nil
 
@@ -79,7 +83,7 @@ function whoami(self)
 	if not self.me then
 		local sessionid = self:get_token()
 		if sessionid then
-			local data = session:get( sessionid )
+			local data = self._session:get( sessionid )
 			if data and data.ip == self:get_guest_ip() then
 				self.me = data.user
 			end
@@ -93,7 +97,7 @@ function login( self, user, password )
 	local ok, msg = pcall(self.validate, self, user, password)
 	if ok then
 		self.me = user
-		local sessionid = session:create{user = user, ip = self:get_guest_ip()}
+		local sessionid = self._session:create{user = user, ip = self:get_guest_ip()}
 		self:set_token( sessionid )
 		return true
 	else
@@ -108,7 +112,7 @@ function logout(self)
 	local sessionid = self:get_token()
 
 	-- clear session
-	session:delete( sessionid )
+	self._session:delete( sessionid )
 	-- clear cookie
 	self:set_token()
 	-- clear module cache

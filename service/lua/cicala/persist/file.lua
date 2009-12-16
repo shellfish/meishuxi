@@ -9,7 +9,6 @@ local util = require'cicala.util'
 local setmetatable, getmetatable  = setmetatable, getmetatable 
 local io, ipairs, pairs, lfs, os, type =  io, ipairs, pairs, lfs, os, type
 local tinsert,  ex = table.insert,  ex
-local newproxy = newproxy
 local loadstring = loadstring
 local error, assert = error, assert
 
@@ -33,9 +32,6 @@ function new( config )
 	obj.to_remove = {}
 
 	obj.share_locks = {}
-
-	obj._company = newproxy(true)
-	getmetatable(obj._company).__gc = function() obj:finalize() end
 
 	return obj
 end
@@ -89,7 +85,6 @@ function get( self, key )
 		end
 	end
 end
-
 
 function set(self, key, value)
 	self.pool[key] = value
