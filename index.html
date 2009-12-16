@@ -274,15 +274,16 @@ ul#toc ul  {
 </head>
 <body>
 <h2>It Works</h2>
-<p>这是WEB根目录下的一个测试网页</p>
-<p>It is a test webpage located under WEBROOT</p>
+<p>这是WEB根目录(%ROOT%)下的一个测试网页</p>
 
-<h3>文档列表</h3>
+<h3>Lua文档列表</h3>
 <ul>
-	<li><a href="doc/libs/luasql/">luasql</a></li>
-	<li><a href="doc/libs/luafilesystem/">luafilesystem</a></li>
-	<li><a href="doc/libs/md5/">md5</a></li>
-	<li><a href="doc/libs/wsapi/">wsapi</a></li>
+	<li><a href="doc/libs/lua_manual.html">manual</a>&nbsp;lua5.1参考手册</li>
+	<li><a href="doc/libs/luasql/">luasql</a>&nbsp;lua的数据库连接库</li>
+	<li><a href="doc/libs/luafilesystem/">luafilesystem</a>&nbsp;文件系统</li>
+	<li><a href="doc/libs/md5/">md5</a>&nbsp;md5散列算法</li>
+	<li><a href="doc/libs/wsapi/">wsapi</a>&nbsp;web服务器接口</li>
+	<li><a href="doc/libs/luadoc/">luadoc</a>&nbsp;代码文档化</li>
 </ul>
 
 <h3>部署指南</h3>
@@ -293,7 +294,7 @@ ul#toc ul  {
 		使得<a href="ui/jslib/dojo-1.4.0/dojo/dojo.js">dojo.js</a>有效。
 	</p>
 	<li><a href="http://downloads.enterprisedb.com/postgresql/postgresql-8.4.2-1-windows.exe">下载PostgreSQL8.4.2</a></li>
-		安装后修改<code>%ROOT/service/etc/config.lua</code>吓的<code>database</code>下的username, port, host, password几个条目使之符合你的配置。
+		安装后修改<code>%ROOT%/service/etc/config.lua</code>吓的<code>database</code>下的username, port, host, password几个条目使之符合你的配置。
 	<p>切换到<b>%ROOT%/service/script</b>目录，在此目录下打开终端，输入</p>
 	<li><pre>lua runtest.lua</pre>进行测试，以确保配置正确。 </li>
 	<li><pre>lua Lua/initdb.lua init</pre>初始化数据库数据</li>
