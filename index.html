@@ -277,7 +277,7 @@ ul#toc ul  {
 <p>这是WEB根目录下的一个测试网页</p>
 <p>It is a test webpage located under WEBROOT</p>
 
-
+<h3>文档列表</h3>
 <ul>
 	<li><a href="doc/libs/luasql/">luasql</a></li>
 	<li><a href="doc/libs/luafilesystem/">luafilesystem</a></li>
@@ -285,7 +285,21 @@ ul#toc ul  {
 	<li><a href="doc/libs/wsapi/">wsapi</a></li>
 </ul>
 
+<h3>部署指南</h3>
+<ol>
+	<li><a href="http://download.dojotoolkit.org/release-1.4.0/dojo-release-1.4.0.tar.gz">下载dojo1.4.0</a></li>
+	<p>
+		将dojo-1.4.0.tar.gz解压缩到%ROOT%/ui/jslib/dojo-1.4.0
+		使得<a href="ui/jslib/dojo-1.4.0/dojo/dojo.js">dojo.js</a>有效。
+	</p>
+	<li><a href="http://downloads.enterprisedb.com/postgresql/postgresql-8.4.2-1-windows.exe">下载PostgreSQL8.4.2</a></li>
+		安装后修改<code>%ROOT/service/etc/config.lua</code>吓的<code>database</code>下的username, port, host, password几个条目使之符合你的配置。
+	<p>切换到<b>%ROOT%/service/script</b>目录，在此目录下打开终端，输入</p>
+	<li><pre>lua runtest.lua</pre>进行测试，以确保配置正确。 </li>
+	<li><pre>lua Lua/initdb.lua init</pre>初始化数据库数据</li>
+</ol>
 
+<h3>目录结构</h3>
 <pre>
 .                         =) WEB根目录
 |-- doc        

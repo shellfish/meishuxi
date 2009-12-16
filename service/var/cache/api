@@ -1,1 +1,0 @@
-return {["test_add"]={[1]="number",[2]="number"},["authentication"]={[1]="string",[2]="any",[3]="any"},["api"]={},["test_calculate"]={[1]="number",[2]="number",[3]="string"}}
