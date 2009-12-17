@@ -8,26 +8,14 @@
 	baseUrl = baseUrl.replace(/^(.+)\/.*$/, '$1' + '\/')
 	dojo.registerModulePath('venus', baseUrl + 'jslib/venus')	
 
-	dojo.require('venus.base')
+	dojo.require('venus.core')
 
-	venus.ready(function() {
-		//venus.rpc.test_add(3, 4).addCallback(function(res) { alert(res) })
-
-		dojo.connect(dojo.byId('tri'), 'click', function() {
-			var N1 = Number(dojo.byId('op1').value)
-			var N2 = Number(dojo.byId('op2').value)
-			var op = dojo.byId('op').value
-
-			venus.rpc.test_calculate(N1, N2, op).addCallback(function(res) {
-				alert(res)	
-			})
-	})})
-</script>
+	dojo.ready(function() {
+		venus.core.init()
+	})
+	</script>
 </head>
 	<body>
-			<input id="op1" size="10"></input><label>N1</label><br />
-			<input id="op" size="10"></input><label>操作</label><br />
-			<input id="op2" size="10"></input><label>N2</label><br />
-			<button id="tri">计算</button>
+		<div id="wrapper"></div>
 	</body>
 </html>

@@ -96,7 +96,13 @@
 			*/
 		  dojo.connect(node, 'load', callback)
 		 
-		  dojo.doc.body.appendChild(node)
+		  if (typeof(dojo.head) == 'undefined') {
+				dojo.head = (function() { 
+					var head_tag = dojo.query('head')[0]
+					return function() { return head_tag }
+				})();
+			}
+		  dojo.head().appendChild(node)
  
     }
     return load
@@ -107,16 +113,18 @@
 	}
 
 	venus.asyncLoad(dojo.moduleUrl('dojo', 'resources/dojo.css'))
-	venus.asyncLoad(dojo.moduleUrl('dijit', 'themes/' + config.theme + 
-		'/' + config.theme + '.css'
+	venus.asyncLoad(dojo.moduleUrl('dijit', 'themes/' + config.theme 	
+		+ 	'/' + config.theme + '.css'
 	))
 	venus.asyncLoad(dojo.moduleUrl('dojox', 'grid/resources/' +
 		config.theme + 'Grid.css'))
 	venus.asyncLoad(dojo.moduleUrl('dojox', 'widget/Toaster/Toaster.css'))
 
+	venus.asyncLoad(dojo.moduleUrl('venus', 'css/app.css'))
+
 	// add default theme
 	dojo.ready(function() {
-		dojo.addClass(dojo.body(), 'soria')
+		dojo.addClass(dojo.body(), config.theme)
 	})
 
 })();
