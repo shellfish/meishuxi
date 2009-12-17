@@ -1,3 +1,7 @@
+---------------------------------------------------------------------------
+-- @class module
+-- @name cicala.session 
+
 local util = require'cicala.util'
 local  require, assert, math  =  require, assert, math
 local socket = require'socket'
@@ -5,7 +9,12 @@ local globals = _G
 
 module(...)
 
--- just a proxy
+
+---------------------------------------------------------------------------
+-- just a proxy to abstract real store interface 
+-- @see session_config_table
+-- @param config configuration hash 
+-- @return new session instance
 function new( config )
 	config = config
 
@@ -23,8 +32,10 @@ function new( config )
 	return _M
 end
 
-
--- create a session
+---
+-- create a random id marked session with value stored in it
+-- @parma value what you what to store(string, number, table)
+-- @return the random id string
 function create(self, value )
 	local id     -- session id
 
@@ -44,3 +55,13 @@ function create(self, value )
 	assert( self:add(id, value) )
 	return id
 end
+
+----
+-- @class table
+-- @name session_config_table
+-- @field module can be file|memcached 
+-- @field expire expiry interval by second
+-- @field path valid ONLY when set module to "file",
+-- absolue path or relative path relate to %ROOT%/service 
+-- @field host valud ONLY when set module to "memcached"
+-- @field port valud ONLY when set module to "memcached"

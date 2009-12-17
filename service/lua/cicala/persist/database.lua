@@ -71,3 +71,14 @@ end
 function new( config )
 	return make_coon( config )
 end
+
+---
+-- @class  table
+-- @name config_database
+-- @field source 数据库名
+-- @field user 数据库连接的用户名
+-- @field driver luasql驱动,默认postges default postgres
+-- @field initstat initializing statement that will be execute when create coonection
+-- @field password 密码
+-- @field host 数据库主机(ip/domainname)
+-- @field port 端口号
