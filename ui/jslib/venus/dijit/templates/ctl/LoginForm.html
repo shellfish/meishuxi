@@ -1,8 +1,10 @@
 <div>
 	<div dojoType="dijit.form.Form">
 	<div dojoType="dijit.form.TextBox"  id="${id}:username"></div>
+		<label>用户名</label>
 	<br />
 	<div dojoType="dijit.form.TextBox" type="password" id="${id}:password"></div>
+		<label>密码</label>
 	<br />
 	<div dojoType="dijit.form.Button" label="登入">
 		<script type="dojo/method" event="onClick" >
@@ -13,9 +15,10 @@
 			var self = dijit.byId("${id}")
 			self.setPrompt('connectting')
 
-			var service = venus.rpc.authentication('login', username, password)
+			var service = venus.rpc.call('authentication', 'post')('login', username, password)
 			service.addCallback(function(result) {
 				self.setPrompt()
+				dojo.publish('success/login')
 			})
 			service.addErrback(function(err) {
 				self.setPrompt('error', err)
@@ -25,8 +28,6 @@
 		</script>
 	</div>
 	<div dojoType="dijit.form.Button" label="重设" type="reset"></div>
-	<div dojoType="dijit.Tooltip" label="输入密码"  connectId="${id}:password"></div>
-	<div dojoType="dijit.Tooltip" label="输入用户名" connectId="${id}:username"></div>
 	<span id="${id}:prompt"></span>
 	</div>
 </div>

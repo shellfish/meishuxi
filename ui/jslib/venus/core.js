@@ -8,6 +8,8 @@
 	// import venus.config & venus.rpc
 	dojo.require('venus.base')
 	dojo.require('venus.eventhandle')
+	dojo.require('venus.shadow')
+
 
 
 
@@ -41,6 +43,8 @@
 				addPane:function( child ) {
 					var self = this
 					child.attr('getParent', function() { return  self})
+					// add scrollbar when needed
+					dojo.style(child.domNode, 'overflow', 'auto')
 					this.addChild( child )
 					this.selectChild( child )
 				}
@@ -73,6 +77,8 @@
 		root.placeAt(dojo.body())
 		setTimeout(function() { root.resize() } ,200)
 
+
+		venus.shadow.init()
 		// bind event handle
 		venus.eventhandle.bindall()
 

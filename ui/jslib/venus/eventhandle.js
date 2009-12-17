@@ -10,7 +10,7 @@
 			container.addPane(new venus.dijit.TabPane({
 				title:'关于系统',
 				href:'/'
-			}))	
+			}))
 		
 		})
 	}

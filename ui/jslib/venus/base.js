@@ -19,7 +19,6 @@
 	// init rpc module and wait until success
 	waiting_queue = []
 	var finish = (function() {
-
 		var counter = 2
 
 		function action() {

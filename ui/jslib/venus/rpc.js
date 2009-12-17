@@ -18,12 +18,34 @@
 				envelope:"JSON-RPC-1.0",
 				transport:"GET",
 				target:url,
-				sync:true,
 				services:result
 			})
 
+			var post_service = new dojox.rpc.Service({
+				envelope:"JSON-RPC-1.0",
+				transport:"POST",
+				target:url,
+				services:result
+			})
+
+
+
 			for(var k in service)
 				_M[k] = service[k]
+
+			_M.call = function(app, method) {
+				method = method.toUpperCase()
+
+				switch(method) {
+					case 'GET':
+						return service[app];
+					case 'POST':
+						return post_service[app];
+					default:
+						throw('unknown app');
+				}
+			
+			}
 
 			callback(service)
 		})
