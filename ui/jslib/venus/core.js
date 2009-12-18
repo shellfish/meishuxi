@@ -30,9 +30,7 @@
 		var navigator = new venus.dijit.Navigator({
 			region:'left',
 			splitter:true,
-			style:'width:107px;',
-			maxSize:109,
-			minSize:105
+			style:'width:130px;',
 		})
 		
 		var workspace = new dijit.layout.TabContainer({

@@ -1,0 +1,7 @@
+.arrowIcon {
+	/*background-image: url(images/arrow.png);   /* 相对于css */ 
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 10px;
+	height: 10px;
+}

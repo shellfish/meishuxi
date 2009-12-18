@@ -77,13 +77,13 @@ dojo.declare('venus.dijit.Navigator',  dijit.layout.AccordionContainer, {
 			// use this.actionList to init this pane
 			var menu = new dijit.Menu({
 				'class':'venusNavigatorMenu',
-				style:'width:100%; background:inherit;'
+			//	style:'width:100%;'
 			})
 
 			dojo.forEach(this.actionList, function( item ) {
 				menu.addChild(new dijit.MenuItem({
 					label: item.name,
-					iconClass:'plusIcon',
+					iconClass:'arrowIcon',
 					postCreate:function() { 	dojo.addClass(this.domNode, 'venusavigatorMenuItemNormal') },
 					//style:'font-size:1.4em; height:1.4em;',
 					onClick:function() { dojo.publish( item.signal ) },

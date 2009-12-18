@@ -1,4 +1,6 @@
-html, body {width:100%; height:100%; margin:0 0; padding:0 0;}
+@import url(icon.css); 
+
+html, body {width:100%; height:100%; }
 
 #wrapper { width:100%; height:100%; }
 
@@ -7,6 +9,7 @@ html, body {width:100%; height:100%; margin:0 0; padding:0 0;}
 	background-image:url(./images/logo.jpg);
 }
 .venusToolbar {height:30%;}
+
 .venusBanner {
 	font-family: 楷体_GB2312,  华文楷体, 黑体, 宋体;
 	font-size:2.77em;
@@ -16,18 +19,44 @@ html, body {width:100%; height:100%; margin:0 0; padding:0 0;}
 	padding-bottom:10em;
 }
 
-/*
-.venusNavigator {
-	height:120% !important;
-}*/
-
-.venusNavigatorMenu {
-	width:100%;
-}
-
 .venusFooter {
 	background:url(images/footer.jpg) !important;
 	color:#D3E3F8;
+}
+
+.venusNavigatorPane {
+	background-image:url(images/navigator.png)  !important;
+	padding:4px;
+	/*
+	border-left:solid 0.9px  #6F08E0 !important;
+	border-right:solid 0.9px  #6F08E0 !important;
+	border-bottom:solid 0.9px  #6F08E0 !important; */
+}
+
+.venusNavigatorMenu {
+	width:100%;
+	background:inherit;
+}
+
+
+.venusavigatorMenuItemNormal {
+	font-size:14px;
+   font-family:SimHei,Microsoft YaHei,Arial,sans-serif;
+   font-weight:bold;
+   color:#151E64 !important;
+   height:24px;
+   background-color:transparent !important;
+	/*
+   border-style:solid;
+   border-color:#FFCC00;
+   border-width:0.3px;
+	*/
+}
+
+.venusNavigatorMenuItemMouseOver {
+	 color:#FFEE99 !important;
+	 background-color:#4E97AB !important;
+	 border-color:#FFEE99;
 }
 
 
