@@ -8,50 +8,6 @@ dojo.require('dijit.MenuItem')
 
 dojo.declare('venus.dijit.Navigator',  dijit.layout.AccordionContainer, {
 		_paneList: {},        // 空列表
-		addChild:function(pane) { 
-			this.inherited(arguments)	
-			this._paneList[pane.title] = pane
-		},
-
-		hideChild:function( title ) {
-			try {
-				var pane = this._paneList[title]
-				this.removeChild(pane)
-			} catch(error) {
-				console.debug('no such pane:' + title)
-			}
-		},
-
-		// 重置所有的子panel
-		// 除了exclude list中的
-		resetChildren:function() {
-			var children = this.getChildren()
-			for ( var k in children ) {
-				var child = children[k]
-				this.removeChild(child)
-			}
-		},
-
-		showChild:function( title ) {
-			try {
-				var pane = this._paneList[title]
-				this.addChild( pane )
-				this._showChild(pane)
-			}catch(error) {
-				console.debug('no title:' + title)
-			}
-		},
-
-		show:function() {
-			dojo.style( this.domNode, 'display', 'inline')
-			this.getParent().layout()
-		},
-
-		hide:function() {
-			dojo.style( this.domNode, 'display', 'none')
-			this.getParent().layout()
-		},
-
 		'class':'venusNavigator',
 		postCreate:function() {
 

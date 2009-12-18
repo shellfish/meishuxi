@@ -21,8 +21,29 @@
 		var root = new dijit.layout.BorderContainer({
 			'class':'venusRoot',
 			gutters:true,
-			_splitterClass:'dojox.layout.ToggleSplitter'
+			_splitterClass:'dojox.layout.ToggleSplitter',
 		}, dojo.byId('wrapper'))
+	
+
+		var interval = 30
+		var flag = setTimeout((function() {
+			var count = 0
+
+			var do_resize
+
+			do_resize = function() {
+				if (count == 7) {
+					clearTimeout(flag)
+				}else {
+					root.resize()
+					count++
+					flag = setTimeout(do_resize, (interval *= 2))
+				}
+			}
+
+			return do_resize
+
+		})(), interval)
 
 		var header = new venus.dijit.Header({
 			region:'top'
@@ -71,10 +92,8 @@
 	_M.init = function() {
 		var root = createRoot()
 
-		root.startup()
 		root.placeAt(dojo.body())
-		setTimeout(function() { root.resize() } ,200)
-
+		root.startup()
 
 		venus.shadow.init()
 		// bind event handle
