@@ -12,6 +12,7 @@
 	venus = dojo.provide('venus')
 	_M = dojo.provide('venus.base')
 
+
 	var config = dojo.require('venus.config')
 	var rpc = dojo.require('venus.rpc')
 

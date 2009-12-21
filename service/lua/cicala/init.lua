@@ -13,6 +13,7 @@ function new_env(http)
 
 	setfenv(function()
 		-- 按照顺序注册模块
+
 		dbc = require'cicala.persist.database'.new(base.database, registry)
 		session = require'cicala.session'.new(base.session, registry)
 		authentication = require'cicala.permmission.authentication'.new(base.permmission, registry)

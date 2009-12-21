@@ -183,3 +183,12 @@ end
 function deserialize( str )
 	return ( loadstring( 'return' .. str ) )()
 end
+
+--返回对array中每个元素依次调用func返回值
+function map(array, func)
+	local new_array = {}
+	for k, v in ipairs( array ) do
+		new_array[k] = func(v)
+	end
+	return new_array
+end

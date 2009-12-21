@@ -1,0 +1,40 @@
+所有的小部件发出'gui'信号.响应ctl信号
+初始化过程中(没有用户操作)发出ctl信号
+
+用模块控制系统的SETUP， 就不用写一个main函数，直接发出ctl/init信号，就可以
+
+
+///////////////////////// ctl //////////////////////////
+# 初始化和销毁
+ctl/init     # 使系统开始初始化
+ctl/uiready  # the UI becomes interactive
+
+
+//////////////////////// action //////////////////////////
+//开启或仅用一个action 
+# opt_object是一个表参数
+  * usertype:String  表明需要开启|关闭的功能类
+  			$ teacher
+			$ student
+			$ admin
+			$ login
+			$ logout
+  * widget:String    读取此widget
+action/enable [opt_object]
+
+# 默认(无参调用)取消'teacher'|'student'|'admin'三个widget的功能
+action/disable [opt_object(opt)]
+
+
+///////////////////////// msg /////////////////////////
+///// 通过小部件向用户展示回馈信息
+msg/loading     # 系统正在加载 
+msg/clean       # 清除消息
+msg/busy        # 阻塞信息
+msg/error       # 错误
+
+//////////////////////// debug ////////////////////////////
+/// 向console 发送消息
+/// 用于调试，在调试开关打开并设置了相应的级别后，可以看到调试信息
+debug [msg, level(default 'debug')
+// can use error,  warn, debug, log, info

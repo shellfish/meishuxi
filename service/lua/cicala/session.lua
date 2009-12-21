@@ -56,6 +56,7 @@ function create(self, value )
 	return id
 end
 
+
 ----
 -- @class table
 -- @name session_config_table

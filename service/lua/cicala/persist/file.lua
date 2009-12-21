@@ -94,6 +94,18 @@ function set(self, key, value)
 	return true
 end
 
+--- value(must be a table) will mixin origin value
+-- means cover fields which exists originally, and add fields which not exists in pool[key] before
+function mixin(self, key, value)
+	local origin = self.pool[key] or {} 
+	for k, v in pairs(value) do
+		origin[k] = v	
+	end
+	self:set(key, origin)
+	return true
+end
+
+
 -- success only if there is no key exists
 function add(self, key, value)
 	if self:get(key) then
@@ -138,8 +150,8 @@ local function serialize(content)
 	return 'return ' .. content
 end
 
--- load all session from disk to pool
--- by the same time, we'll check expire and clear outdated one
+--- load all session from disk to pool
+-- by the same time, we'll check expire and clear outdated ones
 function loadall(self)
 	for key in lfs.dir(self.path) do
 		if  key ~= '.' and key ~= '..' then

@@ -7,7 +7,6 @@ dojo.require('dijit.MenuItem')
 
 
 dojo.declare('venus.dijit.Navigator',  dijit.layout.AccordionContainer, {
-		_paneList: {},        // 空列表
 		'class':'venusNavigator',
 		postCreate:function() {
 
