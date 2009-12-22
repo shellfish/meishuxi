@@ -1,7 +1,19 @@
-.arrowIcon {
-	/*background-image: url(images/arrow.png);   /* 相对于css */ 
+.venusIcon {
 	background-repeat: no-repeat;
-	background-position: center center;
+	 background-position: center center; 
 	width: 10px;
 	height: 10px;
 }
+
+.plusIcon {background-image:url(./images/icons/plus.gif);}
+.ModifyIcon {background-image:url(./images/icons/Modify.png);}
+.LoadIcon {background-image:url(./images/icons/Load.png);}
+.DownloadIcon {background-image:url(./images/icons/Download.png);}
+.InfoIcon {background-image:url(./images/icons/Info.png);}
+.SearchIcon {background-image:url(./images/icons/Search.png);}
+.ExitIcon {background-image:url(./images/icons/Exit.png);}
+.WarningIcon {background-image:url(./images/icons/Warning.png);}
+.arrowIcon {background-image:url(./images/icons/arrow.png);}
+.SaveIcon {background-image:url(./images/icons/Save.png);}
+.AddIcon {background-image:url(./images/icons/Add.png);}
+.EmailIcon {background-image:url(./images/icons/Email.png);}

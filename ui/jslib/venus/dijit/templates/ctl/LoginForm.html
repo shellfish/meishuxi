@@ -17,8 +17,14 @@
 
 			var service = venus.rpc.call('authentication', 'post')('login', username, password)
 			service.addCallback(function(result) {
-				self.setPrompt()
-				dojo.publish('success/login')
+				self.setPrompt(); 
+				dojo.publish('user/login', ['hide'])
+
+				dojo.publish('ctl/update')
+				dojo.publish('ctl/msg', [{
+					message:'登入成功',
+					type:'debug'
+				}])
 			})
 			service.addErrback(function(err) {
 				self.setPrompt('error', err)

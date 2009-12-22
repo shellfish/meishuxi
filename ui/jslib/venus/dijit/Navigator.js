@@ -14,7 +14,8 @@ dojo.declare('venus.dijit.Navigator',  dijit.layout.AccordionContainer, {
 			dojo.forEach(venus.config.nav_list, function( item ){
 			var pane = new venus.dijit.NavigatorPane({
 				title:item.label,
-				actionList:item.items
+				actionList:item.items,
+				icon:item.iconClass
 			})
 			self.addChild( pane )
 		})
@@ -31,16 +32,17 @@ dojo.declare('venus.dijit.Navigator',  dijit.layout.AccordionContainer, {
 
 			// use this.actionList to init this pane
 			var menu = new dijit.Menu({
-				'class':'venusNavigatorMenu',
-			//	style:'width:100%;'
+				'class':'venusNavigatorMenu'
 			})
 
+			var self = this
+
 			dojo.forEach(this.actionList, function( item ) {
-				menu.addChild(new dijit.MenuItem({
+
+				var menuitem = new dijit.MenuItem({
 					label: item.name,
-					iconClass:'arrowIcon',
+					iconClass:(item.iconClass || self.icon || '') + ' venusIcon',
 					postCreate:function() { 	dojo.addClass(this.domNode, 'venusavigatorMenuItemNormal') },
-					//style:'font-size:1.4em; height:1.4em;',
 					onClick:function() { dojo.publish( item.signal ) },
 					onMouseOver:function() {
 						dojo.addClass(this.domNode, 
@@ -50,7 +52,20 @@ dojo.declare('venus.dijit.Navigator',  dijit.layout.AccordionContainer, {
 						dojo.removeClass(this.domNode, 
 							'venusNavigatorMenuItemMouseOver')
 					}
-				}))
+				})
+
+				menuitem.subscribe(item.signal, function(arg) {
+					switch(arg) {
+						case 'disable':
+							menuitem.attr('disabled', true); break;
+						case 'enable':
+							menuitem.attr('disabled', false); break;
+						default:
+							break;
+					}
+				})
+			
+				menu.addChild(menuitem)
 			})
 			
 			this.containerNode.appendChild( menu.domNode )

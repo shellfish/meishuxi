@@ -9,7 +9,6 @@
 	dojo.require('venus.base')
 	dojo.require('venus.eventhandle')
 	dojo.require('venus.shadow')
-	dojo.require('venus.status')
 
 	// custom widgets
 	dojo.require('venus.dijit.Header')
@@ -97,11 +96,11 @@
 		// bind event handle
 		venus.eventhandle.bindall()
 
-		venus.status.update()
 
 		////////////////////////////////////////
 		// init signal
-		dojo.publish('ui/about')
+		dojo.publish('ctl/update')
+		dojo.publish('sys/about')
 	}
 
 })();

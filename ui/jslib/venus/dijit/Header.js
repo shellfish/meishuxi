@@ -31,14 +31,28 @@
 				
 				// 添加工具栏按钮
 				dojo.forEach( venus.config.toolbar_buttons.reverse(), function( item ) {
-					var label = item[1],
-						signal = item[0]
+					var label = item.label,
+						signal = item.signal,
+						icon = item.iconClass || ''
 
-					toolbar.addChild(new dijit.form.Button({
+					var button = new dijit.form.Button({
 						label:label,
 						style:'float:right;',
-						onClick:function() { dojo.publish( signal) }
-					})) 
+						iconClass:icon,
+						onClick:function() { dojo.publish( signal ) }
+					})
+					button.subscribe(signal, function(arg) {
+						switch(arg) {
+							case 'disable':
+								button.attr('disabled', true); break;
+							case 'enable':
+								button.attr('disabled', false); break;
+							default:
+								break;
+						}
+					})
+
+					toolbar.addChild(	button )					
 				})
 				this.has_startup = true
 
