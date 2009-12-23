@@ -9,7 +9,9 @@
 	})();
 
 	_M.alias_signal=function(src,result){dojo.forEach( src, function(item) {
-		dojo.subscribe(item,function(){dojo.publish(result)})
+		dojo.subscribe(item,function(arg){
+			if (!arg) dojo.publish(result)
+		})
 	})}
 
 	_M.send = function(signal, arg) {
