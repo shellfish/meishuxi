@@ -75,6 +75,7 @@
 				var pane = new venus.dijit.TabPane({title:"查看信息"})
 				pane.attr('content', container)
 				dijit.byId('workspace').addPane(pane)
+				pane.resize()
 			})
 
 			service.addErrback(function(err) {
