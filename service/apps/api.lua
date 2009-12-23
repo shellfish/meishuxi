@@ -3,6 +3,8 @@
 define { function()
 --=========================================================================
 	local tinert = table.insert
+	local util = cicala.util
+	local base = cicala.base
 
 	-- dispatcher:load_app 取真实相对路径， 但不包含最后的.lua	
 

@@ -24,7 +24,7 @@ end
 dispatcher.appdir= 'apps'
 
 -- debug mode
-DEBUG = true
+--DEBUG = true
 
 
 

@@ -96,6 +96,16 @@
 		// update ui by user status
 		/////////////////////////////////////////////////////////////////////
 		dojo.subscribe('ctl/update', function() {
+
+			function reset()
+			{
+				var type_list = ['student', 'teacher', 'admin']
+				dojo.forEach(type_list, function(t) {
+					var sig = new RegExp('^' + t + '/')
+					venus.registry.send(sig, ['disable'])
+				})
+			}
+
 		// update ui by remote status
 			var service = venus.rpc.authentication('info')
 			service.addCallback(function(result) {
@@ -104,7 +114,8 @@
 				dojo.forEach(items, function(item) {
 					buf[item.attribute] = item.value
 				})
-
+				
+				reset()
 				var sig = new RegExp('^' + buf.type + '/')
 				venus.registry.send(sig, ['enable'])
 
@@ -117,11 +128,7 @@
 				dojo.publish('user/login', ['enable'])
 				dojo.publish('user/logout', ['disable'])
 
-				var type_list = {'student':true, 'teacher':true, 'admin':true}
-				for (var t in type_list) {
-					var sig = new RegExp('^' + t + '/')
-					venus.registry.send(sig, ['disable'])
-				}
+				reset()	
 
 				// 关闭已经打开的tab
 				var workspace = dijit.byId('workspace')

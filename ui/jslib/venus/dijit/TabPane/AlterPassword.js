@@ -36,8 +36,14 @@ dojo.declare('venus.dijit.TabPane.AlterPassword',
 	},
 	// you shoule over write thie attach point
 	execute:function() {
-		alert('模拟提交')
-		var before_password = dijit.byId(this.id + '/before', this.domNode)
-		var password = dijit.byId(this.id + '/first', this.domNode)
+		var before_password = dijit.byId(this.id + '/before', this.domNode).value
+		var password = dijit.byId(this.id + '/first', this.domNode).value
+
+		var service = venus.rpc.authentication('alter_password', before_password, password)
+		service.addCallback(function(result){
+			alert('修改成功')
+		})
+		service.addErrback(function(err) {alert(err)})
+	
 	}
 })

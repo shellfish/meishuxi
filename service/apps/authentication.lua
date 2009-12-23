@@ -8,16 +8,18 @@ define{
 
 		local util = cicala.util
 		local base = cicala.base
-
+		------------------------------------------------
 		if action == 'login' then
 			assert(type(username) == 'string' and #username ~= 0, 'expect username')
 			assert(type(password) == 'string' and #username ~= 0, 'expect password')
 
 			assert( authentication:login(username, password) )
 			return authentication:whoami()
+		------------------------------------------------
 		elseif action == 'logout' then -- logout
 			authentication:logout()
 			return true
+		-------------------------------------------------
 		elseif action == 'info' then
 			local current_user = assert(authentication:whoami(), 'You has not login')
 
@@ -61,6 +63,16 @@ define{
 			return {items=items}
 		---- END of info(action)	
 
+		elseif action == 'alter_password' then
+			local before = username
+			local new = password
+
+			local me = authentication:whoami()
+			assert(me, 'cannot alter password, login first')
+			authentication:validate(me, before)
+			local template = "UPDATE role SET password = '%s' WHERE id = '%s';"
+			local password = authentication.shadow_password(new)
+			assert(dbc:execute(template:format(password, me)))
 		else
 			error(('Unknown action:[%s]'):format(action))
 		end
