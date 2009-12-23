@@ -1,8 +1,9 @@
 (function(_M) {
 	_M = dojo.provide('venus.config')
 	// 信号注册表
-	var registry = dojo.require('venus.registry')
+	dojo.require('venus.registry')
 
+	var registry = venus.registry
 	var sig = registry.gen_signal
 	var alias_sig = registry.alias_signal
 

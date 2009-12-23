@@ -35,7 +35,7 @@ html, body {width:100%; height:100%; }
 
 .venusNavigatorMenu {
 	width:100%;
-	background:inherit;
+	background:inherit !important;
 }
 
 
@@ -45,7 +45,7 @@ html, body {width:100%; height:100%; }
    font-weight:bold;
    color:#151E64 !important;
    height:24px;
-   background-color:transparent !important;
+   background:inherit !important;
 	/*
    border-style:solid;
    border-color:#FFCC00;

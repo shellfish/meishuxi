@@ -27,7 +27,6 @@
 
 		dojo.forEach(registry, function(item) {
 			if (reg && item.match(reg)) {
-				console.log(item)
 				dojo.publish(item, arg)
 			}else{
 				if (item == str) { 

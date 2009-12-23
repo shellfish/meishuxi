@@ -11,10 +11,12 @@
 (function(_M) {
 	venus = dojo.provide('venus')
 	_M = dojo.provide('venus.base')
+	dojo.require('venus.config')
+	dojo.require('venus.rpc')
 
 
-	var config = dojo.require('venus.config')
-	var rpc = dojo.require('venus.rpc')
+	var config = venus.config
+	var rpc = venus.rpc
 
 	///////////////////////////////////////////////////////////////////////
 	// init rpc module and wait until success
@@ -113,9 +115,7 @@
 	}
 
 	venus.asyncLoad(dojo.moduleUrl('dojo', 'resources/dojo.css'))
-	venus.asyncLoad(dojo.moduleUrl('dijit', 'themes/' + config.theme 	
-		+ 	'/' + config.theme + '.css'
-	))
+	venus.asyncLoad(dojo.moduleUrl('dijit', 'themes/' + config.theme 	+ 	'/' + config.theme + '.css'))
 	venus.asyncLoad(dojo.moduleUrl('dojox', 'grid/resources/' +
 		config.theme + 'Grid.css'))
 	venus.asyncLoad(dojo.moduleUrl('dojox', 'widget/Toaster/Toaster.css'))

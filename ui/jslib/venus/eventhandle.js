@@ -53,7 +53,7 @@
 
 			service.addCallback(function(result) {
 				var store = new  dojo.data.ItemFileWriteStore({
-					data:result,
+					data:result
 				})
 
 				var grid =  new dojox.grid.DataGrid({
@@ -61,14 +61,14 @@
 					autoWidth:true,
 					store:store,
 					structure:s,
-					region:'left',
+					region:'left'
 				})
 
 				var container = new dijit.layout.BorderContainer({})
 				container.addChild(grid)
 
 				var alter_password = new venus.dijit.TabPane.AlterPassword({
-					region:'center',
+					region:'center'
 				})
 				container.addChild(alter_password)
 

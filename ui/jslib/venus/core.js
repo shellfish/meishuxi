@@ -18,7 +18,7 @@
 		var root = new dijit.layout.BorderContainer({
 			'class':'venusRoot',
 			gutters:true,
-			_splitterClass:'dojox.layout.ToggleSplitter',
+			_splitterClass:'dojox.layout.ToggleSplitter'
 		}, dojo.byId('wrapper'))
 	
 
@@ -48,7 +48,7 @@
 		var navigator = new venus.dijit.Navigator({
 			region:'left',
 			splitter:true,
-			style:'width:130px;',
+			style:'width:130px;'
 		})
 		
 		var workspace = new dijit.layout.TabContainer({

@@ -11,8 +11,7 @@ dojo.provide('venus.dijit.TabPane.AlterPassword')
 
 dojo.declare('venus.dijit.TabPane.AlterPassword',
 	[dijit._Widget, dijit._Templated] , {
-//	templateString: dojo.cache('lib', 'templates/AlterPasswordForm.html'),
-	templatePath:dojo.moduleUrl('venus', 'dijit/templates/TabPane/AlterPasswordForm.html'),
+	templateString:dojo.cache('venus', 'dijit/templates/TabPane/AlterPasswordForm.html'),
 	widgetsInTemplate:true,
 	postCreate:function() {
 		var self = this,
