@@ -86,7 +86,7 @@ function mt.__call(self)
 	else
 		local err_msg 
 		if not DEBUG then 
-			err_msg =  result:match('lua:%d+:%s(.+)$') or result or 'unknow error'
+			err_msg =  result:gsub('^.+lua:%d+:', '') or result or 'unknow error'
 		else
 		 err_msg = result or 'unknown error'
 		end

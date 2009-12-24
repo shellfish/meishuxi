@@ -11,6 +11,7 @@ database.initstat = 'SET SEARCH_PATH=meishuxi;'
 --session.expire = 10
 session.path = 'var/cache'
 session.module = 'file'
+session.expire = 600
 
 -- permmission
 permmission.cookie_name = 'userhash'
