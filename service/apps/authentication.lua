@@ -46,18 +46,24 @@ define{
 			local attr_list = table.concat( util.map(index, function(v)  return v[1] end), ',' )
 			local sql_stat =  'SELECT ' .. attr_list .. " FROM Role WHERE id = '%s';"
 			local cursor = assert( dbc:execute( sql_stat:format(current_user) ) )
-			local result = cursor:fetch{}
+			local result = cursor:fetch({}, 'a')
 
 			---
 			-- generate result set
 			---
 			local items = {}
 			local tinsert = table.insert
-			for k, value in ipairs(result) do
-					local key = index[k][2]
-					local filter = index[k][3]
-					value = (filter and filter(value) or value)
-					tinsert(items, {['attribute'] = key, ['value'] = value})
+			
+			for _, item in ipairs(index) do
+				local field = item[1]
+				local attribute = item[2]
+				local filter = item[3]
+			
+				if result[field] then
+					tinsert(items, {['attribute'] = attribute, ['value'] = filter and filter(result[field]) or result[field]})
+				else
+					tinsert(items, {['attribute'] = attribute, ['value'] = '???'})
+				end
 			end
 
 			return {items=items}

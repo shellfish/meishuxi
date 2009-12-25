@@ -47,13 +47,22 @@
 			var service = venus.rpc.authentication('info')
 			// the model
 			var s = {'cells':[[
-				{name:'属性', field:'attribute', width:'10em'},
+				{name:'属性', field:'attribute', width:'10em', 
+					formatter : function(x) {
+						if (x == 'type') return '用户类型'
+						if (x == 'id') return '用户名'
+						return x
+					}
+				},
 				{name:'值', field:'value', width:'10em', editable:true}
 			]]}
 
 			service.addCallback(function(result) {
 				var store = new  dojo.data.ItemFileWriteStore({
 					data:result
+				})
+				dojo.connect(store,'onSet', function(i, a, o, n) {
+					console.debug(a + ' changed from ' + o + ' to ' + n)
 				})
 
 				var grid =  new dojox.grid.DataGrid({
