@@ -17,12 +17,12 @@
 	_M.send = function(signal, arg) {
 		var reg, str
 
-		if (typeof(signal) == 'object' && signal instanceof RegExp)  {
+		if (signal instanceof RegExp)  {
 			reg = signal 
 		}else if (typeof(signal) == 'string') {
 			str = signal
 		}else {
-			Throw('invalid argument')
+			console.error('invalid argument', signal)
 		}
 
 		dojo.forEach(registry, function(item) {

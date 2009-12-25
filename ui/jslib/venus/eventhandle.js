@@ -115,6 +115,8 @@
 				})
 			}
 
+			window.reset = reset
+
 		// update ui by remote status
 			var service = venus.rpc.authentication('info')
 			service.addCallback(function(result) {
