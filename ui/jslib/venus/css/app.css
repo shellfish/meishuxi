@@ -20,8 +20,18 @@ html, body {width:100%; height:100%; }
 }
 
 .venusFooter {
-	background:url(images/footer.jpg) !important;
+	background:url(images/footer.jpg);
 	color:#D3E3F8;
+	text-align:center;
+}
+
+.venusFooter a:hover {
+	color:#751367 !important;
+}
+
+.venusFooter a {
+	color:#F1CAEC !important;
+	text-decoration:none;
 }
 
 .venusNavigator {
@@ -30,7 +40,6 @@ html, body {width:100%; height:100%; }
 
 .venusNavigatorPane {
 	background-image:url(images/navigator.png)  !important;
-	padding:4px;
 	/*
 	border-left:solid 0.9px  #6F08E0 !important;
 	border-right:solid 0.9px  #6F08E0 !important;
@@ -39,6 +48,8 @@ html, body {width:100%; height:100%; }
 
 .venusNavigatorMenu {
 	background:inherit !important;
+	width:90%;
+	margin-left:5% !important;
 }
 
 
@@ -49,6 +60,7 @@ html, body {width:100%; height:100%; }
    color:#151E64 !important;
    height:24px;
    background:inherit !important;
+	text-align:center;
 	/*
    border-style:solid;
    border-color:#FFCC00;

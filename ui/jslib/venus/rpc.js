@@ -13,7 +13,12 @@
 			services:{api:{}}
 		})
 
-		boot_service.api().addCallback(function( result ) {
+		var api = boot_service.api()
+
+		api.addErrback(function() { 
+		dojo.body().innerHTML = '<p style="font-size:2em; margin:30px 30px;">系统维护中...</p>'
+		})
+		api.addCallback(function( result ) {
 			var service = new dojox.rpc.Service({
 				envelope:"JSON-RPC-1.0",
 				transport:"GET",

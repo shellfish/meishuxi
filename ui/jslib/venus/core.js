@@ -68,7 +68,7 @@
 		var statusbar = new dijit.layout.ContentPane({
 			'class':'customFooter',
 			region:"bottom",
-			content:"<center>©Copyright 2009 <a href='http://mms.cuc.edu.cn'>mms.cuc.edu.cn</a> All Rights Reserved</center>",
+			content:dojo.cache('venus', 'resource/footer.html'),
 			'class':'venusFooter'
 			})
 

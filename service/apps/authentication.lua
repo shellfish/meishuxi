@@ -26,7 +26,7 @@ define{
 			-- 类别转换filter
 			local index = {
 				{'_user_type', 'type', function(t) 
-					return t=='s' and 'student' or  t=='t' and 'teacher' or t=='a' and' admin' or error'Unknown type' 
+					return t=='s' and 'student' or  t=='t' and 'teacher' or t=='a' and 'admin' or error'Unknown type' 
 				end},
 				{'id', 'id'},
 				{'name', '姓名'},
