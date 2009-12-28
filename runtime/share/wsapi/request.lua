@@ -120,7 +120,6 @@ local function parse_post_data(wsapi_env, tab)
   local input_type = wsapi_env.CONTENT_TYPE or error("Undefined Media Type")
   local length = tonumber(wsapi_env.CONTENT_LENGTH) or 0
   local post_body = wsapi_env.input:read(length) or ''
-  tab.post_data = post_body
   if string.find(input_type, "x-www-form-urlencoded", 1, true) then
     parse_qs(post_body, tab)
   elseif string.find(input_type, "multipart/form-data", 1, true) then
@@ -131,7 +130,7 @@ local function parse_post_data(wsapi_env, tab)
     local length = tonumber(wsapi_env.CONTENT_LENGTH) or 0
  --   tab.post_data = post_body
   end  
-  return tab
+  return setmetatable(tab, {__tostring = function() return post_body end})
 end
 
 function new(wsapi_env, options)

@@ -10,6 +10,7 @@ local base = require'cicala.base'
 local unpack = unpack
 local getfenv = getfenv
 local ipairs = ipairs
+local tostring = tostring
 local DEBUG = base.DEBUG
 
 module(...)
@@ -171,7 +172,7 @@ function prepare_process(self)
 
 	self.request_method = self.http.servervariable['REQUEST_METHOD']
 	if self.request_method == 'POST' then
-		self.request_data =  parse( self.http.POST.post_data )
+		self.request_data =  parse( tostring(self.http.POST) )
 	elseif self.request_method == 'GET' then
 		self.request_data =  parse( url_decode(self.http.request.query_string) )
 	else
