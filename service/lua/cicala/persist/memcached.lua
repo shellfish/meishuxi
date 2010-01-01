@@ -7,6 +7,7 @@ require'cicala.base'
 
 local setmetatable = setmetatable
 local require, assert, select, append, unpack = require, assert, select, table.insert, unpack
+local rawset, rawget = rawset, rawget
 local serialize,deserialize = cicala.util.serialize,cicala.util.deserialize
 local base = cicala.base
 
@@ -39,17 +40,21 @@ local function make_coon(config)
 
 		return function(tab, key)
 			local real_coon = get_coon()
-			local real_method =  assert(real_coon[key], 
-				'Memcached-Lua doesn\'t support method: ' .. key)
+			local real_method =  real_coon[key]
 
-			return function(...)
-				return real_method( real_coon, select(2, ...) )
+			if real_method then
+				rawset(tab, key, function(...) 
+					return real_method( real_coon, select(2, ...) ) 
+				end)
+				return rawget(tab, key)
+			else
+				return nil, 'Lua-Memcached doesn\'t have method:' .. key
 			end
 		end
 
 	end)();
 
-	return setmetatable({}, {__index = coon_meta_method})
+	return setmetatable({finalize = function() end}, {__index = coon_meta_method})
 end
 
 
@@ -59,6 +64,3 @@ end
 function new( config )
 	return make_coon(config)
 end
-
-
-

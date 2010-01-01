@@ -17,3 +17,5 @@ function sumhexa (k)
            return string.format("%02x", string.byte(c))
          end))
 end
+
+_M.digest = sumhexa

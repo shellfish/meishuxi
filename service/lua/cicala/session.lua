@@ -6,6 +6,7 @@ local util = require'cicala.util'
 local  require, assert, math  =  require, assert, math
 local socket = require'socket'
 local globals = _G
+local error = error
 
 module(...)
 
@@ -37,20 +38,18 @@ end
 -- @parma value what you what to store(string, number, table)
 -- @return the random id string
 function create(self, value )
-	local id     -- session id
-
 	if not self.digest_algorithm then
 		self.digest = self.digest or 'md5'
 		if self.digest == 'md5' then
-			self.digest_algorithm = globals.require'md5'.sumhexa
+			self.digest_algorithm = require'md5'.sumhexa
 		elseif self.digest == 'sha1' then
-			self.digest_algorithm = globals.require'sha1'.digest
+			self.digest_algorithm = require'sha1'.digest
 		else
 			error('I cannot understand digest algorithm:' .. self.digest)
 		end
 	end
 
-	id = self.digest_algorithm( math.random()  .. socket.gettime() )
+	local id = self.digest_algorithm( math.random()  .. socket.gettime() )
 
 	assert( self:add(id, value) )
 	return id

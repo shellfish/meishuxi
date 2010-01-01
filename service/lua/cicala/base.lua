@@ -4,6 +4,7 @@
 
 local getenv, byte, loadfile, error, rawset,  setmetatable, setfenv, assert
 = os.getenv, string.byte, loadfile, error, rawset,  setmetatable, setfenv, assert
+local require = require
 local _G = _G
 
 local print = print
@@ -65,9 +66,13 @@ end)();
 		if base_mt_expire then
 			return nil
 		else
-			local new = setmetatable({}, base_mt)
-			rawset(tab, key, new)
-			return new
+			if not _G[key] then
+				local new = setmetatable({}, base_mt)
+				rawset(tab, key, new)
+				return new
+			else
+				return _G[key]
+			end
 		end
 	end}
 

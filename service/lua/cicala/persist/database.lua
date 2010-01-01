@@ -8,6 +8,7 @@
 local setmetatable, require, assert = setmetatable, require, assert
 local select = select
 local print = print
+local rawset = rawset
 
 module(...)
 
@@ -51,11 +52,14 @@ local function make_coon( config )
 			local real_coon = get_coon()
 			local real_method = assert(real_coon[key], 'database coon dosn\'t has method:' .. key)
 
-			return function(  ... )
+			local final_method =  function(  ... )
 				-- call real method
 				-- drop the first argument for compatiable the : syntax
 				return real_method(real_coon, select(2, ...))
 			end
+
+			rawset(tab, key, final_method)
+			return final_method
 		end
 
 	end)();
