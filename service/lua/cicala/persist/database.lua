@@ -41,6 +41,8 @@ local function make_coon( config )
 				assert( persist_coon:execute(config.initstat) )
 			end
 
+			assert( persist_coon:setautocommit(false) )
+
 			return persist_coon	
 		end
 
