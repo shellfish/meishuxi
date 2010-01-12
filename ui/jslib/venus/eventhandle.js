@@ -9,19 +9,25 @@
 	dojo.require("dojo.data.ItemFileWriteStore");
 	// bind all event handle
 
+	var subscribe = function(sig, callback) {
+		dojo.subscribe(sig, function() {
+			if (!arguments[0]) callback()
+		})
+	}
+
 	_M.bindall = function() {
 		var container = dijit.byId('workspace')
 
 		////////////////////////////////////////////////////////////////////
 		// toolbar buttons
-		dojo.subscribe('sys/about', function() {
+		subscribe('sys/about', function() {
 			container.addPane(new venus.dijit.TabPane({
 				title:'关于系统',
 				href:'/'
 			}))
 		})
 		
-		dojo.subscribe('user/logout', function(action) { if (!action) {
+		subscribe('user/logout', function() { 
 			var service = venus.rpc.call('authentication', 'post')('logout')
 
 			service.addCallback(function() {
@@ -40,10 +46,10 @@
 					type:'error'
 				}])
 			})
-		}})
+		})
 
 
-		dojo.subscribe('user/info', function(){
+		subscribe('user/info', function(){
 			var service = venus.rpc.authentication('info')
 			// the model
 			var s = {'cells':[[
@@ -96,6 +102,25 @@
 
 
 		}) // end catch user/info
+
+		subscribe('teacher/commit', function() {
+			var s = {'cells':[[
+				{name:'考生id', field:'id', width:'7em' },
+				{name:'考卷类型', field:'type', width:'6em', editable:true},
+				{name:'分数', field:'score'}
+			]]}
+
+			var grid =  new dojox.grid.DataGrid({
+					selectable: true,    // make it can copy
+					autoWidth:true,
+					structure:s,
+					region:'left'
+				})
+
+			var pane = new venus.dijit.TabPane({title:"查看信息"})
+			pane.attr('content', grid)
+			dijit.byId('workspace').addPane(pane)
+		})
 
 
 

@@ -2,7 +2,6 @@
 	_M = dojo.provide('venus.core')
 	dojo.require('dijit.layout.ContentPane')
 	dojo.require('dijit.layout.BorderContainer')
-	dojo.require('dojox.layout.ToggleSplitter')
 	dojo.require('dijit.layout.TabContainer')
 
 	// import venus.config & venus.rpc
@@ -18,7 +17,6 @@
 		var root = new dijit.layout.BorderContainer({
 			'class':'venusRoot',
 			gutters:true,
-			_splitterClass:'dojox.layout.ToggleSplitter'
 		}, dojo.byId('wrapper'))
 	
 
@@ -47,7 +45,7 @@
 		})
 		var navigator = new venus.dijit.Navigator({
 			region:'left',
-			splitter:true
+			//splitter:true
 		})
 		
 		var workspace = new dijit.layout.TabContainer({
